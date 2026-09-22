@@ -38,6 +38,7 @@ import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 import { useSEO } from './hooks/useSEO';
 import { useVoiceTour } from './hooks/useVoiceTour';
 import { VoiceTourToggle } from './components/VoiceTourToggle';
+import { getCurrentRoute } from './app/router';
 
 export default function App() {
   const [locale, setLocale] = useState<Locale>(() => getInitialLocale());
@@ -47,11 +48,7 @@ export default function App() {
   // Client Routing State for Handling 404 and Broken Links Gracefully
   const [currentRoute, setCurrentRoute] = useState<'home' | '404'>(() => {
     if (typeof window === 'undefined') return 'home';
-    const path = window.location.pathname;
-    const hash = window.location.hash;
-    if (hash === '#404') return '404';
-    if (path !== '/' && path !== '' && path !== '/index.html') return '404';
-    return 'home';
+    return getCurrentRoute().name === 'home' && window.location.hash !== '#404' ? 'home' : '404';
   });
   const [attemptedPath, setAttemptedPath] = useState<string>(() => {
     if (typeof window === 'undefined') return '';
@@ -194,6 +191,7 @@ export default function App() {
   // Listen to popstate and hashchange events for browser history back/forward navigation
   useEffect(() => {
     const handleLocationChange = () => {
+      const appRoute = getCurrentRoute();
       const path = window.location.pathname;
       const hash = window.location.hash;
       const params = new URLSearchParams(window.location.search);
@@ -212,7 +210,7 @@ export default function App() {
           : null;
 
       setPreviewTemplate(matchedTemplate || null);
-      if (hash === '#404' || (path !== '/' && path !== '' && path !== '/index.html')) {
+      if (hash === '#404' || appRoute.name !== 'home') {
         setCurrentRoute('404');
         setAttemptedPath(path !== '/' && path !== '' ? path : hash);
       } else {

@@ -18,7 +18,7 @@ export const Newsletter: React.FC<NewsletterProps> = ({ locale }) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
 
@@ -38,37 +38,41 @@ export const Newsletter: React.FC<NewsletterProps> = ({ locale }) => {
       return;
     }
 
-    setStatus('loading');
+    const endpoint = import.meta.env.VITE_NEWSLETTER_ENDPOINT;
+    if (!endpoint) {
+      setStatus('error');
+      setErrorMessage(
+        isRtl
+          ? 'خدمة النشرة غير مهيأة في هذه النسخة.'
+          : 'Newsletter signup is not configured for this deployment.'
+      );
+      return;
+    }
 
-    // Simulate mock API submission
-    setTimeout(() => {
-      // Save to mock storage
-      try {
-        const existing = JSON.parse(localStorage.getItem('raloa_subscribers') || '[]');
-        if (!existing.includes(email.trim().toLowerCase())) {
-          existing.push(email.trim().toLowerCase());
-          localStorage.setItem('raloa_subscribers', JSON.stringify(existing));
-        }
-      } catch {
-        // Fallback for private browsing
-      }
+    setStatus('loading');
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim().toLowerCase() })
+      });
+      if (!response.ok) throw new Error(`Newsletter request failed: ${response.status}`);
 
       setSubscribedEmail(email.trim());
       setStatus('success');
       setEmail('');
-
-      // Celebration confetti
-      try {
-        confetti({
-          particleCount: 50,
-          spread: 60,
-          origin: { y: 0.8 },
-          colors: ['#4F46E5', '#06B6D4', '#10B981']
-        });
-      } catch {
-        // Non-blocking
-      }
-    }, 700);
+      confetti({
+        particleCount: 50,
+        spread: 60,
+        origin: { y: 0.8 },
+        colors: ['#4F46E5', '#06B6D4', '#10B981']
+      });
+    } catch {
+      setStatus('error');
+      setErrorMessage(
+        isRtl ? 'تعذر الاشتراك حالياً. حاول مرة أخرى.' : 'We could not complete your signup. Please try again.'
+      );
+    }
   };
 
   const handleReset = () => {

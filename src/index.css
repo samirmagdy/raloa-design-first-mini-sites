@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+  --color-slate-850: #172033;
+  --radius-2xs: 0.25rem;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
@@ -83,6 +88,18 @@ html {
 .animate-marquee-track:hover,
 .animate-marquee-track-reverse:hover {
   animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-marquee-track,
+  .animate-marquee-track-reverse {
+    animation: none !important;
+    transform: none !important;
+  }
 }
 
 [dir="rtl"] .animate-marquee-track {

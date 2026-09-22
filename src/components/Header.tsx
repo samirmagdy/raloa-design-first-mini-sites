@@ -8,6 +8,7 @@ import { VoiceTourToggle } from './VoiceTourToggle';
 import { Locale } from '../types';
 import { Theme } from '../utils/theme';
 import { dictionary } from '../data/content';
+import { useModalAccessibility } from '../hooks/useModalAccessibility';
 
 interface HeaderProps {
   locale: Locale;
@@ -44,6 +45,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useModalAccessibility<HTMLDivElement>(mobileMenuOpen);
   const isRtl = locale === 'ar';
   const isDark = theme === 'dark';
   const t = dictionary[locale].nav;
@@ -63,6 +65,15 @@ export const Header: React.FC<HeaderProps> = ({
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMobileMenuOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mobileMenuOpen]);
 
   const navLinks = [
     { label: t.templates, href: '#templates' },
@@ -185,6 +196,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="md:hidden p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 cursor-pointer"
               aria-label="Open navigation menu"
               aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation-drawer"
             >
               <Menu className="w-6 h-6" />
             </button>
@@ -199,6 +211,11 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => setMobileMenuOpen(false)}
         >
           <div
+            id="mobile-navigation-drawer"
+            ref={mobileMenuRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={isRtl ? 'قائمة التنقل' : 'Navigation menu'}
             className={`fixed top-0 bottom-0 ${
               isRtl ? 'left-0' : 'right-0'
             } w-[310px] bg-white dark:bg-slate-900 shadow-2xl p-6 flex flex-col justify-between transition-transform duration-300 ease-out border-s border-slate-200 dark:border-slate-800`}
@@ -296,4 +313,3 @@ export const Header: React.FC<HeaderProps> = ({
     </>
   );
 };
-

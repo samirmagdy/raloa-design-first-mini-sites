@@ -153,7 +153,7 @@ export const ProjectStatsModal: React.FC<ProjectStatsModalProps> = ({
                   {isRtl ? 'إحصائيات المشروع والزيارات' : 'Creator Project Stats'}
                 </h3>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 font-bold border border-emerald-200/80 dark:border-emerald-800/60">
-                  {isRtl ? 'محاكاة حية' : 'Live Preview'}
+                  {isRtl ? 'بيانات تجريبية' : 'Demo Data'}
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">

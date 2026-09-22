@@ -67,14 +67,34 @@ export const StudioModal: React.FC<StudioModalProps> = ({
 
   const [activeTab, setActiveTab] = useState<'design' | 'content' | 'social' | 'share'>('design');
   const [previewMode, setPreviewMode] = useState<'phone' | 'social'>('phone');
-  const [isPublished, setIsPublished] = useState(false);
+  const [isDraftSaved, setIsDraftSaved] = useState(false);
+  const [saveError, setSaveError] = useState('');
   const [copied, setCopied] = useState(false);
   const [showQr, setShowQr] = useState(false);
   const dialogRef = useModalAccessibility<HTMLDivElement>(true);
 
-  // Trigger site launch with celebratory confetti explosion
+  // Persist a local draft. Publishing requires a configured backend and is intentionally not implied here.
   const handleStartOrPublishSite = () => {
-    setIsPublished(true);
+    setSaveError('');
+    try {
+      const draft: MiniSiteUserConfig = {
+        username,
+        displayName,
+        bio,
+        avatarUrl: avatar,
+        templateId: selectedTemplate.id,
+        themeColor: selectedTemplate.themeColor || '#4F46E5',
+        links,
+        socials: selectedTemplate.socials.map((social) => ({ ...social, enabled: true })),
+        verified: false,
+        published: false
+      };
+      localStorage.setItem(`raloa_draft_${username}`, JSON.stringify(draft));
+    } catch {
+      setSaveError(isRtl ? 'تعذر حفظ المسودة على هذا الجهاز.' : 'The draft could not be saved on this device.');
+      return;
+    }
+    setIsDraftSaved(true);
     setActiveTab('share');
     fireSiteLaunchConfetti();
   };
@@ -121,8 +141,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
   };
 
   const handleCopyLink = async () => {
-    const url = `https://raloa.app/@${username}`;
-    if (await copyTextToClipboard(url)) {
+    if (await copyTextToClipboard(`@${username}`)) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -146,6 +165,12 @@ export const StudioModal: React.FC<StudioModalProps> = ({
       type: l.type as any
     }))
   };
+
+  const draftError = saveError && (
+    <div role="alert" className="mx-6 mb-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-800">
+      {saveError}
+    </div>
+  );
 
   return (
     <div
@@ -239,7 +264,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
               className="px-4 py-2 rounded-full bg-[#0F172A] hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              <span>{isPublished ? (isRtl ? 'تم النشر بنجاح' : 'Live & Published') : (isRtl ? 'نشر وتفعيل الموقع' : 'Launch Site')}</span>
+              <span>{isDraftSaved ? (isRtl ? 'تم حفظ المسودة' : 'Draft Saved') : (isRtl ? 'حفظ المسودة' : 'Save Draft')}</span>
             </button>
 
             <button
@@ -251,6 +276,8 @@ export const StudioModal: React.FC<StudioModalProps> = ({
             </button>
           </div>
         </div>
+
+        {draftError}
 
         {/* Studio Workspace: Split 2-Column (Left: Editor Panels, Right: Live Phone Screen) */}
         <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-12 bg-slate-50 print:bg-white print:block">
@@ -367,7 +394,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
                       className="w-full sm:w-auto px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
-                      <span>{isRtl ? 'بدء ونشر الموقع الآن' : 'Start & Launch Site'}</span>
+                      <span>{isRtl ? 'حفظ المسودة والمتابعة' : 'Save Draft & Continue'}</span>
                     </button>
                   </div>
                 </div>
@@ -544,7 +571,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
                         className="w-full sm:w-auto px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <Sparkles className="w-3.5 h-3.5" />
-                        <span>{isRtl ? 'بدء ونشر الموقع الآن' : 'Start & Launch Site'}</span>
+                        <span>{isRtl ? 'حفظ المسودة' : 'Save Draft'}</span>
                       </button>
                     </div>
                   </div>
@@ -596,25 +623,25 @@ export const StudioModal: React.FC<StudioModalProps> = ({
                     <Check className="w-6 h-6 stroke-[3]" />
                   </div>
                   <h3 className="text-lg font-black text-slate-900 mb-1">
-                    {isRtl ? 'موقعك المصغر منشور ويعمل مباشرة!' : 'Your RALOA Mini-Site is Live!'}
+                    {isRtl ? 'تم حفظ مسودة موقعك المصغر' : 'Your RALOA Mini-Site Draft Is Saved'}
                   </h3>
                   <p className="text-xs text-slate-600 max-w-md mb-4 leading-relaxed">
                     {isRtl
-                      ? `تم حفظ ونشر جميع تعديلاتك على الرابط العالمي raloa.app/@${username}. يمكنك مشاركته فوراً في بايو انستغرام وتيك توك ولينكدإن.`
-                      : `Your updates are published instantly to the global edge network at raloa.app/@${username}. Share your link anywhere.`}
+                      ? `تم حفظ تعديلاتك على هذا الجهاز. النشر العام غير متصل في هذه النسخة.`
+                      : `Your updates are saved on this device. Public publishing is not connected in this deployment.`}
                   </p>
 
                   {/* Share Link Box */}
                   <div className="flex items-center gap-2 bg-white p-2 rounded-2xl border border-slate-200 shadow-2xs">
                     <div className="flex-1 px-3 py-1 text-xs font-mono text-slate-700 font-bold truncate">
-                      https://raloa.app/@{username}
+                      Draft for @{username}
                     </div>
                     <button
                       onClick={handleCopyLink}
                       className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shrink-0"
                     >
                       <Copy className="w-3.5 h-3.5" />
-                      <span>{copied ? (isRtl ? 'تم النسخ!' : 'Copied!') : (isRtl ? 'نسخ الرابط' : 'Copy Link')}</span>
+                      <span>{copied ? (isRtl ? 'تم النسخ!' : 'Copied!') : (isRtl ? 'نسخ المعرف' : 'Copy Handle')}</span>
                     </button>
                   </div>
                 </div>

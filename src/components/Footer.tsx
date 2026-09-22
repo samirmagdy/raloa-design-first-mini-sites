@@ -25,6 +25,12 @@ export const Footer: React.FC<FooterProps> = ({
 }) => {
   const isRtl = locale === 'ar';
   const t = dictionary[locale].footer;
+  const socialLinks = [
+    { label: 'X', href: import.meta.env.VITE_RALOA_X_URL, icon: Twitter },
+    { label: 'Instagram', href: import.meta.env.VITE_RALOA_INSTAGRAM_URL, icon: Instagram },
+    { label: 'YouTube', href: import.meta.env.VITE_RALOA_YOUTUBE_URL, icon: Youtube },
+    { label: 'LinkedIn', href: import.meta.env.VITE_RALOA_LINKEDIN_URL, icon: Linkedin }
+  ].filter((link): link is { label: string; href: string; icon: typeof Twitter } => Boolean(link.href));
   const [copied, setCopied] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -62,26 +68,23 @@ export const Footer: React.FC<FooterProps> = ({
         { label: locale === 'ar' ? 'القوالب' : 'Templates', href: '#templates' },
         { label: locale === 'ar' ? 'الأسعار' : 'Pricing', href: '#pricing' },
         { label: locale === 'ar' ? 'اكسب رصيداً' : 'Earn Credits', href: '#referral' },
-        { label: locale === 'ar' ? 'إحصائيات المشروع' : 'Project Stats', href: '#project-stats' },
-        { label: locale === 'ar' ? 'سجل التحديثات' : 'Changelog', href: '#changelog' }
+        { label: locale === 'ar' ? 'إحصائيات المشروع' : 'Project Stats', href: '#project-stats' }
       ]
     },
     company: {
       title: t.company,
       links: [
-        { label: locale === 'ar' ? 'عن رالوا' : 'About', href: '#about' },
-        { label: locale === 'ar' ? 'المدونة' : 'Blog', href: '#blog' },
-        { label: locale === 'ar' ? 'الوظائف' : 'Careers', href: '#careers' },
-        { label: locale === 'ar' ? 'تواصل معنا' : 'Contact', href: '#contact' }
+        { label: locale === 'ar' ? 'نبذة عن رالوا' : 'About RALOA', href: '#benefits' },
+        { label: locale === 'ar' ? 'قصص المبدعين' : 'Creator Stories', href: '#testimonials' },
+        { label: locale === 'ar' ? 'تواصل معنا' : 'Contact Support', href: '#faq' }
       ]
     },
     resources: {
       title: t.resources,
       links: [
-        { label: locale === 'ar' ? 'مركز المساعدة' : 'Help Center', href: '#help' },
-        { label: locale === 'ar' ? 'أدلة الاستخدام' : 'Guides', href: '#guides' },
-        { label: locale === 'ar' ? 'مجتمع المبدعين' : 'Community', href: '#community' },
-        { label: locale === 'ar' ? 'حالة الخدمة' : 'Status', href: '#status' },
+        { label: locale === 'ar' ? 'مركز المساعدة' : 'Help Center', href: '#faq' },
+        { label: locale === 'ar' ? 'دليل الاستخدام' : 'Getting Started', href: '#how-it-works' },
+        { label: locale === 'ar' ? 'قصص المجتمع' : 'Community Stories', href: '#testimonials' },
         { label: locale === 'ar' ? 'صفحة 404 (معاينة)' : '404 Demo Page', href: '/404' }
       ]
     },
@@ -134,44 +137,22 @@ export const Footer: React.FC<FooterProps> = ({
                 : 'A fast, design-first mini-site builder for creators, freelancers and businesses.'}
             </p>
 
-            <div className="mt-6 flex items-center gap-3">
-              <a
-                href="https://x.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="RALOA on X"
-                className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center transition-colors border border-slate-200 dark:border-slate-800 shadow-2xs"
-              >
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="RALOA on Instagram"
-                className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center transition-colors border border-slate-200 dark:border-slate-800 shadow-2xs"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="RALOA on YouTube"
-                className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center transition-colors border border-slate-200 dark:border-slate-800 shadow-2xs"
-              >
-                <Youtube className="w-4 h-4" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="RALOA on LinkedIn"
-                className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center transition-colors border border-slate-200 dark:border-slate-800 shadow-2xs"
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
-            </div>
+            {socialLinks.length > 0 && (
+              <div className="mt-6 flex items-center gap-3">
+                {socialLinks.map(({ label, href, icon: Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`RALOA on ${label}`}
+                    className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center transition-colors border border-slate-200 dark:border-slate-800 shadow-2xs"
+                  >
+                    <Icon className="w-4 h-4" />
+                  </a>
+                ))}
+              </div>
+            )}
 
             {/* Quick Share / Copy URL button & Earn Credits */}
             <div className="mt-5 flex flex-wrap items-center gap-2">
@@ -318,7 +299,7 @@ export const Footer: React.FC<FooterProps> = ({
             <span>{isRtl ? 'الرياض · لندن · سان فرانسيسكو' : 'London · Riyadh · San Francisco'}</span>
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span className="text-slate-600 dark:text-slate-400 font-medium">{isRtl ? 'جميع الأنظمة تعمل' : 'All systems operational'}</span>
+              <span className="text-slate-600 dark:text-slate-400 font-medium">{isRtl ? 'نسخة معاينة' : 'Preview environment'}</span>
             </div>
           </div>
         </div>

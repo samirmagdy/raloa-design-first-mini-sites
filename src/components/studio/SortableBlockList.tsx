@@ -365,7 +365,7 @@ export const SortableBlockList: React.FC<SortableBlockListProps> = ({
           <span>
             {isRtl ? 'ترتيب المكونات والروابط' : 'Arranged Components & Links'}
           </span>
-          <span className="px-1.5 py-0.2 rounded-full bg-indigo-50 text-indigo-700 font-bold text-[10px] border border-indigo-100">
+          <span className="px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-bold text-[10px] border border-indigo-100">
             {items.length}
           </span>
         </span>

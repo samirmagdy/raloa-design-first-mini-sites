@@ -50,7 +50,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
 
   return (
     <div
-      className={`relative mx-auto w-[295px] sm:w-[320px] md:w-[340px] bg-[#0F172A] rounded-[48px] p-3 shadow-[0_28px_70px_rgba(15,23,42,0.24)] border-[6px] border-[#1E293B] select-none transition-transform duration-300 hover:scale-[1.01] raloa-phone-mockup ${className}`}
+      className={`relative mx-auto w-full max-w-[295px] sm:max-w-[320px] md:max-w-[340px] bg-[#0F172A] rounded-[48px] p-3 shadow-[0_28px_70px_rgba(15,23,42,0.24)] border-[6px] border-[#1E293B] select-none transition-transform duration-300 hover:scale-[1.01] raloa-phone-mockup ${className}`}
     >
       {/* Screen Frame */}
       <div className="relative bg-[#F8FAFC] rounded-[38px] overflow-hidden flex flex-col min-h-[580px] max-h-[640px] shadow-inner text-slate-800 raloa-phone-screen">
@@ -59,7 +59,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
         <div className="pt-3 px-6 pb-2 flex items-center justify-between text-[11px] font-semibold text-slate-900 z-20 phone-status-bar">
           <span>9:41</span>
           <div className="w-24 h-5 bg-black rounded-full flex items-center justify-center">
-            <div className="w-2 h-2 rounded-full bg-slate-800 ml-auto mr-2" />
+              <div className="w-2 h-2 rounded-full bg-slate-800 ml-auto mr-2" />
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-[10px]">5G</span>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Check, ShieldCheck, Sparkles, CreditCard, ArrowRight } from 'lucide-react';
+import { X, Check, ShieldCheck, Sparkles, ArrowRight, AlertCircle } from 'lucide-react';
 import { Locale, PricingPlan } from '../../types';
 import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 
@@ -21,6 +21,7 @@ export const PlanCheckoutModal: React.FC<PlanCheckoutModalProps> = ({
   const isRtl = locale === 'ar';
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const dialogRef = useModalAccessibility<HTMLDivElement>(true);
 
   if (!plan) return null;
@@ -28,12 +29,41 @@ export const PlanCheckoutModal: React.FC<PlanCheckoutModalProps> = ({
   const price = plan.priceMonthly === 0 ? 0 : isYearly ? plan.priceYearly : plan.priceMonthly;
   const annualTotal = (price * 12).toFixed(2);
 
-  const handleCheckout = (e: React.FormEvent) => {
+  const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSuccess(true);
-    setTimeout(() => {
+    setErrorMessage('');
+
+    if (plan.priceMonthly === 0) {
       onConfirmPlan(plan);
-    }, 1200);
+      return;
+    }
+
+    const endpoint = import.meta.env.VITE_CHECKOUT_ENDPOINT;
+    if (!endpoint) {
+      setErrorMessage(
+        isRtl
+          ? 'الدفع غير مهيأ في هذه النسخة. لم يتم تحصيل أي مبلغ.'
+          : 'Checkout is not configured for this deployment. No payment was taken.'
+      );
+      return;
+    }
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planId: plan.id, billing: isYearly ? 'yearly' : 'monthly', email: email.trim() })
+      });
+      if (!response.ok) throw new Error(`Checkout request failed: ${response.status}`);
+      setSuccess(true);
+      onConfirmPlan(plan);
+    } catch {
+      setErrorMessage(
+        isRtl
+          ? 'تعذر إتمام الدفع حالياً. لم يتم تحصيل أي مبلغ.'
+          : 'Checkout could not be completed. No payment was taken.'
+      );
+    }
   };
 
   return (
@@ -138,6 +168,13 @@ export const PlanCheckoutModal: React.FC<PlanCheckoutModalProps> = ({
                       ? 'ضمان استرداد كامل خلال ١٤ يوماً دون أي قيود.'
                       : '14-day no-questions-asked money-back guarantee.'}
                   </span>
+                </div>
+              )}
+
+              {errorMessage && (
+                <div role="alert" className="p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{errorMessage}</span>
                 </div>
               )}
 

@@ -71,7 +71,7 @@ export const BackToTop: React.FC<BackToTopProps> = ({ locale }) => {
               <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-500/10 via-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
               {/* Up arrow icon with upward nudge on hover */}
-              <ArrowUp className="w-5 h-5 sm:w-5.5 sm:h-5.5 transition-transform duration-200 group-hover:-translate-y-0.5 shrink-0" />
+              <ArrowUp className="w-5 h-5 sm:w-5 sm:h-5 transition-transform duration-200 group-hover:-translate-y-0.5 shrink-0" />
             </button>
           </Tooltip>
         </motion.div>

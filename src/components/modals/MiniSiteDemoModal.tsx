@@ -126,8 +126,8 @@ export const MiniSiteDemoModal: React.FC<MiniSiteDemoModalProps> = ({
                   </h4>
                   <p className="text-sm text-slate-600 max-w-xs mx-auto">
                     {isRtl
-                      ? `تم حجز موعدك بتاريخ ${selectedDate} الساعة ${selectedTime}. أُرسلت التفاصيل لبريدك.`
-                      : `Confirmed for ${selectedDate} at ${selectedTime}. Elena will review your brief and send a calendar invite.`}
+                      ? `هذه معاينة تجريبية لموعد بتاريخ ${selectedDate} الساعة ${selectedTime} — لا يتم إرسال دعوة تقويم.`
+                      : `Demo booking for ${selectedDate} at ${selectedTime}. No calendar invite or real appointment was created.`}
                   </p>
                   <button
                     onClick={() => setBookingConfirmed(false)}
@@ -240,7 +240,7 @@ export const MiniSiteDemoModal: React.FC<MiniSiteDemoModalProps> = ({
               {cartSuccess ? (
                 <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>{isRtl ? 'تم إضافة المنتج بنجاح إلى حقيبة الشراء!' : 'Print added to bag! Ready for instant checkout.'}</span>
+                  <span>{isRtl ? 'أضيفت المطبوعة إلى حقيبة تجريبية.' : 'Print added to a demo bag. Checkout is not connected.'}</span>
                 </div>
               ) : (
                 <button

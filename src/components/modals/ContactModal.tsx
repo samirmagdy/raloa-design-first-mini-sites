@@ -18,10 +18,10 @@ export const ContactModal: React.FC<ContactModalProps> = ({ locale, onClose }) =
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const subject = encodeURIComponent(`RALOA support request from ${name}`);
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
+    window.location.href = `mailto:support@raloa.app?subject=${subject}&body=${body}`;
     setSent(true);
-    setTimeout(() => {
-      onClose();
-    }, 2000);
   };
 
   return (
@@ -59,12 +59,12 @@ export const ContactModal: React.FC<ContactModalProps> = ({ locale, onClose }) =
                 <Check className="w-6 h-6 stroke-[3]" />
               </div>
               <h3 className="text-lg font-black text-slate-900">
-                {isRtl ? 'تم إرسال رسالتك بنجاح!' : 'Message Received!'}
+                {isRtl ? 'تم فتح مسودة البريد الإلكتروني' : 'Email draft opened'}
               </h3>
               <p className="text-xs text-slate-500">
                 {isRtl
-                  ? 'سيقوم أحد أعضاء فريقنا بالرد على بريدك خلال ساعات قليلة.'
-                  : 'Our dedicated creator support team will respond to your email shortly.'}
+                  ? 'تم فتح تطبيق البريد لديك. أرسل الرسالة لإكمال التواصل مع فريق الدعم.'
+                  : 'Your email client was opened. Send the draft to contact support.'}
               </p>
             </div>
           ) : (

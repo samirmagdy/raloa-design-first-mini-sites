@@ -41,8 +41,6 @@ export const ok = <T,>(data: T): Result<T, never> => ({ ok: true, data });
 
 export const fail = <E,>(error: E): Result<never, E> => ({ ok: false, error });
 
-export const isOk = <T, E>(result: Result<T, E>): result is { ok: true; data: T } => result.ok;
-
 export const repositoryError = (
   code: RepositoryErrorCode,
   message: LocalizedText,
@@ -66,10 +64,4 @@ export interface Paginated<T> {
   items: T[];
   nextCursor: Cursor | null;
   total: number;
-}
-
-/** Shape the mock emits and the HTTP client will receive verbatim from `/api/v1`. */
-export interface ApiEnvelope<T> {
-  data: T;
-  requestId?: string;
 }

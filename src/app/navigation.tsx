@@ -1,4 +1,4 @@
-import React, { useCallback, useSyncExternalStore } from 'react';
+import React, { useSyncExternalStore } from 'react';
 import { getCurrentRoute, navigate, subscribeToRoute, type Route } from './router';
 
 export const useRoute = (): Route =>
@@ -26,5 +26,3 @@ export const AppLink: React.FC<AppLinkProps> = ({ to, external = false, onClick,
     {children}
   </a>
 );
-
-export const useNavigate = () => useCallback((to: string) => navigate(to), []);

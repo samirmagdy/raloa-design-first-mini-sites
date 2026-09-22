@@ -154,6 +154,7 @@ export const BlockEditorWorkspace: React.FC<BlockEditorWorkspaceProps> = ({ page
     const afterIndex = selected && selected.parentId === parentId ? siblings.findIndex((block) => block.id === selected.id) + 1 : siblings.length;
     const draft = createBlock(type, page.id, afterIndex, parentId);
     const previous = clone(blocks);
+    let createdId = '';
 
     setPageBlocks(withInserted(blocks, parentId, draft, afterIndex));
     setSelectedId(draft.id);
@@ -169,11 +170,14 @@ export const BlockEditorWorkspace: React.FC<BlockEditorWorkspaceProps> = ({ page
         parentId,
         visible: true
       }),
-      (created) => setPageBlocks(mapBlock(withInserted(blocks, parentId, created, afterIndex), created.id, () => created)),
+      (created) => {
+        createdId = created.id;
+        setPageBlocks(mapBlock(withInserted(blocks, parentId, created, afterIndex), created.id, () => created));
+      },
       {
         label: tx(ui.editor.addBlock, locale),
         invert: async () => {
-          await repository.blocks.remove(page.id, draft.id);
+          if (createdId) await repository.blocks.remove(page.id, createdId);
           setPageBlocks(previous);
         }
       }
@@ -184,16 +188,20 @@ export const BlockEditorWorkspace: React.FC<BlockEditorWorkspaceProps> = ({ page
     if (!selected) return;
     const before = clone(selected);
     const optimistic = mapBlock(blocks, selected.id, (block) => ({ ...block, ...patch }));
+    // The forward write bumps the stored version, so the revert has to use the version that came back.
+    let written = before;
     setPageBlocks(optimistic);
     void write(
       () => repository.blocks.update(page.id, selected.id, patch, selected.version),
-      (updated) => setPageBlocks(mapBlock(optimistic, updated.id, () => updated)),
+      (updated) => {
+        written = updated;
+        setPageBlocks(mapBlock(optimistic, updated.id, () => updated));
+      },
       {
         label: tx(ui.editor.blockSettings, locale),
         invert: async () => {
-          const reverted = mapBlock(optimistic, before.id, () => before);
-          setPageBlocks(reverted);
-          await repository.blocks.update(page.id, before.id, revertablePatch(before, patch), before.version);
+          setPageBlocks(mapBlock(optimistic, before.id, () => before));
+          await repository.blocks.update(page.id, before.id, revertablePatch(before, patch), written.version);
         }
       }
     );
@@ -218,7 +226,12 @@ export const BlockEditorWorkspace: React.FC<BlockEditorWorkspaceProps> = ({ page
         label: tx(ui.editor.removeBlockTitle, locale),
         invert: async () => {
           setPageBlocks(previous);
-          await repository.blocks.create(page.id, stripIds(selected));
+          const restored = await repository.blocks.create(page.id, stripIds(selected));
+          if (!restored.ok) return;
+          // The repository mints the id, so the editor has to adopt it or the row points at nothing.
+          const copy = restored.data;
+          setPageBlocks(mapBlock(previous, selected.id, () => copy));
+          setSelectedId((current) => (current === selected.id ? copy.id : current));
         }
       }
     );
@@ -620,6 +633,7 @@ const SortableBlockRow: React.FC<{
     <div
       ref={setNodeRef}
       role="listitem"
+      data-block-id={block.id}
       style={{ transform: CSS.Transform.toString(transform), transition }}
       className={`flex min-h-11 items-center gap-1 rounded-control px-1 text-start text-xs font-bold transition ${
         selected ? 'bg-indigo-50 text-indigo-800 ring-1 ring-indigo-200' : 'text-slate-600 hover:bg-slate-50'

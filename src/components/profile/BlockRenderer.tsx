@@ -24,7 +24,7 @@ import type { ThemeConfig } from '../../services/contracts/theme';
 import { text } from '../../i18n/ui';
 import { FormBlockView } from './FormBlockView';
 import { MediaBlockView } from './MediaBlockView';
-import { safeBlockUrl, sanitizeRichText, isEmbedUrlAllowed } from './blockHelpers';
+import { safeBlockUrl, sanitizeRichText, isEmbedUrlAllowed, toEmbedSrc } from './blockHelpers';
 
 export interface BlockViewProps {
   block: ProfileBlock;
@@ -240,7 +240,7 @@ export const ProfileBlockView: React.FC<BlockViewProps> = ({ block, locale, them
       }
       return shell(
         <div className="overflow-hidden" style={{ borderRadius: 'var(--profile-card-radius)', boxShadow: 'var(--profile-card-shadow)' }}>
-          <iframe src={url} title={title} className="h-64 w-full border-0" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" />
+          <iframe src={toEmbedSrc(url)} title={title} className="h-64 w-full border-0" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" />
         </div>
       );
     }
@@ -450,17 +450,3 @@ export const ProfileBlockView: React.FC<BlockViewProps> = ({ block, locale, them
       );
   }
 };
-
-export const BlockList: React.FC<{ blocks: ProfileBlock[]; locale: Locale; theme: ThemeConfig; labelledBy?: string; onBlockClick?: (block: ProfileBlock) => void }> = ({
-  blocks,
-  locale,
-  theme,
-  labelledBy,
-  onBlockClick
-}) => (
-  <section className="space-y-3" aria-label={labelledBy}>
-    {blocks.map((block) => (
-      <ProfileBlockView key={block.id} block={block} locale={locale} theme={theme} onBlockClick={onBlockClick} />
-    ))}
-  </section>
-);

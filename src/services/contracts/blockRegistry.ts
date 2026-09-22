@@ -569,11 +569,3 @@ export const ALL_EMBED_HOSTS: string[] = Object.values(EMBED_HOSTS).flat();
 
 export const getBlockDefinition = (type: BlockType): BlockDefinition | undefined =>
   blockDefinitions.find((definition) => definition.key === type);
-
-export const getBlockFields = (type: BlockType): BlockFieldDefinition[] => getBlockDefinition(type)?.fields ?? [];
-
-export const blockDefinitionLabels = (): Record<BlockType, LocalizedText> =>
-  blockDefinitions.reduce<Record<string, LocalizedText>>((accumulator, definition) => {
-    accumulator[definition.key] = definition.label;
-    return accumulator;
-  }, {});

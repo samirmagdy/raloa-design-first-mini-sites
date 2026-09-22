@@ -64,14 +64,3 @@ export const themeToCssVariables = (theme: ThemeConfig): CSSProperties => {
     '--profile-weight': String(theme.typography.weight)
   } as CSSProperties;
 };
-
-/** Solid / outline / soft button treatments shared by every themed block. */
-export const themeButtonStyle = (theme: ThemeConfig): CSSProperties => {
-  if (theme.button.variant === 'outline') {
-    return { backgroundColor: 'transparent', color: theme.accent, border: `1.5px solid ${theme.accent}` };
-  }
-  if (theme.button.variant === 'soft') {
-    return { backgroundColor: `${theme.accent}1F`, color: theme.accent, border: '1.5px solid transparent' };
-  }
-  return { backgroundColor: theme.accent, color: '#FFFFFF', border: '1.5px solid transparent' };
-};

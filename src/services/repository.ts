@@ -29,6 +29,9 @@ export interface ProfilesRepository {
   get(profileId: Id): Promise<Result<PublicProfile | null>>;
   getByUsername(username: string): Promise<Result<PublicProfile | null>>;
   usage(): Promise<Result<ProfileUsage>>;
+  /** The profile the account is working on. Screens read this instead of guessing `list()[0]`. */
+  activeId(): Promise<Result<Id | null>>;
+  setActive(profileId: Id): Promise<Result<Id>>;
   checkUsername(username: string): Promise<Result<UsernameAvailability>>;
   create(input: { username: string; displayName: string; role?: LocalizedText; bio?: LocalizedText }): Promise<Result<PublicProfile>>;
   update(

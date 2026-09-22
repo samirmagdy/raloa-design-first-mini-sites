@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import type { Locale } from '../types';
 import { useRepository } from '../services/RepositoryContext';
 import { useAsyncResource } from '../services/useAsyncResource';
-import type { ProfilePage, PublicProfile } from '../services';
+import type { ProfileBlock, ProfilePage, PublicProfile, UtmParams } from '../services';
 import { LoadingState, ErrorState, EmptyState } from './ui/States';
 import { ProfileView } from './profile/ProfileView';
 import { ui, text, tx } from '../i18n/ui';
@@ -23,6 +23,21 @@ const visitorKey = (): string => {
   window.sessionStorage.setItem('raloa.visitor', created);
   return created;
 };
+
+/** Read once per document: a campaign link keeps its attribution for the whole visit. */
+const utmFromLocation = (): UtmParams | undefined => {
+  const params = new URLSearchParams(window.location.search);
+  const utm: UtmParams = {
+    source: params.get('utm_source') || undefined,
+    medium: params.get('utm_medium') || undefined,
+    campaign: params.get('utm_campaign') || undefined,
+    term: params.get('utm_term') || undefined,
+    content: params.get('utm_content') || undefined
+  };
+  return Object.values(utm).some(Boolean) ? utm : undefined;
+};
+
+const sessionUtm = utmFromLocation();
 
 /**
  * The read path: profile + its published pages in one resource, a view event recorded per visit,
@@ -72,9 +87,22 @@ export const PublicProfilePage: React.FC<PublicProfilePageProps> = ({ username, 
       pageId: activePage.id,
       type: 'view',
       visitorKey: visitorKey(),
+      utm: sessionUtm,
       referrer: typeof document === 'undefined' ? undefined : document.referrer ? new URL(document.referrer).host : undefined
     });
   }, [profile, activePage, repository]);
+
+  const recordClick = (block: ProfileBlock) => {
+    if (!profile?.published || !activePage) return;
+    void repository.analytics.record({
+      profileId: profile.id,
+      pageId: activePage.id,
+      blockId: block.id,
+      type: 'click',
+      visitorKey: visitorKey(),
+      utm: sessionUtm
+    });
+  };
 
   useEffect(() => {
     if (!profile) return;
@@ -143,7 +171,7 @@ export const PublicProfilePage: React.FC<PublicProfilePageProps> = ({ username, 
     );
   }
 
-  return <ProfileView profile={profile} page={activePage} locale={locale} pages={visiblePages} onSelectPage={setActivePageId} onReturnHome={onReturnHome} />;
+  return <ProfileView profile={profile} page={activePage} locale={locale} pages={visiblePages} onSelectPage={setActivePageId} onBlockClick={recordClick} onReturnHome={onReturnHome} />;
 };
 
 const Fullscreen: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (

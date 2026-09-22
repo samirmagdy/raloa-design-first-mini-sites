@@ -85,9 +85,3 @@ export const Tabs: React.FC<TabsProps> = ({ items, value, onChange, ariaLabel, v
   );
 };
 
-export const TabPanel: React.FC<{ id: string; active: boolean; children: React.ReactNode }> = ({ id, active, children }) =>
-  active ? (
-    <div role="tabpanel" id={`panel-${id}`} aria-labelledby={`tab-${id}`} tabIndex={0}>
-      {children}
-    </div>
-  ) : null;

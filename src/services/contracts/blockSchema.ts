@@ -159,8 +159,6 @@ export const validateBlock = (block: ProfileBlock): RepositoryFieldError[] => {
   return errors;
 };
 
-export const isBlockValid = (block: ProfileBlock): boolean => validateBlock(block).length === 0;
-
 const DEFAULT_CONFIG: Partial<Record<string, BlockConfigValue>> = {
   fit: 'cover',
   columns: 2,

@@ -45,9 +45,9 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ locale, section, onR
   const usage = useAsyncResource(() => repository.profiles.usage(), []);
   const loaded = useAsyncResource(
     async () => {
-      const list = await repository.profiles.list();
-      if (!list.ok) return list;
-      const wanted = activeProfileId ?? list.data[0]?.id ?? '';
+      const active = await repository.profiles.activeId();
+      if (!active.ok) return active;
+      const wanted = activeProfileId ?? active.data ?? '';
       return repository.profiles.get(wanted);
     },
     [activeProfileId],
@@ -57,7 +57,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ locale, section, onR
   useEffect(() => {
     if (!loaded.data) return;
     setDraft(clone(loaded.data));
-    setActiveProfileId(loaded.data.id);
     setUsernameState('idle');
   }, [loaded.data]);
 
@@ -178,7 +177,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ locale, section, onR
             <Select
               label={tx(ui.common.profile, locale)}
               value={draft.id}
-              onChange={(event) => setActiveProfileId(event.target.value)}
+              onChange={(event) => {
+                setActiveProfileId(event.target.value);
+                void repository.profiles.setActive(event.target.value);
+              }}
               options={(profiles.data ?? []).map((item) => ({ value: item.id, label: `@${item.username}` }))}
               className="sm:w-56"
             />

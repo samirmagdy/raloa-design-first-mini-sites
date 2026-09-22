@@ -175,6 +175,20 @@ const profiles: ProfilesRepository = {
     });
   },
 
+  async activeId() {
+    return respond(() => ok(database().activeProfileId));
+  },
+
+  async setActive(profileId) {
+    return respond(() => {
+      if (!profileOf(database(), profileId)) return fail(notFound('profile'));
+      mutateDatabase((db) => {
+        db.activeProfileId = profileId;
+      });
+      return ok(profileId);
+    });
+  },
+
   async checkUsername(username) {
     return respond(() => {
       const candidate = username.trim().toLowerCase();
@@ -981,14 +995,13 @@ const analytics: AnalyticsRepository = {
   },
 
   async record(event) {
-    return respond(() => {
-      mutateDatabase((db) => {
-        const entry: AnalyticsEvent = { ...event, id: uid('evt'), occurredAt: nowIso() };
-        db.events.push(entry);
-        if (db.events.length > 40_000) db.events.splice(0, db.events.length - 40_000);
-      });
-      return ok(undefined);
+    // Deliberately not routed through respond(): activating a link navigates the visitor away, and
+    // an event that waits on simulated latency is dropped by the unload. Ingestion is immediate.
+    mutateDatabase((db) => {
+      db.events.push({ ...event, id: uid('evt'), occurredAt: nowIso() });
+      if (db.events.length > 40_000) db.events.splice(0, db.events.length - 40_000);
     });
+    return ok(undefined);
   }
 };
 

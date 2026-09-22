@@ -128,15 +128,3 @@ export const ErrorState: React.FC<ErrorStateProps> = ({ title, body, onRetry, re
   </Surface>
 );
 
-/** Full-page variant used by route boundaries. */
-export const PageState: React.FC<{ title: string; body: string; action?: { label: string; onClick: () => void } }> = ({
-  title,
-  body,
-  action
-}) => (
-  <main className="flex min-h-screen items-center justify-center bg-surface-alt p-6 text-center">
-    <div className="w-full max-w-md">
-      <EmptyState title={title} body={body} action={action} />
-    </div>
-  </main>
-);

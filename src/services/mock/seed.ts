@@ -4,6 +4,7 @@ import type { TemplateItem } from '../../types';
 import type { AnalyticsEvent } from '../contracts/analytics';
 import type { ProfileBlock } from '../contracts/block';
 import type { PageRecord } from '../storage/database';
+import { SCHEMA_VERSION } from '../storage/database';
 import type { PublicProfile } from '../contracts/profile';
 import type { RaloaDatabase } from '../storage/database';
 import type { Id, IsoDateTime, LocalizedText } from '../contracts/common';
@@ -382,7 +383,7 @@ export const createSeedDatabase = (): RaloaDatabase => {
   });
 
   return {
-    schemaVersion: 2,
+    schemaVersion: SCHEMA_VERSION,
     session: null,
     profiles,
     pages,

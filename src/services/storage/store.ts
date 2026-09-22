@@ -6,6 +6,7 @@ import {
   DATABASE_KEY,
   LEGACY_REPOSITORY_KEY,
   NETWORK_KEY,
+  SCHEMA_VERSION,
   type NetworkMode,
   type PageRecord,
   type RaloaDatabase
@@ -135,7 +136,7 @@ export const readDatabase = (): RaloaDatabase => {
     if (current) {
       try {
         const parsed = JSON.parse(current) as RaloaDatabase;
-        if (parsed.schemaVersion === 2) {
+        if (parsed.schemaVersion === SCHEMA_VERSION) {
           cached = parsed;
           return cached;
         }

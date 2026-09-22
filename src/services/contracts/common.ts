@@ -29,8 +29,6 @@ export const localize = (text: LocalizedText, locale: Locale): string => {
   return text[locale] ?? text.en ?? '';
 };
 
-export const monolingual = (value: string): LocalizedString => ({ en: value, ar: value });
-
 export const nowIso = (): IsoDateTime => new Date().toISOString();
 
 export const uid = (prefix: string): Id =>

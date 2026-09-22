@@ -21,15 +21,6 @@ export interface MediaAsset {
 }
 
 /** Presigned-upload contract (M3): the client never streams bytes through the API process. */
-export interface MediaUploadIntent {
-  assetId: Id;
-  storageKey: string;
-  uploadUrl: string;
-  method: 'PUT' | 'POST';
-  expiresAt: IsoDateTime;
-  headers: Record<string, string>;
-}
-
 export interface MediaUploadRequest {
   profileId?: Id;
   filename: string;

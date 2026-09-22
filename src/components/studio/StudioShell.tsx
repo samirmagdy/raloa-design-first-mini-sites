@@ -76,7 +76,9 @@ export const StudioShell: React.FC<StudioShellProps> = ({ locale, section, onRet
     async () => {
       const list = await repository.profiles.list();
       if (!list.ok) return list;
-      const wanted = activeProfileId ?? list.data[0]?.id ?? '';
+      const active = await repository.profiles.activeId();
+      if (!active.ok) return active;
+      const wanted = activeProfileId ?? active.data ?? list.data[0]?.id ?? '';
       const profileResult = await repository.profiles.get(wanted);
       if (!profileResult.ok) return profileResult;
       if (!profileResult.data) return { ok: true as const, data: null };
@@ -92,7 +94,6 @@ export const StudioShell: React.FC<StudioShellProps> = ({ locale, section, onRet
     if (!document_.data) return;
     setProfile(clone(document_.data.profile));
     setPages(clone(document_.data.pages));
-    setActiveProfileId(document_.data.profile.id);
     setActivePageId((current) => current ?? document_.data!.pages[0]?.id ?? null);
   }, [document_.data]);
 
@@ -178,7 +179,9 @@ export const StudioShell: React.FC<StudioShellProps> = ({ locale, section, onRet
     if (!saved) toast({ title: tx(ui.common.unsaved, locale), message: isRtl ? 'لم يُحفظ تعديلك بعد.' : 'Your edits are not saved yet.', tone: 'error' });
     setActiveProfileId(profileId);
     setActivePageId(null);
-    document_.reload();
+    // The loader keys off `activeProfileId`, so setting it above already refetches; this only makes
+    // the choice stick for plan usage and for the next screen that opens the studio.
+    void repository.profiles.setActive(profileId);
   };
 
   if (status === 'loading') return <LoadingState label={tx(ui.common.loading, locale)} variant="card" />;

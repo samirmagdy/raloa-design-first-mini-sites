@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { RaloaMark } from './brand/RaloaLogo';
+import { RaloaMark, RaloaWordmark } from './brand/RaloaLogo';
 import { Locale } from '../types';
 import { Theme } from '../utils/theme';
 
@@ -84,15 +84,13 @@ export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
                 }}
                 className="relative z-10 drop-shadow-[0_8px_24px_rgba(99,102,241,0.25)]"
               >
-                <RaloaMark size={58} theme={isDark ? 'primary' : 'primary'} />
+                <RaloaMark size={58} theme={isDark ? 'monochrome-white' : 'monochrome-black'} />
               </motion.div>
             </div>
 
             {/* Branded Wordmark & Skeleton Title */}
             <div className="text-center space-y-2">
-              <span className="text-[20px] font-black tracking-[-0.03em] bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 dark:from-white dark:via-indigo-200 dark:to-white bg-clip-text text-transparent">
-                RALOA
-              </span>
+              <RaloaWordmark height={20} theme={isDark ? 'monochrome-white' : 'monochrome-black'} className="mx-auto" />
 
               {/* Shimmer Progress Track */}
               <div className="w-48 sm:w-56 h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mx-auto mt-4">

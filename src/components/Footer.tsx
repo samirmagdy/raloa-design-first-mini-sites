@@ -2,12 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Instagram, Youtube, Linkedin, Twitter, Keyboard, BarChart3, Link2, Check, Share2, Gift } from 'lucide-react';
 import { RaloaLogo } from './brand/RaloaLogo';
 import { Locale } from '../types';
+import { Theme } from '../utils/theme';
 import { dictionary } from '../data/content';
 import { Tooltip } from './Tooltip';
 import { copyTextToClipboard } from '../utils/clipboard';
 
 interface FooterProps {
   locale: Locale;
+  theme?: Theme;
   onOpenPrivacyTerms?: (type: string) => void;
   onOpenShortcuts?: () => void;
   onOpenStats?: () => void;
@@ -17,6 +19,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({
   locale,
+  theme = 'light',
   onOpenPrivacyTerms,
   onOpenShortcuts,
   onOpenStats,
@@ -130,7 +133,7 @@ export const Footer: React.FC<FooterProps> = ({
           
           {/* Brand Info (4 cols) */}
           <div className="col-span-2 md:col-span-4 flex flex-col items-start">
-            <RaloaLogo isRtl={isRtl} size="md" />
+            <RaloaLogo isRtl={isRtl} size="md" theme={theme === 'dark' ? 'on-dark' : 'primary'} />
             <p className="text-[13px] text-slate-500 dark:text-slate-400 mt-4 max-w-xs leading-relaxed">
               {isRtl
                 ? 'المنصة الرائدة لبناء المواقع المصغرة الأنيقة لصناع المحتوى والمستقلين وأصحاب الأعمال.'

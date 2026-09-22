@@ -600,6 +600,7 @@ export default function App() {
       <FadeInSection id="footer-reveal">
         <Footer
           locale={locale}
+          theme={theme}
           onOpenPrivacyTerms={(title) => setLegalTitle(title)}
           onOpenShortcuts={() => setShortcutsModalOpen(true)}
           onOpenStats={() => setProjectStatsOpen(true)}

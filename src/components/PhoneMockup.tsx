@@ -190,7 +190,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
 
           {/* Bottom badge */}
           <div className="mt-3 flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-500 tracking-wider">
-            <RaloaMark size={14} />
+            <RaloaMark size={14} theme="monochrome-black" />
             <span>raloa.app/@{template.name.toLowerCase()}</span>
           </div>
         </div>

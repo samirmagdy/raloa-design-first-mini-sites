@@ -64,7 +64,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
           <div className="flex items-center gap-2.5">
-            <RaloaMark size={24} />
+            <RaloaMark size={24} theme="monochrome-black" />
             <span id="auth-modal-title" className="text-xs font-bold text-slate-800">
               {mode === 'signin'
                 ? isRtl ? 'تسجيل الدخول إلى رالوا' : 'Sign in to RALOA'

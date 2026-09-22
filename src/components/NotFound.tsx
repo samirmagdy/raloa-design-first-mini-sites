@@ -69,7 +69,7 @@ export const NotFound: React.FC<NotFoundProps> = ({
           className="focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-xl"
           aria-label={isRtl ? 'الرئيسية RALOA' : 'RALOA Home'}
         >
-          <RaloaLogo isRtl={isRtl} size="md" />
+          <RaloaLogo isRtl={isRtl} size="md" theme={theme === 'dark' ? 'on-dark' : 'primary'} />
         </button>
 
         <div className="flex items-center gap-2 sm:gap-3">

@@ -180,7 +180,7 @@ export const SocialPreviewGenerator: React.FC<SocialPreviewGeneratorProps> = ({
       <div className="relative z-10 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center p-1">
-            <RaloaMark size={20} />
+            <RaloaMark size={20} theme="monochrome-white" />
           </div>
           <span className="text-[11px] font-black tracking-wider text-white uppercase font-sans">
             RALOA

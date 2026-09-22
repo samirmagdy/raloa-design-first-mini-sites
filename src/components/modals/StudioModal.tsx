@@ -188,7 +188,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
         {/* Studio Top Navigation Bar */}
         <div className="h-16 px-6 border-b border-slate-200 flex items-center justify-between bg-white shrink-0 print:border-b-2 print:border-slate-800">
           <div className="flex items-center gap-3">
-            <RaloaMark size={34} />
+            <RaloaMark size={34} theme="monochrome-black" />
             <div>
               <h2 id="studio-modal-title" className="text-sm font-extrabold text-[#0F172A] leading-tight flex items-center gap-1.5">
                 <span>RALOA Studio</span>

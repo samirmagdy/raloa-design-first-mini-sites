@@ -321,6 +321,22 @@ section[id] {
   }
 }
 
+/* Preview dialogs have a bounded viewport. Let the phone screen shrink with
+   that viewport instead of clipping its outer frame at shorter heights. */
+@media (min-width: 768px) {
+  .raloa-modal-depth-stage .raloa-phone-screen {
+    min-height: min(580px, calc(92vh - 94px));
+    max-height: min(640px, calc(92vh - 94px));
+  }
+}
+
+@media (max-width: 767px) {
+  .raloa-modal-depth-stage .raloa-phone-screen {
+    min-height: 420px;
+    max-height: 420px;
+  }
+}
+
 /* ==========================================================================
    ENTER ANIMATIONS
    Dialogs, toasts and disclosures in this app are written with

@@ -89,7 +89,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative w-full max-w-4xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col md:flex-row max-h-[92vh] transition-colors duration-200">
+      <div className="relative w-full max-w-5xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col md:flex-row max-h-[92vh] transition-colors duration-200">
         
         {/* Floating Success Notification Toast */}
         {copied && (
@@ -104,14 +104,14 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
         )}
 
         {/* Left Side: Mobile Phone Device Preview */}
-        <div className="raloa-modal-depth-stage md:w-1/2 bg-gradient-to-br from-slate-100 via-indigo-50/40 to-slate-200 dark:from-slate-950 dark:via-indigo-950/30 dark:to-slate-900 p-6 flex flex-col items-center justify-center overflow-y-auto">
-          <div className="w-full max-w-[280px] sm:max-w-[300px]">
+        <div className="raloa-modal-depth-stage h-[430px] shrink-0 md:h-auto md:w-[44%] md:shrink bg-gradient-to-br from-slate-100 via-indigo-50/40 to-slate-200 dark:from-slate-950 dark:via-indigo-950/30 dark:to-slate-900 p-5 sm:h-[500px] sm:p-6 md:p-5 flex flex-col items-center justify-center overflow-hidden md:overflow-y-auto">
+          <div className="w-full max-w-[220px] sm:max-w-[270px]">
             <PhoneMockup template={template} isRtl={isRtl} />
           </div>
         </div>
 
         {/* Right Side: Template Details & Action */}
-        <div className="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
+        <div className="md:w-[56%] p-6 sm:p-8 flex flex-col justify-start overflow-y-auto bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
           <div>
             {/* Top Modal Header */}
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
@@ -220,7 +220,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
           </div>
 
           {/* Action Buttons Section with 'Copy Template URL' button */}
-          <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-3">
+          <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-3">
             {/* Primary 'Use this template' CTA */}
             <button
               type="button"
@@ -237,7 +237,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
               id="copy-template-url-btn"
               type="button"
               onClick={handleCopyUrl}
-              className="w-full sm:w-auto px-5 py-3.5 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-2xs group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              className="w-full sm:w-auto shrink-0 whitespace-nowrap px-4 py-3.5 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-2xs group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               aria-label={isRtl ? 'نسخ رابط القالب' : 'Copy Template URL'}
             >
               {copied ? (
@@ -250,7 +250,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
               ) : (
                 <>
                   <Copy className="w-4 h-4 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform" />
-                  <span>{isRtl ? 'نسخ رابط القالب' : 'Copy Template URL'}</span>
+                  <span>{isRtl ? 'نسخ الرابط' : 'Copy URL'}</span>
                 </>
               )}
             </button>
@@ -259,7 +259,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="w-full sm:w-auto px-4 py-3.5 rounded-full border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              className="w-full sm:w-auto min-w-[68px] px-4 py-3.5 rounded-full border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             >
               {isRtl ? 'إغلاق' : 'Close'}
             </button>

@@ -449,7 +449,7 @@ export default function App() {
     <div className="min-h-screen bg-white dark:bg-slate-950 text-ink dark:text-slate-100 transition-colors duration-200 font-sans">
       
       {/* Custom Spring-Based Trailing Cursor */}
-      <CustomCursor theme={theme} />
+      {!previewTemplate && <CustomCursor theme={theme} />}
 
       {/* Global Branded Loading Overlay */}
 

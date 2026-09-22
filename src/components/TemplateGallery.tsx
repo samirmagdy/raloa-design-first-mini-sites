@@ -137,6 +137,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
               }}
               onMouseEnter={(e) => handleMouseEnter(template, e)}
               onMouseLeave={handleMouseLeave}
+              onFocus={(e) => handleMouseEnter(template, e as unknown as React.MouseEvent<HTMLDivElement>)}
+              onBlur={handleMouseLeave}
               className="w-[180px] sm:w-[200px] shrink-0 snap-start bg-white dark:bg-slate-900 rounded-[22px] p-3 border border-slate-200 dark:border-slate-800 shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:shadow-[0_16px_36px_rgba(15,23,42,0.12)] dark:hover:shadow-[0_16px_36px_rgba(0,0,0,0.6)] hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col"
               role="button"
               tabIndex={0}

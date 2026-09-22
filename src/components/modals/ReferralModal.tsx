@@ -36,26 +36,7 @@ interface MockInvite {
   status: 'completed' | 'pending';
 }
 
-const DEFAULT_INVITES: MockInvite[] = [
-  {
-    id: '1',
-    name: 'Sarah Jenkins',
-    handle: '@sarah.design',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
-    date: '2 days ago',
-    dateAr: 'منذ يومين',
-    status: 'completed'
-  },
-  {
-    id: '2',
-    name: 'Tariq Al-Mansour',
-    handle: '@tariq.media',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    date: 'Yesterday',
-    dateAr: 'أمس',
-    status: 'completed'
-  }
-];
+const DEFAULT_INVITES: MockInvite[] = [];
 
 const TARGET_INVITES = 3;
 const REFERRAL_CODE = 'CREATOR-PRO99';
@@ -124,14 +105,31 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
     }
   };
 
-  const handleSimulateInvite = (e: React.FormEvent) => {
+  const handleSimulateInvite = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!friendEmail.trim() || isGoalReached) return;
+
+    const endpoint = import.meta.env.VITE_REFERRAL_ENDPOINT;
+    if (!endpoint) {
+      setFeedbackMsg(
+        isRtl
+          ? 'نظام الإحالة غير مهيأ في هذه النسخة.'
+          : 'Referral tracking is not configured for this deployment.'
+      );
+      return;
+    }
 
     setIsSimulating(true);
     setFeedbackMsg('');
 
-    setTimeout(() => {
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: friendEmail.trim().toLowerCase(), referralCode: REFERRAL_CODE })
+      });
+      if (!response.ok) throw new Error(`Referral request failed: ${response.status}`);
+
       const username = friendEmail.split('@')[0] || 'friend';
       const newInvite: MockInvite = {
         id: Date.now().toString(),
@@ -163,7 +161,13 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
           // ignore
         }
       }
-    }, 600);
+    } catch {
+      setFeedbackMsg(
+        isRtl ? 'تعذر تسجيل الإحالة حالياً.' : 'We could not register this referral. Please try again.'
+      );
+    } finally {
+      setIsSimulating(false);
+    }
   };
 
   const handleResetProgress = () => {
@@ -360,7 +364,7 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
           </div>
         </div>
 
-        {/* Simulate Friend Signup (Interactive Demo Tool) */}
+        {/* Send a real referral invite when the referral service is configured */}
         {!isGoalReached && (
           <form
             onSubmit={handleSimulateInvite}
@@ -368,10 +372,10 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
           >
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-indigo-950 dark:text-indigo-200">
-                {isRtl ? 'محاكاة دعوة صديق (تجربة تفاعلية)' : 'Simulate a Friend Invite (Interactive Demo)'}
+                {isRtl ? 'إرسال دعوة إحالة' : 'Send a Referral Invite'}
               </span>
               <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-medium">
-                {isRtl ? 'اختبر شريط التقدم' : 'Test progress bar'}
+                {isRtl ? 'تتطلب خدمة إحالة مهيأة' : 'Requires a configured referral service'}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -389,7 +393,7 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
                 className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0 transition-colors"
               >
                 <Send className="w-3.5 h-3.5" />
-                <span>{isSimulating ? (isRtl ? 'جارٍ...' : 'Adding...') : (isRtl ? 'محاكاة' : 'Simulate')}</span>
+                <span>{isSimulating ? (isRtl ? 'جارٍ...' : 'Sending...') : (isRtl ? 'إرسال' : 'Send Invite')}</span>
               </button>
             </div>
             {feedbackMsg && (
@@ -429,7 +433,7 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
               onClick={handleResetProgress}
               className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-[11px] cursor-pointer underline transition-colors"
             >
-              {isRtl ? 'إعادة ضبط المحاكاة' : 'Reset demo'}
+              {isRtl ? 'مسح السجل المحلي' : 'Clear local history'}
             </button>
             <button
               type="button"

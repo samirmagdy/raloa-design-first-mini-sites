@@ -356,7 +356,7 @@ export const SocialProofMarquee: React.FC<SocialProofMarqueeProps> = ({
         {activeTab === 'sites' && (
           <div id="published-sites-panel" role="tabpanel" aria-labelledby="published-sites-tab" className="flex flex-col gap-3.5">
             {/* Top Row - Forward Direction */}
-            <div className="animate-marquee-track hover:[animation-play-state:paused] flex items-center gap-4 py-1">
+            <div className="animate-marquee-track hover:[animation-play-state:paused] focus-within:[animation-play-state:paused] flex items-center gap-4 py-1">
               {doubledSites.map((site, idx) => (
                 <div
                   key={`${site.id}-${idx}`}
@@ -417,7 +417,7 @@ export const SocialProofMarquee: React.FC<SocialProofMarqueeProps> = ({
             </div>
 
             {/* Bottom Row - Reverse Direction for Dynamic Kinetic Effect */}
-            <div className="animate-marquee-track-reverse hover:[animation-play-state:paused] flex items-center gap-4 py-1">
+            <div className="animate-marquee-track-reverse hover:[animation-play-state:paused] focus-within:[animation-play-state:paused] flex items-center gap-4 py-1">
               {[...doubledSites].reverse().map((site, idx) => (
                 <div
                   key={`rev-${site.id}-${idx}`}

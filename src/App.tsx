@@ -43,6 +43,7 @@ import { PublicProfilePage } from './components/PublicProfilePage';
 import { AppRoute } from './app/router';
 import { StudioShell } from './components/studio/StudioShell';
 import { AnalyticsPage } from './components/AnalyticsPage';
+import { SettingsPage } from './components/SettingsPage';
 
 export default function App() {
   const [locale, setLocale] = useState<Locale>(() => getInitialLocale());
@@ -76,6 +77,10 @@ export default function App() {
         ? locale === 'ar'
           ? 'التحليلات — RALOA'
           : 'Analytics — RALOA'
+        : appRoute.name === 'settings'
+        ? locale === 'ar'
+          ? 'الإعدادات — RALOA'
+          : 'Settings — RALOA'
         : currentRoute === '404'
         ? locale === 'ar'
           ? '٤٠٤: الصفحة غير موجودة — RALOA'
@@ -90,6 +95,10 @@ export default function App() {
         ? locale === 'ar'
           ? 'تابع أداء صفحاتك العامة على RALOA.'
           : 'Track the performance of your public RALOA pages.'
+        : appRoute.name === 'settings'
+        ? locale === 'ar'
+          ? 'حدّث إعدادات صفحاتك العامة على RALOA.'
+          : 'Update your public RALOA page settings.'
         : currentRoute === '404'
         ? locale === 'ar'
           ? 'عذراً، الصفحة المطلوبة غير متوفرة. عد إلى الصفحة الرئيسية لرالوا.'
@@ -482,6 +491,8 @@ export default function App() {
         <StudioShell locale={locale} onReturnHome={handleReturnHome} />
       ) : appRoute.name === 'analytics' ? (
         <AnalyticsPage locale={locale} onReturnHome={handleReturnHome} />
+      ) : appRoute.name === 'settings' ? (
+        <SettingsPage locale={locale} onReturnHome={handleReturnHome} />
       ) : currentRoute === '404' ? (
         <NotFound
           locale={locale}

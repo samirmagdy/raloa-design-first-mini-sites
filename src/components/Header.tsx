@@ -118,7 +118,7 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center gap-2 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg"
             aria-label="RALOA Home"
           >
-            <RaloaLogo isRtl={isRtl} theme={isDark ? 'on-dark' : 'primary'} showTagline />
+            <RaloaLogo isRtl={isRtl} theme={isDark ? 'on-dark' : 'primary'} />
           </a>
 
           {/* Center Navigation Links (Desktop) */}

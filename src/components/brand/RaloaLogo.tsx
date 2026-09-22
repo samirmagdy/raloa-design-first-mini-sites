@@ -10,7 +10,6 @@ interface RaloaLogoProps {
   theme?: LogoTheme;
   size?: LogoSize;
   isRtl?: boolean;
-  showTagline?: boolean;
   width?: number;
   height?: number;
 }
@@ -83,7 +82,6 @@ export const RaloaLogo: React.FC<RaloaLogoProps> = ({
   theme = 'primary',
   size = 'md',
   isRtl = false,
-  showTagline = false,
   width,
   height
 }) => {
@@ -105,12 +103,12 @@ export const RaloaLogo: React.FC<RaloaLogoProps> = ({
 
   return (
     <div
-      className={`inline-flex items-center select-none overflow-visible ${showTagline ? 'flex-col justify-center' : ''} ${className}`}
+      className={`inline-flex items-center select-none overflow-visible ${className}`}
       role="banner"
       dir={isRtl ? 'rtl' : 'ltr'}
       style={{ width: width || current.width, height: height || current.height }}
     >
-      <div className={showTagline ? 'h-[78%] w-full' : 'h-full w-full'}>
+      <div className="h-full w-full">
         <BrandPicture
           sources={horizontalSources[theme]}
           alt="RALOA"
@@ -118,13 +116,6 @@ export const RaloaLogo: React.FC<RaloaLogoProps> = ({
           className="h-full w-full object-cover object-center"
         />
       </div>
-      {showTagline && (
-        <span className={`text-[9px] leading-none font-semibold tracking-tight ${
-          theme === 'on-dark' || theme === 'monochrome-white' ? 'text-slate-300' : 'text-slate-500'
-        }`}>
-          {isRtl ? 'مواقع مصغرة تركز على التصميم' : 'Design-first mini-sites'}
-        </span>
-      )}
     </div>
   );
 };

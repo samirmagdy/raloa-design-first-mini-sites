@@ -133,7 +133,7 @@ export const Footer: React.FC<FooterProps> = ({
           
           {/* Brand Info (4 cols) */}
           <div className="col-span-2 md:col-span-4 flex flex-col items-start">
-            <RaloaLogo isRtl={isRtl} size="md" theme={theme === 'dark' ? 'on-dark' : 'primary'} showTagline />
+            <RaloaLogo isRtl={isRtl} size="md" theme={theme === 'dark' ? 'on-dark' : 'primary'} />
             <p className="text-[13px] text-slate-500 dark:text-slate-400 mt-4 max-w-xs leading-relaxed">
               {isRtl
                 ? 'المنصة الرائدة لبناء المواقع المصغرة الأنيقة لصناع المحتوى والمستقلين وأصحاب الأعمال.'

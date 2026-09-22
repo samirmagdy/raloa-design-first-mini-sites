@@ -32,7 +32,8 @@ export const LegalModal: React.FC<LegalModalProps> = ({ title, locale, onClose }
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors"
+            className="w-11 h-11 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
+            aria-label={isRtl ? 'إغلاق' : 'Close'}
           >
             <X className="w-4 h-4" />
           </button>

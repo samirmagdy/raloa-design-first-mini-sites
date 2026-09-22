@@ -193,7 +193,7 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
           type="button"
           onClick={onClose}
           aria-label={isRtl ? 'إغلاق' : 'Close'}
-          className="absolute top-5 right-5 rtl:right-auto rtl:left-5 p-2 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          className="absolute top-5 right-5 rtl:right-auto rtl:left-5 w-11 h-11 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer flex items-center justify-center"
         >
           <X className="w-5 h-5" />
         </button>

@@ -153,7 +153,7 @@ export const Hero: React.FC<HeroProps> = ({
                 }`}
               >
                 {/* Prefix & Input */}
-                <div className="flex items-center flex-1 px-3 py-2 sm:py-0">
+                <div className="flex items-center flex-1 min-h-11 px-3 py-2 sm:py-0">
                   <span className="text-[15px] font-semibold text-slate-400 dark:text-slate-500 select-none ltr:mr-1 rtl:ml-1">
                     {t.prefix}
                   </span>
@@ -162,7 +162,7 @@ export const Hero: React.FC<HeroProps> = ({
                     value={username}
                     onChange={handleInputChange}
                     placeholder={t.placeholder}
-                    className="w-full bg-transparent text-[16px] font-semibold text-[#0F172A] dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
+                    className="w-full min-h-11 bg-transparent text-[16px] font-semibold text-[#0F172A] dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
                     aria-label="Choose your username handle"
                     autoComplete="off"
                     spellCheck="false"

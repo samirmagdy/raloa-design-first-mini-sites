@@ -61,7 +61,7 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({ locale, onContactSup
               <span>{t.stillQuestions} </span>
               <button
                 onClick={onContactSupport}
-                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-bold underline underline-offset-4 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+                className="inline-flex min-h-11 items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-bold underline underline-offset-4 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
               >
                 {t.contactSupport}
               </button>

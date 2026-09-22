@@ -2,17 +2,10 @@ import React, { useState } from 'react';
 import {
   CheckCircle2,
   ChevronRight,
-  Instagram,
-  Linkedin,
   Mail,
-  Youtube,
   Twitter,
-  Calendar,
   Sparkles,
-  ShoppingBag,
-  ExternalLink,
-  Camera,
-  X
+  Github
 } from 'lucide-react';
 import { TemplateItem } from '../types';
 import { RaloaMark } from './brand/RaloaLogo';
@@ -88,9 +81,9 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
           </div>
 
           {/* Name & Titles */}
-          <h3 className="font-extrabold text-[18px] text-slate-900 tracking-tight leading-tight">
+          <p className="font-extrabold text-[18px] text-slate-900 tracking-tight leading-tight">
             {template.name}
-          </h3>
+          </p>
           <p className="text-[12px] font-medium text-slate-500 mt-1">
             {template.role}
           </p>
@@ -112,14 +105,14 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
                 spotify: 'Spotify'
               };
               const icons: Record<TemplateItem['socials'][number]['platform'], React.ReactNode> = {
-                instagram: <Instagram className="w-4 h-4" />,
+                instagram: <img src="/brand/trusted/instagram.svg" alt="" aria-hidden="true" className="w-4 h-4" />,
                 x: <Twitter className="w-3.5 h-3.5" />,
-                youtube: <Youtube className="w-4 h-4" />,
-                linkedin: <Linkedin className="w-3.5 h-3.5" />,
+                youtube: <img src="/brand/trusted/youtube.svg" alt="" aria-hidden="true" className="w-4 h-4" />,
+                linkedin: <img src="/brand/trusted/linkedin.svg" alt="" aria-hidden="true" className="w-4 h-4" />,
                 email: <Mail className="w-3.5 h-3.5" />,
-                tiktok: <Sparkles className="w-3.5 h-3.5" />,
-                github: <ExternalLink className="w-3.5 h-3.5" />,
-                spotify: <ExternalLink className="w-3.5 h-3.5" />
+                tiktok: <img src="/brand/trusted/tiktok.svg" alt="" aria-hidden="true" className="w-4 h-4" />,
+                github: <Github className="w-3.5 h-3.5" />,
+                spotify: <img src="/brand/trusted/spotify.svg" alt="" aria-hidden="true" className="w-4 h-4" />
               };
               return (
                 <a
@@ -128,7 +121,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
                   target={social.url.startsWith('mailto:') ? undefined : '_blank'}
                   rel={social.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                   aria-label={labels[social.platform]}
-                  className="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-700 flex items-center justify-center hover:bg-slate-50 transition-colors shadow-2xs"
+                  className="w-11 h-11 rounded-full bg-white border border-slate-200 text-slate-700 flex items-center justify-center hover:bg-slate-50 transition-colors shadow-2xs"
                 >
                   {icons[social.platform]}
                 </a>

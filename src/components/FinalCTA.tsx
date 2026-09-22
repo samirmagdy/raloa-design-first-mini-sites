@@ -83,7 +83,7 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ locale, onOpenStudio }) => {
                   error ? 'ring-3 ring-rose-400' : 'focus-within:ring-3 focus-within:ring-white/80'
                 }`}
               >
-                <div className="flex items-center flex-1 px-3 py-2 sm:py-0">
+                <div className="flex items-center flex-1 min-h-11 px-3 py-2 sm:py-0">
                   <span className="text-[14px] font-semibold text-slate-400 dark:text-slate-500 select-none ltr:mr-1 rtl:ml-1">
                     raloa.app/@
                   </span>
@@ -92,7 +92,7 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ locale, onOpenStudio }) => {
                     value={username}
                     onChange={handleInputChange}
                     placeholder={locale === 'ar' ? 'اسمك' : 'yourname'}
-                    className="w-full bg-transparent text-[15px] font-semibold text-[#0F172A] dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
+                    className="w-full min-h-11 bg-transparent text-[15px] font-semibold text-[#0F172A] dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
                     aria-label="Username for final CTA"
                   />
                 </div>

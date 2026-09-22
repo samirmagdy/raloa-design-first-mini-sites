@@ -65,8 +65,8 @@ export const MiniSiteDemoModal: React.FC<MiniSiteDemoModalProps> = ({
             </button>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
-              aria-label="Close modal"
+              className="w-11 h-11 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
+              aria-label={isRtl ? 'إغلاق النافذة' : 'Close modal'}
             >
               <X className="w-4 h-4" />
             </button>

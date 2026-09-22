@@ -590,6 +590,7 @@ export default function App() {
           locale={locale}
           theme={theme}
           onOpenPrivacyTerms={(title) => setLegalTitle(title)}
+          onOpenContact={() => setContactOpen(true)}
           onOpenShortcuts={() => setShortcutsModalOpen(true)}
           onOpenStats={() => setProjectStatsOpen(true)}
           onOpenReferral={() => setReferralModalOpen(true)}

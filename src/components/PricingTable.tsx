@@ -33,7 +33,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
           <div className="inline-flex items-center gap-1 p-1 bg-white dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 shadow-2xs mt-8">
             <button
               onClick={() => setIsYearly(false)}
-              className={`px-5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
+              className={`min-h-11 px-5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 !isYearly
                   ? 'bg-[#0F172A] dark:bg-white text-white dark:text-slate-900 shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -43,7 +43,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
             </button>
             <button
               onClick={() => setIsYearly(true)}
-              className={`inline-flex items-center gap-1.5 px-5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
+              className={`inline-flex min-h-11 items-center gap-1.5 px-5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 isYearly
                   ? 'bg-[#0F172A] dark:bg-white text-white dark:text-slate-900 shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'

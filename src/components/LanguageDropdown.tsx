@@ -129,7 +129,7 @@ export const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-label={isRtl ? 'تغيير اللغة' : 'Change language'}
-          className={`group inline-flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 text-[13px] font-semibold cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 ${
+          className={`group inline-flex min-h-11 items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 text-[13px] font-semibold cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 ${
             isOpen
               ? 'bg-slate-100/90 dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white shadow-xs'
               : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border-slate-200/90 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-2xs hover:border-slate-300 dark:hover:border-slate-600'

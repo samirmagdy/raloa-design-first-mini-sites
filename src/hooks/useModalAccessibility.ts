@@ -3,6 +3,9 @@ import { useEffect, useRef } from 'react';
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+let modalScrollLocks = 0;
+let bodyOverflowBeforeModal = '';
+
 export function useModalAccessibility<T extends HTMLElement>(isOpen: boolean) {
   const dialogRef = useRef<T>(null);
 
@@ -11,6 +14,11 @@ export function useModalAccessibility<T extends HTMLElement>(isOpen: boolean) {
 
     const dialog = dialogRef.current;
     const previousFocus = document.activeElement as HTMLElement | null;
+    if (modalScrollLocks === 0) {
+      bodyOverflowBeforeModal = document.body.style.overflow;
+    }
+    modalScrollLocks += 1;
+    document.body.style.overflow = 'hidden';
     const getFocusable = () => Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
     getFocusable()[0]?.focus();
 
@@ -32,6 +40,11 @@ export function useModalAccessibility<T extends HTMLElement>(isOpen: boolean) {
     dialog.addEventListener('keydown', handleKeyDown);
     return () => {
       dialog.removeEventListener('keydown', handleKeyDown);
+      modalScrollLocks = Math.max(0, modalScrollLocks - 1);
+      if (modalScrollLocks === 0) {
+        document.body.style.overflow = bodyOverflowBeforeModal;
+        bodyOverflowBeforeModal = '';
+      }
       previousFocus?.focus();
     };
   }, [isOpen]);

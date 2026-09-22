@@ -64,7 +64,7 @@ export const FeatureGrid: React.FC<FeatureGridProps> = ({ locale, onExploreFeatu
 
           <button
             onClick={onExploreFeatures}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 text-slate-800 dark:text-slate-200 text-[14px] font-bold shadow-2xs hover:shadow-sm transition-all whitespace-nowrap self-start md:self-auto cursor-pointer"
+            className="inline-flex min-h-11 items-center gap-2 px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 text-slate-800 dark:text-slate-200 text-[14px] font-bold shadow-2xs hover:shadow-sm transition-all whitespace-nowrap self-start md:self-auto cursor-pointer"
           >
             <span>{t.seeAll}</span>
             <ArrowRight className="w-4 h-4 rtl:rotate-180" />

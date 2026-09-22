@@ -159,7 +159,7 @@ export const EasterEggOverlay: React.FC<EasterEggOverlayProps> = ({
             <button
               onClick={onClose}
               aria-label={isRtl ? 'إغلاق المفاجأة' : 'Dismiss Easter Egg'}
-              className="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer border border-slate-700/60 z-20"
+              className="absolute top-4 right-4 w-11 h-11 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer border border-slate-700/60 z-20"
             >
               <X className="w-4 h-4" />
             </button>

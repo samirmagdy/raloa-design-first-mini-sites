@@ -128,7 +128,7 @@ export const Header: React.FC<HeaderProps> = ({
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="whitespace-nowrap text-[14px] font-medium text-slate-600 dark:text-slate-300 hover:text-[#0F172A] dark:hover:text-white transition-colors relative py-1"
+                className="inline-flex min-h-11 items-center whitespace-nowrap text-[14px] font-medium text-slate-600 dark:text-slate-300 hover:text-[#0F172A] dark:hover:text-white transition-colors relative px-1"
               >
                 {link.label}
               </a>
@@ -149,7 +149,7 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Sign in Button */}
               <button
                 onClick={() => onOpenAuth('signin')}
-                className="inline-flex whitespace-nowrap text-[14px] font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-3 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                className="inline-flex min-h-11 items-center whitespace-nowrap text-[14px] font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-3 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
               >
                 {t.signIn}
               </button>
@@ -157,7 +157,7 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Primary CTA Button */}
               <button
                 onClick={() => onOpenStudio()}
-                className="inline-flex items-center gap-2 whitespace-nowrap px-5 py-2.5 rounded-full bg-[#0F172A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-[14px] font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 cursor-pointer"
+                className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap px-5 py-2.5 rounded-full bg-[#0F172A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-[14px] font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 cursor-pointer"
               >
                 <span>{t.createPage}</span>
                 <ArrowRight className="w-4 h-4 rtl:rotate-180" />
@@ -167,7 +167,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Mobile Menu Trigger */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 cursor-pointer"
+              className="lg:hidden w-11 h-11 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 cursor-pointer flex items-center justify-center"
               aria-label="Open navigation menu"
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-navigation-drawer"
@@ -201,8 +201,8 @@ export const Header: React.FC<HeaderProps> = ({
                 <RaloaLogo isRtl={isRtl} size="sm" theme={isDark ? 'on-dark' : 'primary'} />
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
-                  aria-label="Close menu"
+                  className="w-11 h-11 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer flex items-center justify-center"
+                  aria-label={isRtl ? 'إغلاق القائمة' : 'Close menu'}
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -254,6 +254,7 @@ export const Header: React.FC<HeaderProps> = ({
                   currentLocale={locale}
                   onSelectLocale={(newLocale) => {
                     handleSelectLanguage(newLocale);
+                    setMobileMenuOpen(false);
                   }}
                   variant="mobile"
                 />

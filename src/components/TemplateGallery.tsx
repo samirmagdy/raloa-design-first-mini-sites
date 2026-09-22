@@ -98,14 +98,14 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
             <div className="hidden sm:flex items-center gap-1.5 ltr:mr-2 rtl:ml-2">
               <button
                 onClick={() => scroll(isRtl ? 'right' : 'left')}
-                className="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-2xs"
+                className="w-11 h-11 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-2xs cursor-pointer"
                 aria-label="Scroll templates left"
               >
                 <ChevronLeft className="w-5 h-5 rtl:rotate-180" />
               </button>
               <button
                 onClick={() => scroll(isRtl ? 'left' : 'right')}
-                className="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-2xs"
+                className="w-11 h-11 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-2xs cursor-pointer"
                 aria-label="Scroll templates right"
               >
                 <ChevronRight className="w-5 h-5 rtl:rotate-180" />
@@ -114,7 +114,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
 
             <button
               onClick={onBrowseAll}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 text-slate-800 dark:text-slate-200 text-[14px] font-bold shadow-2xs hover:shadow-sm transition-all whitespace-nowrap"
+              className="inline-flex min-h-11 items-center gap-2 px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 text-slate-800 dark:text-slate-200 text-[14px] font-bold shadow-2xs hover:shadow-sm transition-all whitespace-nowrap cursor-pointer"
             >
               <span>{t.browseAll}</span>
               <ArrowRight className="w-4 h-4 rtl:rotate-180" />

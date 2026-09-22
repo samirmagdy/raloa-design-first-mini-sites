@@ -11,6 +11,7 @@ interface FooterProps {
   locale: Locale;
   theme?: Theme;
   onOpenPrivacyTerms?: (type: string) => void;
+  onOpenContact?: () => void;
   onOpenShortcuts?: () => void;
   onOpenStats?: () => void;
   onOpenReferral?: () => void;
@@ -21,6 +22,7 @@ export const Footer: React.FC<FooterProps> = ({
   locale,
   theme = 'light',
   onOpenPrivacyTerms,
+  onOpenContact,
   onOpenShortcuts,
   onOpenStats,
   onOpenReferral,
@@ -70,25 +72,25 @@ export const Footer: React.FC<FooterProps> = ({
         { label: locale === 'ar' ? 'المميزات' : 'Features', href: '#features' },
         { label: locale === 'ar' ? 'القوالب' : 'Templates', href: '#templates' },
         { label: locale === 'ar' ? 'الأسعار' : 'Pricing', href: '#pricing' },
-        { label: locale === 'ar' ? 'سجل التحديثات' : 'Changelog', href: '#features' }
+        { label: locale === 'ar' ? 'سجل التحديثات' : 'Changelog', href: '/changelog' }
       ]
     },
     company: {
       title: t.company,
       links: [
         { label: locale === 'ar' ? 'نبذة عن رالوا' : 'About RALOA', href: '#benefits' },
-        { label: locale === 'ar' ? 'المدونة' : 'Blog', href: '#testimonials' },
-        { label: locale === 'ar' ? 'الوظائف' : 'Careers', href: '#faq' },
+        { label: locale === 'ar' ? 'المدونة' : 'Blog', href: '/blog' },
+        { label: locale === 'ar' ? 'الوظائف' : 'Careers', href: '/careers' },
         { label: locale === 'ar' ? 'تواصل معنا' : 'Contact', href: '#faq' }
       ]
     },
     resources: {
       title: t.resources,
       links: [
-        { label: locale === 'ar' ? 'مركز المساعدة' : 'Help Center', href: '#faq' },
+        { label: locale === 'ar' ? 'مركز المساعدة' : 'Help Center', href: '/help' },
         { label: locale === 'ar' ? 'الأدلة' : 'Guides', href: '#how-it-works' },
-        { label: locale === 'ar' ? 'المجتمع' : 'Community', href: '#testimonials' },
-        { label: locale === 'ar' ? 'حالة الخدمة' : 'Status', href: '#footer-reveal' }
+        { label: locale === 'ar' ? 'المجتمع' : 'Community', href: '/community' },
+        { label: locale === 'ar' ? 'حالة الخدمة' : 'Status', href: '/status' }
       ]
     },
     legal: {
@@ -102,9 +104,19 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   const handleLinkClick = (e: React.MouseEvent, label: string, href: string) => {
-    if (label === 'Privacy' || label === 'Terms' || label === 'Cookie Policy' || label === 'سياسة الخصوصية' || label === 'الشروط والأحكام') {
+    if (
+      label === 'Privacy' ||
+      label === 'Terms' ||
+      label === 'Cookie Policy' ||
+      label === 'سياسة الخصوصية' ||
+      label === 'الشروط والأحكام' ||
+      label === 'سياسة ملفات تعريف الارتباط'
+    ) {
       e.preventDefault();
       if (onOpenPrivacyTerms) onOpenPrivacyTerms(label);
+    } else if (label === 'Contact' || label === 'تواصل معنا') {
+      e.preventDefault();
+      onOpenContact?.();
     } else if (label === 'Project Stats' || label === 'إحصائيات المشروع') {
       e.preventDefault();
       if (onOpenStats) onOpenStats();
@@ -114,6 +126,9 @@ export const Footer: React.FC<FooterProps> = ({
     } else if (href === '/404' || href === '#404') {
       e.preventDefault();
       if (onTriggerNotFound) onTriggerNotFound('/404');
+    } else if (href.startsWith('/')) {
+      e.preventDefault();
+      onTriggerNotFound?.(href);
     } else if (href.startsWith('#')) {
       const targetId = href.replace('#', '');
       const el = document.getElementById(targetId);
@@ -141,17 +156,12 @@ export const Footer: React.FC<FooterProps> = ({
             </p>
 
             <div className="mt-6 flex items-center gap-3">
-              {socialLinks.map(({ label, href, icon: Icon }) => {
+              {socialLinks.filter(({ href }) => Boolean(href)).map(({ label, href, icon: Icon }) => {
                 const content = <Icon className="w-4 h-4" />;
-                const className = "w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center transition-colors border border-slate-200 dark:border-slate-800 shadow-2xs";
-                return href ? (
-                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={`RALOA on ${label}`} className={className}>
+                return (
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={`RALOA on ${label}`} className="w-11 h-11 rounded-full bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center transition-colors border border-slate-200 dark:border-slate-800 shadow-2xs">
                     {content}
                   </a>
-                ) : (
-                  <span key={label} role="img" aria-label={`${label} link not configured`} className={`${className} opacity-80`}>
-                    {content}
-                  </span>
                 );
               })}
             </div>
@@ -162,7 +172,7 @@ export const Footer: React.FC<FooterProps> = ({
                 <button
                   type="button"
                   onClick={onOpenReferral}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-bold bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/70 dark:hover:bg-indigo-900/80 text-indigo-700 dark:text-indigo-300 border border-indigo-200/90 dark:border-indigo-800/90 transition-all cursor-pointer shadow-2xs group"
+                  className="inline-flex min-h-11 items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-bold bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/70 dark:hover:bg-indigo-900/80 text-indigo-700 dark:text-indigo-300 border border-indigo-200/90 dark:border-indigo-800/90 transition-all cursor-pointer shadow-2xs group"
                   title={isRtl ? 'اكسب رصيداً - برنامج الإحالة' : 'Earn Credits - Referral Program'}
                   aria-label={isRtl ? 'اكسب رصيداً' : 'Earn Credits'}
                 >
@@ -175,7 +185,7 @@ export const Footer: React.FC<FooterProps> = ({
                 type="button"
                 id="share-raloa-button"
                 onClick={handleShareRaloa}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-bold bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 transition-all cursor-pointer shadow-2xs group"
+                className="inline-flex min-h-11 items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-bold bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 transition-all cursor-pointer shadow-2xs group"
                 title={isRtl ? 'مشاركة RALOA (نسخ الرابط)' : 'Share RALOA (Copy link)'}
                 aria-label={isRtl ? 'مشاركة RALOA' : 'Share RALOA'}
               >
@@ -209,7 +219,7 @@ export const Footer: React.FC<FooterProps> = ({
                       <a
                         href={link.href}
                         onClick={(e) => handleLinkClick(e, link.label, link.href)}
-                        className="text-[13px] text-slate-500 dark:text-slate-400 hover:text-[#0F172A] dark:hover:text-white transition-colors"
+                        className="inline-flex min-h-11 items-center text-[13px] text-slate-500 dark:text-slate-400 hover:text-[#0F172A] dark:hover:text-white transition-colors"
                       >
                         {link.label}
                       </a>
@@ -230,7 +240,7 @@ export const Footer: React.FC<FooterProps> = ({
               type="button"
               id="share-raloa-bottom-button"
               onClick={handleShareRaloa}
-              className="flex items-center gap-1.5 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer group"
+              className="inline-flex min-h-11 items-center gap-1.5 px-2 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer group"
               title={isRtl ? 'مشاركة RALOA (نسخ الرابط)' : 'Share RALOA (Copy link)'}
               aria-label={isRtl ? 'مشاركة RALOA' : 'Share RALOA'}
             >
@@ -252,7 +262,7 @@ export const Footer: React.FC<FooterProps> = ({
               <button
                 type="button"
                 onClick={onOpenReferral}
-                className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-semibold transition-colors cursor-pointer group"
+                className="inline-flex min-h-11 items-center gap-1.5 px-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-semibold transition-colors cursor-pointer group"
                 title={isRtl ? 'اكسب رصيداً - برنامج الإحالة' : 'Earn Credits - Referral Program'}
                 aria-label={isRtl ? 'اكسب رصيداً' : 'Earn Credits'}
               >
@@ -269,7 +279,7 @@ export const Footer: React.FC<FooterProps> = ({
                 <button
                   type="button"
                   onClick={onOpenStats}
-                  className="flex items-center gap-1.5 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer group"
+                  className="inline-flex min-h-11 items-center gap-1.5 px-2 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer group"
                   aria-label={isRtl ? 'عرض إحصائيات المشروع' : 'View Project Stats'}
                 >
                   <BarChart3 className="w-3.5 h-3.5 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors" />
@@ -287,7 +297,7 @@ export const Footer: React.FC<FooterProps> = ({
                 <button
                   type="button"
                   onClick={onOpenShortcuts}
-                  className="flex items-center gap-1.5 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer group"
+                  className="inline-flex min-h-11 items-center gap-1.5 px-2 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer group"
                   aria-label={isRtl ? 'عرض اختصارات لوحة المفاتيح' : 'Show Keyboard Shortcuts'}
                 >
                   <Keyboard className="w-3.5 h-3.5 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors" />

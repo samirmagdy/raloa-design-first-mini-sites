@@ -149,8 +149,8 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-colors cursor-pointer"
-                  aria-label="Close preview"
+                  className="w-11 h-11 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-colors cursor-pointer"
+                  aria-label={isRtl ? 'إغلاق المعاينة' : 'Close preview'}
                 >
                   <X className="w-4 h-4" />
                 </button>

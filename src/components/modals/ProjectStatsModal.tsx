@@ -177,7 +177,7 @@ export const ProjectStatsModal: React.FC<ProjectStatsModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              className="w-11 h-11 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer flex items-center justify-center"
               aria-label={isRtl ? 'إغلاق' : 'Close'}
             >
               <X className="w-5 h-5" />

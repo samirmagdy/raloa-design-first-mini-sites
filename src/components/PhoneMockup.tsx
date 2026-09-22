@@ -71,12 +71,12 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
           </div>
           
           {/* Avatar with verified badge */}
-          <div className="relative -mt-7 mb-3 z-10">
+          <div className="relative mt-1 mb-3 z-10">
             <div className="w-20 h-20 rounded-full p-1 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-md">
               <img
                 src={template.avatar}
                 alt={template.name}
-                className="w-full h-full object-cover rounded-full bg-slate-100"
+                className="w-full h-full object-cover object-[center_20%] rounded-full bg-slate-100"
                 loading="eager"
               />
             </div>

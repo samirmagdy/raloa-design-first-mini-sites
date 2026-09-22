@@ -13,7 +13,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ locale, onSeeMoreSto
   const t = dictionary[locale].testimonialsSection;
 
   return (
-    <section id="testimonials" className="py-20 md:py-28 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 transition-colors duration-200">
+    <section id="testimonials" className="py-14 sm:py-18 md:py-28 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 transition-colors duration-200">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}

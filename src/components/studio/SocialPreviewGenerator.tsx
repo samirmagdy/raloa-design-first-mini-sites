@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { Locale } from '../../types';
 import { RaloaMark } from '../brand/RaloaLogo';
+import { copyTextToClipboard } from '../../utils/clipboard';
 
 export type SocialPlatform = 'twitter' | 'linkedin' | 'imessage';
 export type OgTheme = 'gradient' | 'slate' | 'sunset' | 'emerald';
@@ -140,16 +141,18 @@ export const SocialPreviewGenerator: React.FC<SocialPreviewGeneratorProps> = ({
 <meta name="twitter:description" content="${ogDesc}" />
 <meta name="twitter:image" content="https://raloa.app/api/og?user=${username}&theme=${ogTheme}" />`;
 
-  const handleCopySnippet = () => {
-    navigator.clipboard.writeText(metaTagsSnippet);
-    setCopiedSnippet(true);
-    setTimeout(() => setCopiedSnippet(false), 2200);
+  const handleCopySnippet = async () => {
+    if (await copyTextToClipboard(metaTagsSnippet)) {
+      setCopiedSnippet(true);
+      setTimeout(() => setCopiedSnippet(false), 2200);
+    }
   };
 
-  const handleCopyUrl = () => {
-    navigator.clipboard.writeText(currentUrl);
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2000);
+  const handleCopyUrl = async () => {
+    if (await copyTextToClipboard(currentUrl)) {
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2000);
+    }
   };
 
   // 1200x630 proportion OpenGraph Card Banner

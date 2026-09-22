@@ -32,11 +32,11 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
   interactive = true,
   onOpenAction
 }) => {
-  const [activeTab, setActiveTab] = useState<'links' | 'gallery'>('links');
   const [clickedItem, setClickedItem] = useState<string | null>(null);
 
   const handleLinkClick = (link: typeof template.sampleLinks[0], e: React.MouseEvent) => {
     e.preventDefault();
+    if (!interactive) return;
     setClickedItem(link.id);
     setTimeout(() => setClickedItem(null), 350);
 
@@ -100,49 +100,40 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
 
           {/* Social Icons Strip */}
           <div className="flex items-center justify-center gap-2 mt-3.5 mb-4">
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-700 flex items-center justify-center hover:bg-slate-50 transition-colors shadow-2xs"
-            >
-              <Instagram className="w-4 h-4" />
-            </a>
-            <a
-              href="https://x.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Twitter X"
-              className="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-700 flex items-center justify-center hover:bg-slate-50 transition-colors shadow-2xs"
-            >
-              <Twitter className="w-3.5 h-3.5" />
-            </a>
-            <a
-              href="https://youtube.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="YouTube"
-              className="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-700 flex items-center justify-center hover:bg-slate-50 transition-colors shadow-2xs"
-            >
-              <Youtube className="w-4 h-4" />
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-700 flex items-center justify-center hover:bg-slate-50 transition-colors shadow-2xs"
-            >
-              <Linkedin className="w-3.5 h-3.5" />
-            </a>
-            <a
-              href="mailto:contact@raloa.app"
-              aria-label="Email"
-              className="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-700 flex items-center justify-center hover:bg-slate-50 transition-colors shadow-2xs"
-            >
-              <Mail className="w-3.5 h-3.5" />
-            </a>
+            {template.socials.map((social) => {
+              const labels: Record<TemplateItem['socials'][number]['platform'], string> = {
+                instagram: 'Instagram',
+                x: 'Twitter X',
+                youtube: 'YouTube',
+                linkedin: 'LinkedIn',
+                email: 'Email',
+                tiktok: 'TikTok',
+                github: 'GitHub',
+                spotify: 'Spotify'
+              };
+              const icons: Record<TemplateItem['socials'][number]['platform'], React.ReactNode> = {
+                instagram: <Instagram className="w-4 h-4" />,
+                x: <Twitter className="w-3.5 h-3.5" />,
+                youtube: <Youtube className="w-4 h-4" />,
+                linkedin: <Linkedin className="w-3.5 h-3.5" />,
+                email: <Mail className="w-3.5 h-3.5" />,
+                tiktok: <Sparkles className="w-3.5 h-3.5" />,
+                github: <ExternalLink className="w-3.5 h-3.5" />,
+                spotify: <ExternalLink className="w-3.5 h-3.5" />
+              };
+              return (
+                <a
+                  key={`${social.platform}-${social.url}`}
+                  href={social.url}
+                  target={social.url.startsWith('mailto:') ? undefined : '_blank'}
+                  rel={social.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+                  aria-label={labels[social.platform]}
+                  className="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-700 flex items-center justify-center hover:bg-slate-50 transition-colors shadow-2xs"
+                >
+                  {icons[social.platform]}
+                </a>
+              );
+            })}
           </div>
 
           {/* Mini-site interactive links */}

@@ -4,6 +4,7 @@ import { RaloaLogo } from './brand/RaloaLogo';
 import { Locale } from '../types';
 import { dictionary } from '../data/content';
 import { Tooltip } from './Tooltip';
+import { copyTextToClipboard } from '../utils/clipboard';
 
 interface FooterProps {
   locale: Locale;
@@ -37,20 +38,8 @@ export const Footer: React.FC<FooterProps> = ({
   }, []);
 
   const handleShareRaloa = async () => {
-    try {
-      const url = typeof window !== 'undefined' ? window.location.href : 'https://raloa.app';
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(url);
-      } else {
-        const textArea = document.createElement('textarea');
-        textArea.value = url;
-        textArea.style.position = 'fixed';
-        textArea.style.opacity = '0';
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-      }
+    const url = typeof window !== 'undefined' ? window.location.href : 'https://raloa.app';
+    if (await copyTextToClipboard(url)) {
       setCopied(true);
       setShowToast(true);
 
@@ -62,8 +51,6 @@ export const Footer: React.FC<FooterProps> = ({
         setCopied(false);
         setShowToast(false);
       }, 2600);
-    } catch (err) {
-      console.error('Failed to copy URL to clipboard:', err);
     }
   };
 

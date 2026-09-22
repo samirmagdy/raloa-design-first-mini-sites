@@ -16,8 +16,8 @@ export const MiniSiteDemoModal: React.FC<MiniSiteDemoModalProps> = ({
   onStartOwnPage
 }) => {
   const isRtl = locale === 'ar';
-  const [selectedDate, setSelectedDate] = useState('2024-10-15');
-  const [selectedTime, setSelectedTime] = useState('14:00');
+  const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [selectedTime, setSelectedTime] = useState('02:00 PM');
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [cartSuccess, setCartSuccess] = useState(false);
 
@@ -28,6 +28,7 @@ export const MiniSiteDemoModal: React.FC<MiniSiteDemoModalProps> = ({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 raloa-minisite-modal-container"
       role="dialog"
       aria-modal="true"
+      aria-labelledby="mini-site-demo-title"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -40,7 +41,7 @@ export const MiniSiteDemoModal: React.FC<MiniSiteDemoModalProps> = ({
               ER
             </div>
             <div>
-              <h3 className="font-bold text-[15px] text-slate-900 leading-tight">
+              <h3 id="mini-site-demo-title" className="font-bold text-[15px] text-slate-900 leading-tight">
                 {type === 'portfolio' && (isRtl ? 'معرض الأعمال — إيلينا روستوفا' : 'Portfolio — Elena Rostova')}
                 {type === 'booking' && (isRtl ? 'حجز جلسة استشارية أو تصوير' : 'Book a Session — Elena Rostova')}
                 {type === 'shop' && (isRtl ? 'متجر المطبوعات الفنية' : 'Shop Limited Edition Prints')}

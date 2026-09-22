@@ -36,6 +36,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
+      aria-labelledby="auth-modal-title"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -46,7 +47,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
           <div className="flex items-center gap-2.5">
             <RaloaMark size={24} />
-            <span className="text-xs font-bold text-slate-800">
+            <span id="auth-modal-title" className="text-xs font-bold text-slate-800">
               {mode === 'signin'
                 ? isRtl ? 'تسجيل الدخول إلى رالوا' : 'Sign in to RALOA'
                 : isRtl ? 'إنشاء حساب جديد' : 'Create your RALOA account'}

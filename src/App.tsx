@@ -209,11 +209,28 @@ export default function App() {
     const handleLocationChange = () => {
       const path = window.location.pathname;
       const hash = window.location.hash;
+      const params = new URLSearchParams(window.location.search);
+      const templateParam = params.get('template') || params.get('preview');
+      const matchedTemplate = templateParam
+        ? templatesData.find(
+            (t) =>
+              t.id.toLowerCase() === templateParam.toLowerCase() ||
+              t.name.toLowerCase() === templateParam.toLowerCase()
+          )
+        : hash.startsWith('#template-')
+          ? templatesData.find((t) => {
+              const value = hash.replace('#template-', '').toLowerCase();
+              return t.id.toLowerCase() === value || t.name.toLowerCase() === value;
+            })
+          : null;
+
+      setPreviewTemplate(matchedTemplate || null);
       if (hash === '#404' || (path !== '/' && path !== '' && path !== '/index.html')) {
         setCurrentRoute('404');
         setAttemptedPath(path !== '/' && path !== '' ? path : hash);
       } else {
         setCurrentRoute('home');
+        setAttemptedPath('');
       }
     };
 
@@ -292,12 +309,11 @@ export default function App() {
   const handleClosePreviewTemplate = () => {
     setPreviewTemplate(null);
     const params = new URLSearchParams(window.location.search);
-    if (params.has('template') || params.has('preview')) {
-      params.delete('template');
-      params.delete('preview');
-      const newQuery = params.toString() ? `?${params.toString()}` : '';
-      window.history.pushState(null, '', `${window.location.pathname}${newQuery}`);
-    }
+    params.delete('template');
+    params.delete('preview');
+    const newQuery = params.toString() ? `?${params.toString()}` : '';
+    const newHash = window.location.hash.startsWith('#template-') ? '' : window.location.hash;
+    window.history.pushState(null, '', `${window.location.pathname}${newQuery}${newHash}`);
   };
 
   const handleUseTemplateFromPreview = (template: TemplateItem) => {
@@ -323,6 +339,8 @@ export default function App() {
     authModal.open ||
     selectedPlanState ||
     contactOpen ||
+    projectStatsOpen ||
+    referralModalOpen ||
     previewTemplate ||
     studioOpen
   );
@@ -356,6 +374,14 @@ export default function App() {
     }
     if (contactOpen) {
       setContactOpen(false);
+      return;
+    }
+    if (projectStatsOpen) {
+      setProjectStatsOpen(false);
+      return;
+    }
+    if (referralModalOpen) {
+      setReferralModalOpen(false);
       return;
     }
     if (previewTemplate) {

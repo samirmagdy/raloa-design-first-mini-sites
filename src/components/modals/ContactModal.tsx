@@ -27,6 +27,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ locale, onClose }) =
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
+      aria-labelledby="contact-modal-title"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -36,7 +37,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ locale, onClose }) =
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
           <div className="flex items-center gap-2">
             <MessageSquare className="w-4 h-4 text-indigo-600" />
-            <span className="text-xs font-bold text-slate-800">
+            <span id="contact-modal-title" className="text-xs font-bold text-slate-800">
               {isRtl ? 'تواصل مع فريق دعم رالوا' : 'Contact RALOA Support'}
             </span>
           </div>

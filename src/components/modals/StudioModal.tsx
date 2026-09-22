@@ -24,6 +24,7 @@ import { PhoneMockup } from '../PhoneMockup';
 import { RaloaMark } from '../brand/RaloaLogo';
 import { fireSiteLaunchConfetti } from '../../utils/confetti';
 import { SocialPreviewGenerator } from '../studio/SocialPreviewGenerator';
+import { copyTextToClipboard } from '../../utils/clipboard';
 
 interface StudioModalProps {
   initialUsername?: string;
@@ -117,11 +118,12 @@ export const StudioModal: React.FC<StudioModalProps> = ({
     setLinks(links.filter((l) => l.id !== id));
   };
 
-  const handleCopyLink = () => {
+  const handleCopyLink = async () => {
     const url = `https://raloa.app/@${username}`;
-    navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (await copyTextToClipboard(url)) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   // Preview template constructed from user state
@@ -657,18 +659,16 @@ export const StudioModal: React.FC<StudioModalProps> = ({
                     <span>{showQr ? (isRtl ? 'إخفاء رمز QR' : 'Hide QR') : (isRtl ? 'عرض رمز QR' : 'View QR Code')}</span>
                   </button>
 
-                  <a
-                    href={`#live-demo`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleCopyLink();
-                      alert(isRtl ? `تم نسخ الرابط raloa.app/@${username}` : `Link raloa.app/@${username} copied to clipboard!`);
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.open(`https://raloa.app/@${encodeURIComponent(username)}`, '_blank', 'noopener,noreferrer');
                     }}
                     className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors flex items-center gap-2"
                   >
                     <ExternalLink className="w-4 h-4 text-slate-600" />
                     <span>{isRtl ? 'فتح في علامة تبويب جديدة' : 'Open in New Tab'}</span>
-                  </a>
+                  </button>
                 </div>
 
                 {showQr && (

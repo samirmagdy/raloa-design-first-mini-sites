@@ -60,6 +60,8 @@ export interface ThemeConfig {
   backgroundImage?: string;
   backgroundVideo?: string;
   overlay?: { opacity: number; blur: number };
+  customCss?: string;
+  branding?: { showLogo: boolean; showFooter: boolean };
   button: {
     radius: 'none' | 'sm' | 'md' | 'full';
     variant: 'solid' | 'outline' | 'soft';
@@ -101,4 +103,3 @@ export interface RaloaRepository {
   saveProfile(profile: PublicProfile): Promise<RepositoryResult<PublicProfile>>;
   getAnalytics(username: string): Promise<RepositoryResult<AnalyticsSnapshot>>;
 }
-

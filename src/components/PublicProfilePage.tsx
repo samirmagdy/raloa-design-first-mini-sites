@@ -15,6 +15,7 @@ import {
 import { Locale } from '../types';
 import { mockRepository } from '../services/mockRepository';
 import { ProfileBlock, PublicProfile } from '../services/repository';
+import { ThemeProvider } from '../theme/ThemeProvider';
 
 interface PublicProfilePageProps {
   username: string;
@@ -189,17 +190,24 @@ export const PublicProfilePage: React.FC<PublicProfilePageProps> = ({ username, 
   const accent = profile.theme.accent;
 
   return (
-    <main
-      dir={isRtl ? 'rtl' : 'ltr'}
-      className="min-h-screen px-4 py-8 text-slate-900 sm:px-6 sm:py-12"
-      style={{
-        backgroundColor: profile.theme.background,
-        color: profile.theme.text,
-        backgroundImage: profile.theme.backgroundImage ? `url(${profile.theme.backgroundImage})` : undefined
-      }}
-    >
+    <ThemeProvider initialTheme={profile.theme} storageKey={`raloa_theme_${profile.username}`}>
+      <main
+        dir={isRtl ? 'rtl' : 'ltr'}
+        className="relative min-h-screen overflow-hidden px-4 py-8 text-slate-900 sm:px-6 sm:py-12"
+        style={{
+          backgroundColor: 'var(--profile-background)',
+          color: 'var(--profile-text)',
+          backgroundImage: profile.theme.backgroundImage ? `url(${profile.theme.backgroundImage})` : undefined
+        }}
+      >
+        {profile.theme.backgroundVideo && (
+          <video className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-30" src={profile.theme.backgroundVideo} autoPlay muted loop playsInline aria-hidden="true" />
+        )}
+        {profile.theme.overlay && (
+          <div className="pointer-events-none absolute inset-0 bg-slate-950" style={{ opacity: profile.theme.overlay.opacity, backdropFilter: `blur(${profile.theme.overlay.blur}px)` }} aria-hidden="true" />
+        )}
       <div className="mx-auto w-full max-w-xl">
-        <div className="rounded-[2rem] border border-white/80 bg-white/75 p-5 shadow-[0_24px_70px_rgba(15,23,42,0.12)] backdrop-blur-xl sm:p-8">
+        <div className="relative rounded-[2rem] border border-white/80 p-5 shadow-[0_24px_70px_rgba(15,23,42,0.12)] backdrop-blur-xl sm:p-8" style={{ backgroundColor: 'var(--profile-card)' }}>
           <header className="text-center">
             <div className="relative mx-auto h-24 w-24">
               {avatarFailed ? (
@@ -271,7 +279,7 @@ export const PublicProfilePage: React.FC<PublicProfilePageProps> = ({ username, 
           </a>
         </footer>
       </div>
-    </main>
+      </main>
+    </ThemeProvider>
   );
 };
-

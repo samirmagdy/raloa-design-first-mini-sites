@@ -87,4 +87,5 @@ export interface MiniSiteUserConfig {
   }[];
   verified: boolean;
   published: boolean;
+  theme?: import('./services/repository').ThemeConfig;
 }

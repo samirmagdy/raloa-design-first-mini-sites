@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Check, ShieldCheck, Sparkles, CreditCard, ArrowRight } from 'lucide-react';
 import { Locale, PricingPlan } from '../../types';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 
 interface PlanCheckoutModalProps {
   plan: PricingPlan | null;
@@ -17,12 +18,15 @@ export const PlanCheckoutModal: React.FC<PlanCheckoutModalProps> = ({
   onClose,
   onConfirmPlan
 }) => {
-  if (!plan) return null;
   const isRtl = locale === 'ar';
-  const price = plan.priceMonthly === 0 ? 0 : isYearly ? plan.priceYearly : plan.priceMonthly;
-  const annualTotal = (price * 12).toFixed(2);
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
+  const dialogRef = useModalAccessibility<HTMLDivElement>(true);
+
+  if (!plan) return null;
+
+  const price = plan.priceMonthly === 0 ? 0 : isYearly ? plan.priceYearly : plan.priceMonthly;
+  const annualTotal = (price * 12).toFixed(2);
 
   const handleCheckout = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +39,7 @@ export const PlanCheckoutModal: React.FC<PlanCheckoutModalProps> = ({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200"
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="plan-checkout-modal-title"

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Send, Check, MessageSquare } from 'lucide-react';
 import { Locale } from '../../types';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 
 interface ContactModalProps {
   locale: Locale;
@@ -13,6 +14,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ locale, onClose }) =
   const [message, setMessage] = useState('');
   const [sent, setSent] = useState(false);
   const isRtl = locale === 'ar';
+  const dialogRef = useModalAccessibility<HTMLDivElement>(true);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +27,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ locale, onClose }) =
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200"
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="contact-modal-title"

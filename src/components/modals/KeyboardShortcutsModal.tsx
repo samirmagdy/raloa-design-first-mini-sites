@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Keyboard, Sparkles } from 'lucide-react';
 import { Locale } from '../../types';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 
 interface KeyboardShortcutsModalProps {
   isOpen: boolean;
@@ -15,9 +16,10 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
   onClose,
   onTriggerEasterEgg
 }) => {
-  if (!isOpen) return null;
-
   const isRtl = locale === 'ar';
+  const dialogRef = useModalAccessibility<HTMLDivElement>(isOpen);
+
+  if (!isOpen) return null;
 
   const shortcuts = [
     {
@@ -53,6 +55,7 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-150"
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="shortcuts-dialog-title"

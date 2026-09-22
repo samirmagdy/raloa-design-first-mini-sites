@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { Locale, TemplateItem, PricingPlan } from './types';
 import { templatesData, pricingPlans } from './data/content';
 import { Header } from './components/Header';
@@ -20,17 +20,17 @@ import { FadeInSection } from './components/FadeInSection';
 import { NotFound } from './components/NotFound';
 
 // Interactive Modals
-import { StudioModal } from './components/modals/StudioModal';
-import { TemplatePreviewModal } from './components/modals/TemplatePreviewModal';
-import { PlanCheckoutModal } from './components/modals/PlanCheckoutModal';
-import { MiniSiteDemoModal } from './components/modals/MiniSiteDemoModal';
-import { AuthModal } from './components/modals/AuthModal';
-import { ContactModal } from './components/modals/ContactModal';
-import { LegalModal } from './components/modals/LegalModal';
-import { KeyboardShortcutsModal } from './components/modals/KeyboardShortcutsModal';
-import { ProjectStatsModal } from './components/modals/ProjectStatsModal';
-import { ReferralModal } from './components/modals/ReferralModal';
-import { EasterEggOverlay } from './components/EasterEggOverlay';
+const StudioModal = lazy(() => import('./components/modals/StudioModal').then((module) => ({ default: module.StudioModal })));
+const TemplatePreviewModal = lazy(() => import('./components/modals/TemplatePreviewModal').then((module) => ({ default: module.TemplatePreviewModal })));
+const PlanCheckoutModal = lazy(() => import('./components/modals/PlanCheckoutModal').then((module) => ({ default: module.PlanCheckoutModal })));
+const MiniSiteDemoModal = lazy(() => import('./components/modals/MiniSiteDemoModal').then((module) => ({ default: module.MiniSiteDemoModal })));
+const AuthModal = lazy(() => import('./components/modals/AuthModal').then((module) => ({ default: module.AuthModal })));
+const ContactModal = lazy(() => import('./components/modals/ContactModal').then((module) => ({ default: module.ContactModal })));
+const LegalModal = lazy(() => import('./components/modals/LegalModal').then((module) => ({ default: module.LegalModal })));
+const KeyboardShortcutsModal = lazy(() => import('./components/modals/KeyboardShortcutsModal').then((module) => ({ default: module.KeyboardShortcutsModal })));
+const ProjectStatsModal = lazy(() => import('./components/modals/ProjectStatsModal').then((module) => ({ default: module.ProjectStatsModal })));
+const ReferralModal = lazy(() => import('./components/modals/ReferralModal').then((module) => ({ default: module.ReferralModal })));
+const EasterEggOverlay = lazy(() => import('./components/EasterEggOverlay').then((module) => ({ default: module.EasterEggOverlay })));
 import { LoadingOverlay } from './components/LoadingOverlay';
 import { CustomCursor } from './components/CustomCursor';
 import { getInitialLocale, persistLocale } from './utils/locale';
@@ -626,13 +626,14 @@ export default function App() {
 
       {/* --- REAL INTERACTIVE MODALS (0% FAKE IMPLEMENTATION) --- */}
 
-      {/* Project Analytics & Stats Modal (Recharts) */}
-      <ProjectStatsModal
-        isOpen={projectStatsOpen}
-        locale={locale}
-        onClose={() => setProjectStatsOpen(false)}
-        onOpenStudio={() => handleOpenStudio()}
-      />
+      <Suspense fallback={null}>
+        {/* Project Analytics & Stats Modal (Recharts) */}
+        <ProjectStatsModal
+          isOpen={projectStatsOpen}
+          locale={locale}
+          onClose={() => setProjectStatsOpen(false)}
+          onOpenStudio={() => handleOpenStudio()}
+        />
 
       {/* Keyboard Shortcuts Reference Modal */}
       <KeyboardShortcutsModal
@@ -643,15 +644,14 @@ export default function App() {
       />
 
       {/* Live Studio Mini-Site Builder */}
-      {studioOpen && (
-        <StudioModal
-          initialUsername={studioUsername}
-          initialTemplate={studioTemplate}
-          locale={locale}
-          onClose={() => setStudioOpen(false)}
-        />
-      )}
-
+        {studioOpen && (
+          <StudioModal
+            initialUsername={studioUsername}
+            initialTemplate={studioTemplate}
+            locale={locale}
+            onClose={() => setStudioOpen(false)}
+          />
+        )}
       {/* Template Preview Details Modal */}
       {previewTemplate && (
         <TemplatePreviewModal
@@ -735,6 +735,7 @@ export default function App() {
           resetEasterEgg();
         }}
       />
+      </Suspense>
 
     </div>
   );

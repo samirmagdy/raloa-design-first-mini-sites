@@ -16,6 +16,7 @@ import {
 import { Locale } from '../types';
 import { fireSiteLaunchConfetti } from '../utils/confetti';
 import { playCelebratoryFanfare } from '../utils/audio';
+import { useModalAccessibility } from '../hooks/useModalAccessibility';
 
 interface EasterEggOverlayProps {
   isOpen: boolean;
@@ -32,6 +33,7 @@ export const EasterEggOverlay: React.FC<EasterEggOverlayProps> = ({
 }) => {
   const isRtl = locale === 'ar';
   const [copied, setCopied] = useState(false);
+  const dialogRef = useModalAccessibility<HTMLDivElement>(isOpen);
 
   // Trigger initial fireworks & celebratory fanfare sound
   useEffect(() => {
@@ -94,6 +96,7 @@ export const EasterEggOverlay: React.FC<EasterEggOverlayProps> = ({
       {isOpen && (
         <motion.div
           id="easter-egg-celebration-overlay"
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="easter-egg-title"

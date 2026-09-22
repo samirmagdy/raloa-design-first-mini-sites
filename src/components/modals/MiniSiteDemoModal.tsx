@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Calendar as CalendarIcon, Check, ShoppingBag, Eye, Camera, Star, ArrowRight, Printer } from 'lucide-react';
 import { Locale } from '../../types';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 
 interface MiniSiteDemoModalProps {
   type: 'portfolio' | 'booking' | 'shop' | 'gear' | null;
@@ -20,12 +21,14 @@ export const MiniSiteDemoModal: React.FC<MiniSiteDemoModalProps> = ({
   const [selectedTime, setSelectedTime] = useState('02:00 PM');
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [cartSuccess, setCartSuccess] = useState(false);
+  const dialogRef = useModalAccessibility<HTMLDivElement>(true);
 
   if (!type) return null;
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 raloa-minisite-modal-container"
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="mini-site-demo-title"

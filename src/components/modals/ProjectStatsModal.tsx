@@ -22,6 +22,7 @@ import {
   Legend
 } from 'recharts';
 import { Locale } from '../../types';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 
 interface ProjectStatsModalProps {
   isOpen: boolean;
@@ -80,6 +81,7 @@ export const ProjectStatsModal: React.FC<ProjectStatsModalProps> = ({
   const [period, setPeriod] = useState<7 | 14 | 30>(7);
   const [seed, setSeed] = useState<number>(1);
   const isRtl = locale === 'ar';
+  const dialogRef = useModalAccessibility<HTMLDivElement>(isOpen);
 
   const chartData = useMemo(() => {
     return generateStatsData(period, seed);
@@ -129,6 +131,7 @@ export const ProjectStatsModal: React.FC<ProjectStatsModalProps> = ({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-150"
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="project-stats-title"

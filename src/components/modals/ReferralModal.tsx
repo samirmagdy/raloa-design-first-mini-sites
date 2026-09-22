@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Locale } from '../../types';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
+import { copyTextToClipboard } from '../../utils/clipboard';
 
 interface ReferralModalProps {
   isOpen: boolean;
@@ -65,6 +67,7 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
   onClose
 }) => {
   const isRtl = locale === 'ar';
+  const dialogRef = useModalAccessibility<HTMLDivElement>(isOpen);
 
   const [invites, setInvites] = useState<MockInvite[]>(() => {
     try {
@@ -115,23 +118,9 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
   const isGoalReached = completedCount >= TARGET_INVITES;
 
   const handleCopyLink = async () => {
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(REFERRAL_LINK);
-      } else {
-        const ta = document.createElement('textarea');
-        ta.value = REFERRAL_LINK;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-      }
+    if (await copyTextToClipboard(REFERRAL_LINK)) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2400);
-    } catch (err) {
-      console.error('Failed to copy referral link', err);
     }
   };
 
@@ -186,6 +175,7 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200"
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="referral-modal-title"

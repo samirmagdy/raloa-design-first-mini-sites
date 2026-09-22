@@ -25,6 +25,7 @@ import { RaloaMark } from '../brand/RaloaLogo';
 import { fireSiteLaunchConfetti } from '../../utils/confetti';
 import { SocialPreviewGenerator } from '../studio/SocialPreviewGenerator';
 import { copyTextToClipboard } from '../../utils/clipboard';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 
 interface StudioModalProps {
   initialUsername?: string;
@@ -69,6 +70,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
   const [isPublished, setIsPublished] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showQr, setShowQr] = useState(false);
+  const dialogRef = useModalAccessibility<HTMLDivElement>(true);
 
   // Trigger site launch with celebratory confetti explosion
   const handleStartOrPublishSite = () => {
@@ -148,8 +150,10 @@ export const StudioModal: React.FC<StudioModalProps> = ({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200 raloa-studio-modal-container"
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
+      aria-labelledby="studio-modal-title"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -161,7 +165,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
           <div className="flex items-center gap-3">
             <RaloaMark size={34} />
             <div>
-              <h2 className="text-sm font-extrabold text-[#0F172A] leading-tight flex items-center gap-1.5">
+              <h2 id="studio-modal-title" className="text-sm font-extrabold text-[#0F172A] leading-tight flex items-center gap-1.5">
                 <span>RALOA Studio</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-bold border border-indigo-100 print:hidden">
                   {isRtl ? 'مباشر' : 'Live Editor'}

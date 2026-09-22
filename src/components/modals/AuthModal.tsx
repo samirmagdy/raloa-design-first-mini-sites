@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, ArrowRight, Check, Sparkles, Mail, Lock } from 'lucide-react';
 import { Locale } from '../../types';
 import { RaloaMark } from '../brand/RaloaLogo';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 
 interface AuthModalProps {
   initialMode?: 'signin' | 'signup';
@@ -21,6 +22,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [password, setPassword] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const isRtl = locale === 'ar';
+  const dialogRef = useModalAccessibility<HTMLDivElement>(true);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +36,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200"
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-modal-title"

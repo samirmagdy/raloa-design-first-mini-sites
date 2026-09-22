@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Globe,
   Copy,
@@ -71,6 +71,12 @@ export const SocialPreviewGenerator: React.FC<SocialPreviewGeneratorProps> = ({
   const [copiedLink, setCopiedLink] = useState(false);
   const [showCodeSnippet, setShowCodeSnippet] = useState(false);
 
+  useEffect(() => {
+    setOgTitle(defaultTitle);
+    setOgDesc(defaultDesc);
+    setBadgeText(isRtl ? 'صانع محتوى موثق' : 'Verified Creator');
+  }, [defaultTitle, defaultDesc, isRtl]);
+
   // Sync from profile
   const handleResetToProfile = () => {
     setOgTitle(`${displayName || 'Creator'} — ${role || 'Portfolio'} | RALOA`);
@@ -82,7 +88,7 @@ export const SocialPreviewGenerator: React.FC<SocialPreviewGeneratorProps> = ({
     );
   };
 
-  const currentUrl = `https://raloa.app/@${username}`;
+  const currentUrl = `https://raloa.app/@${encodeURIComponent(username)}`;
 
   // Theme styling configurations
   const themeStyles: Record<OgTheme, { bg: string; text: string; subtext: string; pillBg: string; pillBorder: string; accent: string }> = {

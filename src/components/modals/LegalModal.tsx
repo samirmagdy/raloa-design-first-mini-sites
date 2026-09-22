@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Shield } from 'lucide-react';
 import { Locale } from '../../types';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 
 interface LegalModalProps {
   title: string;
@@ -10,10 +11,12 @@ interface LegalModalProps {
 
 export const LegalModal: React.FC<LegalModalProps> = ({ title, locale, onClose }) => {
   const isRtl = locale === 'ar';
+  const dialogRef = useModalAccessibility<HTMLDivElement>(true);
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200"
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="legal-modal-title"

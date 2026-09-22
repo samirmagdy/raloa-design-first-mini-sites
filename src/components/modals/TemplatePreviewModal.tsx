@@ -3,6 +3,7 @@ import { X, ArrowRight, CheckCircle2, Sparkles, Copy, Check, Share2, Link2 } fro
 import { Locale, TemplateItem } from '../../types';
 import { PhoneMockup } from '../PhoneMockup';
 import { Tooltip } from '../Tooltip';
+import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 
 interface TemplatePreviewModalProps {
   template: TemplateItem | null;
@@ -17,11 +18,13 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
   onClose,
   onUseTemplate
 }) => {
-  if (!template) return null;
   const isRtl = locale === 'ar';
 
   const [copied, setCopied] = useState(false);
   const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const dialogRef = useModalAccessibility<HTMLDivElement>(Boolean(template));
+
+  if (!template) return null;
 
   // Compute the direct canonical preview URL for this template
   const getTemplateUrl = () => {
@@ -78,6 +81,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-md animate-in fade-in duration-200"
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="template-preview-title"

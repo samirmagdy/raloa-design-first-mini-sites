@@ -43,14 +43,19 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ locale }) => {
         </div>
 
         <div className="relative grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-8">
-          <div className="hidden md:block absolute top-5 left-[15%] right-[15%] h-px bg-slate-200 dark:bg-slate-800" aria-hidden="true" />
           {steps.map((step) => (
             <article key={step.number} className="relative z-10 bg-white dark:bg-slate-950 md:bg-transparent md:dark:bg-transparent">
+              {step.number < steps.length && (
+                <div
+                  className="hidden md:block absolute top-5 left-24 right-[-3.25rem] h-px bg-slate-200 dark:bg-slate-800"
+                  aria-hidden="true"
+                />
+              )}
               <div className="flex items-center gap-3 mb-3">
-                <span className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[15px] font-extrabold shadow-md ring-3 ring-white dark:ring-slate-950">
+                <span className="relative z-10 w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[15px] font-extrabold shadow-md ring-3 ring-white dark:ring-slate-950">
                   {step.number}
                 </span>
-                <span className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center border border-indigo-100 dark:border-indigo-800">
+                <span className="relative z-10 w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center border border-indigo-100 dark:border-indigo-800">
                   {React.cloneElement(step.icon, { className: 'w-3.5 h-3.5' })}
                 </span>
               </div>

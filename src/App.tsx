@@ -13,7 +13,6 @@ import { FAQAccordion } from './components/FAQAccordion';
 import { FinalCTA } from './components/FinalCTA';
 import { Footer } from './components/Footer';
 import { ScrollProgressBar } from './components/ScrollProgressBar';
-import { ScrollSpyDots } from './components/ScrollSpyDots';
 import { BackToTop } from './components/BackToTop';
 import { FadeInSection } from './components/FadeInSection';
 import { NotFound } from './components/NotFound';
@@ -490,7 +489,6 @@ export default function App() {
           <ScrollProgressBar isRtl={locale === 'ar'} />
 
       {/* Vertical Scroll-Spy Indicator Dots */}
-      <ScrollSpyDots locale={locale} />
 
       {/* 01 Sticky Navigation Header */}
       <Header

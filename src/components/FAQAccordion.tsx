@@ -37,7 +37,7 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({ locale, onContactSup
   };
 
   return (
-    <section id="faq" className="py-14 sm:py-18 md:py-28 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 transition-colors duration-200">
+    <section id="faq" className="py-12 sm:py-18 md:py-28 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 transition-colors duration-200">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
           
@@ -54,7 +54,7 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({ locale, onContactSup
                 locale={locale}
               />
             </div>
-            <h2 className="text-[34px] sm:text-[42px] font-extrabold text-ink dark:text-white tracking-tight leading-tight mb-4">
+            <h2 className="text-[32px] sm:text-[42px] font-extrabold text-ink dark:text-white tracking-tight leading-[1.08] mb-4">
               {t.headline}
             </h2>
             <p className="text-[15px] sm:text-[16px] text-slate-600 dark:text-slate-300 font-normal">
@@ -81,14 +81,14 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({ locale, onContactSup
                     onClick={() => toggleItem(item.id)}
                     aria-expanded={isOpen}
                     aria-controls={`faq-answer-${item.id}`}
-                    className="w-full py-4.5 px-6 flex items-center justify-between text-left rtl:text-right hover:bg-slate-50/80 dark:hover:bg-slate-850 transition-colors cursor-pointer select-none"
+                    className="w-full min-h-12 py-3.5 px-5 sm:px-6 flex items-center justify-between text-left rtl:text-right hover:bg-slate-50/80 dark:hover:bg-slate-850 transition-colors cursor-pointer select-none"
                   >
                     <span className="font-bold text-[16px] text-ink dark:text-white tracking-tight pr-4 rtl:pr-0 rtl:pl-4">
                       {isRtl ? item.questionAr : item.question}
                     </span>
                     <div
                       className={`w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 transition-transform duration-200 ${
-                        isOpen ? 'rotate-180 bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400' : 'text-slate-500 dark:text-slate-400'
+                        isOpen ? 'rotate-180 bg-indigo-50 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-300'
                       }`}
                     >
                       <ChevronDown className="w-4 h-4" />
@@ -98,7 +98,7 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({ locale, onContactSup
                   {isOpen && (
                     <div
                       id={`faq-answer-${item.id}`}
-                      className="px-6 pb-5 pt-1 text-[14px] sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal animate-in fade-in duration-200"
+                      className="px-5 sm:px-6 pb-5 pt-1 text-[15px] sm:text-[16px] text-slate-700 dark:text-slate-200 leading-relaxed font-normal animate-in fade-in duration-200"
                     >
                       <p>{isRtl ? item.answerAr : item.answer}</p>
                     </div>

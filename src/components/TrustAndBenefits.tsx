@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Zap, Palette, TrendingUp, Monitor } from 'lucide-react';
 import { Locale } from '../types';
 import { benefitsList } from '../data/content';
@@ -19,6 +19,47 @@ const trustedBrands = [
 
 export const TrustAndBenefits: React.FC<TrustAndBenefitsProps> = ({ locale }) => {
   const isRtl = locale === 'ar';
+  const brandRailRef = useRef<HTMLDivElement>(null);
+  const autoScrollPausedRef = useRef(false);
+
+  useEffect(() => {
+    const rail = brandRailRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 639px)');
+    if (!rail || !mobileQuery.matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const pauseAutoScroll = () => {
+      autoScrollPausedRef.current = true;
+    };
+
+    let frame = 0;
+    let previousTime = performance.now();
+    const scrollBrands = (time: number) => {
+      const elapsed = Math.min(time - previousTime, 50);
+      previousTime = time;
+
+      if (!autoScrollPausedRef.current && !document.hidden) {
+        const firstSet = rail.querySelector<HTMLElement>('[data-brand-set="primary"]');
+        const cycleWidth = firstSet?.offsetWidth ?? 0;
+        if (cycleWidth > 0) {
+          rail.scrollLeft += (isRtl ? -1 : 1) * elapsed * 0.035;
+          if (rail.scrollLeft >= cycleWidth) rail.scrollLeft -= cycleWidth;
+        }
+      }
+
+      frame = window.requestAnimationFrame(scrollBrands);
+    };
+    frame = window.requestAnimationFrame(scrollBrands);
+    rail.addEventListener('pointerdown', pauseAutoScroll, { passive: true });
+    rail.addEventListener('touchstart', pauseAutoScroll, { passive: true });
+    rail.addEventListener('focusin', pauseAutoScroll);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      rail.removeEventListener('pointerdown', pauseAutoScroll);
+      rail.removeEventListener('touchstart', pauseAutoScroll);
+      rail.removeEventListener('focusin', pauseAutoScroll);
+    };
+  }, [isRtl]);
 
   const getIcon = (iconName: string, color: string) => {
     switch (iconName) {
@@ -35,24 +76,54 @@ export const TrustAndBenefits: React.FC<TrustAndBenefitsProps> = ({ locale }) =>
   };
 
   return (
-    <section id="benefits" className="pt-4 pb-14 sm:pb-18 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden transition-colors duration-200">
+    <section id="benefits" className="pt-4 pb-12 sm:pb-16 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden transition-colors duration-200">
       {/* Approved trust row: quiet static brand proof, not a competing content carousel. */}
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-8">
         <p className="text-center text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-5">
           {isRtl ? 'يعمل مع المنصات التي تستخدمها بالفعل' : 'Works with the platforms you already use'}
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 items-center gap-5 text-slate-500 dark:text-slate-400">
-          {trustedBrands.map(({ name, asset }) => (
-            <div key={name} className="flex items-center justify-center gap-1.5 text-[13px] sm:text-[14px] font-bold">
-              <img
-                src={`/brand/trusted/${asset}.svg`}
-                alt=""
-                aria-hidden="true"
-                className="h-4 w-4 object-contain opacity-70 dark:invert"
-              />
-              <span>{name}</span>
+        <div
+          ref={brandRailRef}
+          className="-mx-4 overflow-x-auto px-4 no-scrollbar sm:mx-0 sm:overflow-visible sm:px-0"
+          role="region"
+          aria-label={isRtl ? 'المنصات المدعومة' : 'Supported platforms'}
+          onMouseEnter={() => {
+            autoScrollPausedRef.current = true;
+          }}
+          onFocus={() => {
+            autoScrollPausedRef.current = true;
+          }}
+        >
+          <div className="flex w-max items-center text-slate-600 dark:text-slate-400 sm:grid sm:w-auto sm:grid-cols-4 sm:gap-5 lg:grid-cols-7">
+            <div data-brand-set="primary" className="flex items-center gap-7 pr-7 sm:contents">
+              {trustedBrands.map(({ name, asset }) => (
+                <div
+                  key={name}
+                  className="flex min-w-[118px] items-center justify-start gap-2 text-[13px] font-bold sm:min-w-0 sm:justify-center sm:text-[14px]"
+                >
+                  <img
+                    src={`/brand/trusted/${asset}.svg`}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-4 w-4 shrink-0 object-contain opacity-75 dark:invert"
+                  />
+                  <span>{name}</span>
+                </div>
+              ))}
             </div>
-          ))}
+            <div aria-hidden="true" className="flex items-center gap-7 pr-7 sm:hidden">
+              {trustedBrands.map(({ name, asset }) => (
+                <div key={`duplicate-${name}`} className="flex min-w-[118px] items-center justify-start gap-2 text-[13px] font-bold">
+                  <img
+                    src={`/brand/trusted/${asset}.svg`}
+                    alt=""
+                    className="h-4 w-4 shrink-0 object-contain opacity-75 dark:invert"
+                  />
+                  <span>{name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -62,24 +133,24 @@ export const TrustAndBenefits: React.FC<TrustAndBenefitsProps> = ({ locale }) =>
           {isRtl ? 'لماذا يختار صناع المحتوى رالوا' : 'Why creators choose RALOA'}
         </h2>
         {/* 4 Benefit Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {benefitsList.map((benefit) => (
             <div
               key={benefit.id}
-              className="bg-white dark:bg-slate-900 rounded-[20px] p-6 border border-slate-200/90 dark:border-slate-800 shadow-[0_6px_18px_rgba(15,23,42,0.04)] dark:shadow-[0_6px_18px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_28px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_12px_28px_rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col justify-start group hover:-translate-y-1"
+              className="bg-white dark:bg-slate-900 rounded-[20px] p-4 sm:p-6 border border-slate-200/90 dark:border-slate-800 shadow-[0_6px_18px_rgba(15,23,42,0.04)] dark:shadow-[0_6px_18px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_28px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_12px_28px_rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col justify-start group hover:-translate-y-1"
             >
               <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5 transition-transform group-hover:scale-110 duration-200"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center mb-3 sm:mb-5 transition-transform group-hover:scale-110 duration-200"
                 style={{ backgroundColor: benefit.bgColor }}
               >
                 {getIcon(benefit.icon, benefit.color)}
               </div>
 
-              <h3 className="font-extrabold text-[17px] text-ink dark:text-white tracking-tight leading-snug mb-2">
+              <h3 className="font-extrabold text-[15px] sm:text-[17px] text-ink dark:text-white tracking-tight leading-snug mb-2">
                 {isRtl ? benefit.titleAr : benefit.title}
               </h3>
 
-              <p className="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+              <p className="text-[14px] sm:text-[15px] text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
                 {isRtl ? benefit.bodyAr : benefit.body}
               </p>
             </div>

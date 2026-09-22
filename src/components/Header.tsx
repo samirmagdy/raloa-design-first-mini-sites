@@ -115,7 +115,7 @@ export const Header: React.FC<HeaderProps> = ({
               e.preventDefault();
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="flex items-center gap-2 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg"
+            className="flex items-center gap-2 shrink-0 scale-[1.04] lg:scale-100 origin-left focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg"
             aria-label="RALOA Home"
           >
             <RaloaLogo isRtl={isRtl} theme={isDark ? 'on-dark' : 'primary'} />
@@ -190,7 +190,7 @@ export const Header: React.FC<HeaderProps> = ({
             role="dialog"
             aria-modal="true"
             aria-label={isRtl ? 'قائمة التنقل' : 'Navigation menu'}
-            className={`fixed top-0 bottom-0 ${
+            className={`fixed top-0 bottom-0 max-h-[100dvh] overflow-y-auto overscroll-contain ${
               isRtl ? 'left-0' : 'right-0'
             } w-[310px] bg-white dark:bg-slate-900 shadow-2xl p-6 flex flex-col justify-between animate-in slide-in-from-end-full duration-300 border-s border-slate-200 dark:border-slate-800`}
             onClick={(e) => e.stopPropagation()}
@@ -208,13 +208,13 @@ export const Header: React.FC<HeaderProps> = ({
                 </button>
               </div>
 
-              <nav className="mt-6 flex flex-col space-y-4" aria-label="Mobile Navigation">
+              <nav className="mt-5 flex flex-col space-y-1" aria-label="Mobile Navigation">
                 {navLinks.map((link) => (
                   <a
                     key={link.href}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className="text-[16px] font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors py-1 flex items-center justify-between"
+                    className="min-h-11 text-[16px] font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors px-2 py-2 flex items-center justify-between rounded-lg"
                   >
                     <span>{link.label}</span>
                     <ArrowRight className="w-4 h-4 text-slate-400 rtl:rotate-180" />
@@ -267,7 +267,7 @@ export const Header: React.FC<HeaderProps> = ({
                   setMobileMenuOpen(false);
                   onOpenAuth('signin');
                 }}
-                className="w-full py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-[14px] font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                className="w-full min-h-11 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-[14px] font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
               >
                 {t.signIn}
               </button>

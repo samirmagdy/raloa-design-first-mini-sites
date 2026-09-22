@@ -23,7 +23,14 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
     template: TemplateItem;
     rect: DOMRect;
   } | null>(null);
+  const [canScrollNext, setCanScrollNext] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const updateScrollState = () => {
+    const scroller = scrollRef.current;
+    if (!scroller) return;
+    setCanScrollNext(scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth - 8);
+  };
 
   const handleMouseEnter = (template: TemplateItem, e: React.MouseEvent<HTMLDivElement>) => {
     if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
@@ -42,6 +49,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
     const handleScrollOrResize = () => {
       if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
       setHoveredState(null);
+      updateScrollState();
     };
 
     window.addEventListener('scroll', handleScrollOrResize, { passive: true });
@@ -51,6 +59,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
     if (scroller) {
       scroller.addEventListener('scroll', handleScrollOrResize, { passive: true });
     }
+
+    updateScrollState();
 
     return () => {
       window.removeEventListener('scroll', handleScrollOrResize);
@@ -128,7 +138,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
           role="group"
           aria-label={locale === 'ar' ? 'معرض القوالب' : 'Template gallery'}
           tabIndex={0}
-          className="flex items-stretch gap-3 overflow-x-auto no-scrollbar pb-6 pt-2 snap-x snap-mandatory focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-xl"
+          onScroll={updateScrollState}
+          className="relative flex items-stretch gap-3 overflow-x-auto no-scrollbar pb-6 pt-2 snap-x snap-mandatory focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-xl"
           style={{ scrollbarWidth: 'none' }}
         >
           {templatesData.map((template) => (
@@ -208,6 +219,15 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
             </span>
           </div>
         </div>
+
+        {canScrollNext && (
+          <div className="pointer-events-none -mt-14 mb-5 flex h-9 items-center justify-end pe-2 sm:hidden" aria-hidden="true">
+            <span className="inline-flex items-center gap-1 rounded-full border border-indigo-100 bg-white/95 px-3 py-1.5 text-[11px] font-bold text-indigo-700 shadow-sm backdrop-blur-sm dark:border-indigo-900 dark:bg-slate-900/95 dark:text-indigo-300">
+              <span>{locale === 'ar' ? 'اسحب للمزيد' : 'Swipe to explore'}</span>
+              <ChevronRight className="h-3.5 w-3.5 rtl:rotate-180" />
+            </span>
+          </div>
+        )}
 
         {/* Mock Site Snapshot Hover Popover */}
         <TemplateSnapshotPopover

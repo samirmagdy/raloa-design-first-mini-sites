@@ -35,6 +35,36 @@ section[id] {
   --tracking-display: 0em;
 }
 
+/* Mobile reading and interaction contract. Components can still opt into a
+   denser layout, but controls and content never regress below these floors. */
+@media (max-width: 767px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  section[id] {
+    scroll-margin-top: 80px;
+  }
+
+  button,
+  a[role="button"],
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .raloa-phone-mockup {
+    max-width: min(295px, calc(100vw - 40px));
+    box-shadow: 0 20px 48px rgba(15, 23, 42, 0.18);
+  }
+
+  .raloa-depth-card:hover,
+  .raloa-step-depth:hover,
+  .raloa-plan-depth:hover,
+  .raloa-testimonial-depth:hover {
+    transform: none;
+  }
+}
+
 /* Custom scrollbar for horizontal gallery */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

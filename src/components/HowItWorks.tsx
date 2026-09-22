@@ -19,7 +19,7 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ locale }) => {
   return (
     <section
       id="how-it-works"
-      className="py-10 sm:py-12 md:py-14 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 relative overflow-hidden transition-colors duration-200"
+      className="py-12 sm:py-14 md:py-16 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 relative overflow-hidden transition-colors duration-200"
     >
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative mb-8 md:mb-10">
@@ -42,7 +42,7 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ locale }) => {
           </div>
         </div>
 
-        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-8">
+        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-8">
           {steps.map((step) => (
             <article key={step.number} className="raloa-step-depth relative z-10 bg-white dark:bg-slate-950 md:bg-transparent md:dark:bg-transparent">
               {step.number < steps.length && (
@@ -62,7 +62,7 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ locale }) => {
               <h3 className="font-extrabold text-[18px] text-ink dark:text-white tracking-tight mb-2">
                 {step.title}
               </h3>
-              <p className="text-[14px] sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed max-w-sm">
+              <p className="text-[15px] sm:text-[16px] text-slate-700 dark:text-slate-300 leading-relaxed max-w-sm">
                 {step.body}
               </p>
             </article>

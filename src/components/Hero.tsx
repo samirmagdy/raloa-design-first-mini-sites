@@ -84,10 +84,10 @@ export const Hero: React.FC<HeroProps> = ({
         style={{ y: glowY, scale: glowScale }}
         className="absolute top-10 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-indigo-200/30 to-purple-200/20 dark:from-indigo-600/10 dark:to-purple-600/10 blur-3xl rounded-full pointer-events-none -z-10"
       />
-      <div className="absolute -right-[220px] top-[-180px] h-[760px] w-[760px] rounded-full bg-gradient-to-br from-blue-100/80 via-indigo-100/40 to-purple-200/70 blur-2xl dark:from-indigo-950/40 dark:via-slate-900/20 dark:to-purple-950/40 pointer-events-none" />
-      <div className="absolute -right-[80px] top-[160px] h-[620px] w-[620px] rounded-full border border-indigo-200/50 dark:border-indigo-800/30 pointer-events-none" />
+      <div className="absolute -right-[220px] top-[-180px] z-0 h-[760px] w-[760px] rounded-full bg-gradient-to-br from-blue-100/80 via-indigo-100/40 to-purple-200/70 blur-2xl dark:from-indigo-950/40 dark:via-slate-900/20 dark:to-purple-950/40 pointer-events-none" />
+      <div className="absolute -right-[80px] top-[160px] z-0 h-[620px] w-[620px] rounded-full border border-indigo-200/50 dark:border-indigo-800/30 pointer-events-none" />
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-4 items-center min-h-[520px] lg:min-h-[540px]">
           
           {/* Left Column: 55% split (lg:col-span-7) */}
@@ -98,7 +98,7 @@ export const Hero: React.FC<HeroProps> = ({
               initial={{ opacity: 0, y: -16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50/90 dark:bg-indigo-950/80 border border-indigo-100/80 dark:border-indigo-800/80 text-indigo-700 dark:text-indigo-300 font-bold text-[11px] sm:text-[12px] tracking-wider uppercase mb-6 shadow-2xs"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-indigo-950/90 border border-indigo-200/90 dark:border-indigo-800/80 text-indigo-800 dark:text-indigo-300 font-bold text-[11px] sm:text-[12px] tracking-[0.08em] uppercase mb-5 shadow-sm"
             >
               <BadgeCheck className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
               <span>{t.eyebrow}</span>
@@ -109,7 +109,7 @@ export const Hero: React.FC<HeroProps> = ({
               initial={{ opacity: 0, y: 22 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[40px] sm:text-[54px] md:text-[62px] lg:text-[70px] font-extrabold text-ink dark:text-white tracking-display leading-[1.04] mb-6"
+              className="text-[39px] sm:text-[54px] md:text-[62px] lg:text-[70px] font-extrabold text-ink dark:text-white tracking-display leading-[1.02] mb-5 sm:mb-6 max-w-[15ch]"
             >
               <span>{t.headlineStart}</span>
               <br />
@@ -123,7 +123,7 @@ export const Hero: React.FC<HeroProps> = ({
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[17px] sm:text-[19px] lg:text-[20px] text-slate-600 dark:text-slate-300 leading-[1.55] max-w-[560px] mb-8 font-normal"
+              className="text-[17px] sm:text-[19px] lg:text-[20px] text-slate-700 dark:text-slate-300 leading-[1.5] max-w-[560px] mb-6 sm:mb-8 font-normal"
             >
               {t.subheadline}
             </motion.p>
@@ -134,11 +134,11 @@ export const Hero: React.FC<HeroProps> = ({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
               onSubmit={validateAndSubmit}
-              className="w-full max-w-[530px] mb-4"
+              className="w-full max-w-[530px] mb-3"
               noValidate
             >
               <div
-                className={`relative flex flex-col sm:flex-row items-stretch sm:items-center bg-white dark:bg-slate-900 rounded-2xl sm:rounded-full p-2 border shadow-[0_12px_36px_rgba(15,23,42,0.08)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.5)] transition-all ${
+                className={`relative flex flex-col sm:flex-row items-stretch sm:items-center bg-white dark:bg-slate-900 rounded-2xl sm:rounded-full p-1.5 border shadow-[0_12px_36px_rgba(15,23,42,0.08)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.5)] transition-all ${
                   error
                     ? 'border-rose-400 ring-2 ring-rose-200 dark:ring-rose-950'
                     : 'border-slate-200 dark:border-slate-800 focus-within:border-indigo-400 dark:focus-within:border-indigo-500 focus-within:ring-3 focus-within:ring-indigo-100 dark:focus-within:ring-indigo-950/60'
@@ -164,7 +164,7 @@ export const Hero: React.FC<HeroProps> = ({
                 {/* Primary CTA Submit */}
                 <button
                   type="submit"
-                  className="mt-2 sm:mt-0 min-h-[48px] px-6 py-3 rounded-xl sm:rounded-full bg-ink hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 active:scale-[0.98] text-white font-bold text-[15px] flex items-center justify-center gap-2 shadow-md transition-all whitespace-nowrap cursor-pointer"
+                  className="mt-1.5 sm:mt-0 min-h-11 px-5 py-2.5 rounded-xl sm:rounded-full bg-ink hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 active:scale-[0.98] text-white font-bold text-[15px] flex items-center justify-center gap-2 shadow-md transition-all whitespace-nowrap cursor-pointer"
                 >
                   <span>{t.cta}</span>
                   <ArrowRight className="w-4 h-4 rtl:rotate-180" />
@@ -185,7 +185,7 @@ export const Hero: React.FC<HeroProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.32 }}
-              className="flex flex-wrap items-center justify-center lg:justify-start gap-y-2 gap-x-5 text-[13px] font-medium text-slate-600 dark:text-slate-400 mt-2"
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-y-2.5 gap-x-5 text-[14px] font-medium text-slate-700 dark:text-slate-300 mt-2"
             >
               {t.proof.map((item, idx) => (
                 <motion.div
@@ -216,7 +216,7 @@ export const Hero: React.FC<HeroProps> = ({
                 rotate: phoneRotate,
                 scale: phoneScale
               }}
-              className="relative z-10 w-full max-w-[380px] flex justify-center"
+              className="relative z-10 w-full max-w-[380px] flex justify-center px-3 sm:px-0"
             >
               {/* Dynamic entrance glide + infinite subtle breathing oscillation */}
               <motion.div

@@ -41,11 +41,11 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ locale, onOpenStudio }) => {
   };
 
   return (
-    <section className="py-20 md:py-28 bg-white dark:bg-slate-950 transition-colors duration-200">
+    <section className="py-14 sm:py-20 md:py-28 bg-white dark:bg-slate-950 transition-colors duration-200">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Banner with gradient matching tokens: linear-gradient(90deg, #5B5CF6 0%, #8B5CF6 100%) */}
-        <div className="raloa-cta-depth relative rounded-[32px] overflow-hidden p-8 sm:p-12 lg:p-16 text-white shadow-[0_20px_50px_rgba(91,92,246,0.25)] dark:shadow-[0_20px_50px_rgba(91,92,246,0.15)] bg-gradient-to-r from-[#4338CA] via-[#4F46E5] to-[#6D28D9]">
+        <div className="raloa-cta-depth relative rounded-[28px] sm:rounded-[32px] overflow-hidden p-6 sm:p-12 lg:p-16 text-white shadow-[0_20px_50px_rgba(91,92,246,0.25)] dark:shadow-[0_20px_50px_rgba(91,92,246,0.15)] bg-gradient-to-r from-[#4338CA] via-[#4F46E5] to-[#6D28D9]">
           
           {/* Directional depth accents */}
           <div className="absolute top-4 left-6 opacity-30 select-none pointer-events-none">
@@ -63,12 +63,12 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ locale, onOpenStudio }) => {
             </span>
 
             {/* Headline */}
-            <h2 className="text-[34px] sm:text-[44px] md:text-[52px] font-extrabold tracking-tight leading-[1.08] mb-4 text-white">
+            <h2 className="text-[31px] sm:text-[44px] md:text-[52px] font-extrabold tracking-tight leading-[1.08] mb-4 text-white max-w-[18ch]">
               {t.headline}
             </h2>
 
             {/* Subhead */}
-            <p className="text-[16px] sm:text-[18px] text-indigo-100 mb-8 max-w-xl font-normal">
+            <p className="text-[16px] sm:text-[18px] text-white/90 mb-6 sm:mb-8 max-w-xl font-normal leading-relaxed">
               {t.subheadline}
             </p>
 
@@ -115,7 +115,7 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ locale, onOpenStudio }) => {
             </form>
 
             {/* Proof Points */}
-            <div className="flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-[13px] font-medium text-indigo-100 mt-2">
+            <div className="flex flex-wrap items-center justify-center gap-y-2.5 gap-x-6 text-[14px] font-medium text-white/90 mt-2">
               {t.proof.map((item, idx) => (
                 <div key={idx} className="flex items-center gap-1.5">
                   <div className="w-4 h-4 rounded-full bg-white/20 text-white flex items-center justify-center">

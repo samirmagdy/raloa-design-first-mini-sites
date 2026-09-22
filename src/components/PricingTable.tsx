@@ -14,7 +14,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
   const t = dictionary[locale].pricingSection;
 
   return (
-    <section id="pricing" className="py-14 sm:py-18 md:py-28 bg-surface-alt dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
+    <section id="pricing" className="py-12 sm:py-18 md:py-28 bg-surface-alt dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -22,7 +22,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
           <span className="text-[12px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block mb-2">
             {t.eyebrow}
           </span>
-          <h2 className="text-[34px] sm:text-[42px] md:text-[48px] font-extrabold text-ink dark:text-white tracking-tight leading-tight">
+          <h2 className="text-[32px] sm:text-[42px] md:text-[48px] font-extrabold text-ink dark:text-white tracking-tight leading-[1.08]">
             {t.headline}
           </h2>
           <p className="text-[16px] sm:text-[18px] text-slate-600 dark:text-slate-300 mt-2 font-normal">
@@ -58,7 +58,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
         </div>
 
         {/* 3 Pricing Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch pt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8 items-stretch pt-4">
           {pricingPlans.map((plan) => {
             const isPopular = plan.popular;
             const price = plan.priceMonthly === 0 ? 0 : isYearly ? plan.priceYearly : plan.priceMonthly;
@@ -67,7 +67,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
             return (
               <div
                 key={plan.id}
-                className={`raloa-plan-depth ${isPopular ? 'raloa-plan-depth-popular' : ''} relative bg-white dark:bg-slate-900 rounded-[24px] p-8 border transition-all duration-300 flex flex-col justify-between ${
+                className={`raloa-plan-depth ${isPopular ? 'raloa-plan-depth-popular' : ''} relative bg-white dark:bg-slate-900 rounded-[24px] p-5 sm:p-8 border transition-all duration-300 flex flex-col justify-between ${
                   isPopular
                     ? 'border-indigo-500 dark:border-indigo-500 ring-2 ring-indigo-500/20 dark:ring-indigo-500/40 shadow-[0_16px_40px_rgba(91,92,246,0.12)] dark:shadow-[0_16px_40px_rgba(91,92,246,0.25)] lg:-translate-y-2'
                     : 'border-slate-200 dark:border-slate-800 shadow-[0_6px_20px_rgba(15,23,42,0.04)] dark:shadow-[0_6px_20px_rgba(0,0,0,0.3)] hover:shadow-lg dark:hover:shadow-2xl'
@@ -75,7 +75,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
               >
                 {/* Popular Pill */}
                 {isPopular && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-[11px] font-extrabold tracking-wide uppercase shadow-sm">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-[11px] font-extrabold tracking-wide uppercase shadow-sm">
                     {t.popularBadge}
                   </div>
                 )}
@@ -91,10 +91,10 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
 
                   {/* Price */}
                   <div className="flex items-baseline gap-1.5 mb-7">
-                    <span className="text-[44px] font-black text-ink dark:text-white tracking-tight leading-none">
+                    <span className="text-[42px] sm:text-[44px] font-black text-ink dark:text-white tracking-tight leading-none tabular-nums">
                       {formattedPrice}
                     </span>
-                    <span className="text-[14px] text-slate-500 dark:text-slate-400 font-medium">
+                    <span className="text-[15px] text-slate-600 dark:text-slate-300 font-medium">
                       / {isRtl ? plan.periodAr : plan.period}
                     </span>
                   </div>
@@ -106,7 +106,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
                         <div className="w-5 h-5 rounded-full bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 mt-0.5">
                           <Check className="w-3.5 h-3.5 stroke-[2.5]" />
                         </div>
-                        <span className="text-[14px] text-slate-700 dark:text-slate-300 leading-tight">
+                        <span className="text-[15px] text-slate-800 dark:text-slate-200 leading-snug">
                           {feat}
                         </span>
                       </div>
@@ -117,7 +117,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
                 {/* Plan Action CTA */}
                 <button
                   onClick={() => onSelectPlan(plan, isYearly)}
-                  className={`w-full py-3.5 px-6 rounded-full font-bold text-[14px] transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`w-full min-h-11 py-3 px-6 rounded-full font-bold text-[14px] transition-all flex items-center justify-center gap-2 cursor-pointer ${
                     isPopular
                       ? 'bg-ink hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 shadow-md hover:scale-[1.01]'
                       : 'bg-white hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-ink dark:text-white border border-slate-300 dark:border-slate-700'

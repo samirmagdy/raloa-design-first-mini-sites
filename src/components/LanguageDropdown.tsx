@@ -92,7 +92,7 @@ export const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
                 role="radio"
                 aria-checked={isSelected}
                 onClick={() => onSelectLocale(lang.code)}
-                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-[13px] font-semibold transition-all duration-150 cursor-pointer ${
+                className={`flex min-h-11 items-center justify-center gap-2 py-2 px-3 rounded-lg text-[13px] font-semibold transition-all duration-150 cursor-pointer ${
                   isSelected
                     ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs border border-slate-200/60 dark:border-slate-700 font-bold'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-700/60'

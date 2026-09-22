@@ -130,16 +130,16 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   return (
-    <footer className="bg-white dark:bg-slate-950 border-t border-slate-200/90 dark:border-slate-850 pt-16 pb-12 text-slate-600 dark:text-slate-400 transition-colors duration-200">
+    <footer className="bg-white dark:bg-slate-950 border-t border-slate-200/90 dark:border-slate-850 pt-12 sm:pt-16 pb-8 sm:pb-12 text-slate-700 dark:text-slate-300 transition-colors duration-200">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Main Footer Row */}
-        <div className="grid grid-cols-2 md:grid-cols-12 gap-8 lg:gap-12 pb-12 border-b border-slate-100 dark:border-slate-800/80">
+        <div className="grid grid-cols-2 md:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 pb-8 sm:pb-12 border-b border-slate-100 dark:border-slate-800/80">
           
           {/* Brand Info (4 cols) */}
           <div className="col-span-2 md:col-span-4 flex flex-col items-start">
-            <RaloaLogo isRtl={isRtl} size="md" theme={theme === 'dark' ? 'on-dark' : 'primary'} />
-            <p className="text-[13px] text-slate-500 dark:text-slate-400 mt-4 max-w-xs leading-relaxed">
+            <RaloaLogo isRtl={isRtl} size="md" className="scale-[0.92] origin-left sm:scale-100" theme={theme === 'dark' ? 'on-dark' : 'primary'} />
+            <p className="text-[14px] text-slate-600 dark:text-slate-300 mt-4 max-w-xs leading-relaxed">
               {isRtl
                 ? 'المنصة الرائدة لبناء المواقع المصغرة الأنيقة لصناع المحتوى والمستقلين وأصحاب الأعمال.'
                 : 'A fast, design-first mini-site builder for creators, freelancers and businesses.'}
@@ -197,7 +197,7 @@ export const Footer: React.FC<FooterProps> = ({
           </div>
 
           {/* Navigation Links Columns (8 cols) */}
-          <div className="col-span-2 md:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-8">
+          <div className="hidden md:grid md:col-span-8 grid-cols-4 gap-8">
             {Object.entries(footerLinks).map(([key, group]) => (
               <div key={key}>
                 <h2 className="font-extrabold text-[13px] text-ink dark:text-white uppercase tracking-wider mb-4">
@@ -209,7 +209,7 @@ export const Footer: React.FC<FooterProps> = ({
                       <a
                         href={link.href}
                         onClick={(e) => handleLinkClick(e, link.label, link.href)}
-                        className="inline-flex min-h-11 min-w-11 items-center text-[13px] text-slate-500 dark:text-slate-400 hover:text-ink dark:hover:text-white transition-colors"
+                        className="inline-flex min-h-11 min-w-11 items-center text-[14px] text-slate-600 dark:text-slate-300 hover:text-ink dark:hover:text-white transition-colors"
                       >
                         {link.label}
                       </a>
@@ -217,6 +217,30 @@ export const Footer: React.FC<FooterProps> = ({
                   ))}
                 </ul>
               </div>
+            ))}
+          </div>
+
+          <div className="col-span-2 md:hidden space-y-2">
+            {Object.entries(footerLinks).map(([key, group]) => (
+              <details key={key} className="group rounded-xl border border-slate-200/90 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60">
+                <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between px-4 py-3 text-[14px] font-extrabold text-ink dark:text-white [&::-webkit-details-marker]:hidden">
+                  <span>{group.title}</span>
+                  <span className="text-lg leading-none text-slate-500 transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <ul className="border-t border-slate-200/80 px-4 pb-3 pt-1 dark:border-slate-800">
+                  {group.links.map((link) => (
+                    <li key={link.label}>
+                      <a
+                        href={link.href}
+                        onClick={(e) => handleLinkClick(e, link.label, link.href)}
+                        className="inline-flex min-h-11 items-center text-[14px] text-slate-600 dark:text-slate-300 hover:text-ink dark:hover:text-white transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
             ))}
           </div>
 

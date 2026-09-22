@@ -200,7 +200,7 @@ export const MiniSiteDemoModal: React.FC<MiniSiteDemoModalProps> = ({
 
                   <button
                     type="submit"
-                    className="w-full py-3 bg-[#0F172A] text-white font-bold text-sm rounded-xl hover:bg-slate-800 transition-colors shadow-sm"
+                    className="w-full py-3 bg-ink text-white font-bold text-sm rounded-xl hover:bg-slate-800 transition-colors shadow-sm"
                   >
                     {isRtl ? 'تأكيد الحجز الفوري' : 'Confirm Instant Booking'}
                   </button>

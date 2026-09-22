@@ -104,7 +104,6 @@ export const RaloaLogo: React.FC<RaloaLogoProps> = ({
   return (
     <div
       className={`inline-flex items-center select-none overflow-visible ${className}`}
-      role="banner"
       dir={isRtl ? 'rtl' : 'ltr'}
       style={{ width: width || current.width, height: height || current.height }}
     >

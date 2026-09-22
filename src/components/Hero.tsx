@@ -118,7 +118,7 @@ export const Hero: React.FC<HeroProps> = ({
               initial={{ opacity: 0, y: 22 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[40px] sm:text-[54px] md:text-[62px] lg:text-[70px] font-extrabold text-[#0F172A] dark:text-white tracking-[-0.03em] leading-[1.04] mb-6"
+              className="text-[40px] sm:text-[54px] md:text-[62px] lg:text-[70px] font-extrabold text-ink dark:text-white tracking-display leading-[1.04] mb-6"
             >
               <span>{t.headlineStart}</span>
               <br />
@@ -155,7 +155,7 @@ export const Hero: React.FC<HeroProps> = ({
               >
                 {/* Prefix & Input */}
                 <div className="flex items-center flex-1 min-h-11 px-3 py-2 sm:py-0">
-                  <span className="text-[15px] font-semibold text-slate-400 dark:text-slate-500 select-none ltr:mr-1 rtl:ml-1">
+                  <span className="text-[15px] font-semibold text-slate-500 dark:text-slate-400 select-none ltr:mr-1 rtl:ml-1">
                     {t.prefix}
                   </span>
                   <input
@@ -163,7 +163,7 @@ export const Hero: React.FC<HeroProps> = ({
                     value={username}
                     onChange={handleInputChange}
                     placeholder={t.placeholder}
-                    className="w-full min-h-11 bg-transparent text-[16px] font-semibold text-[#0F172A] dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
+                    className="w-full min-h-11 bg-transparent text-[16px] font-semibold text-ink dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
                     aria-label="Choose your username handle"
                     autoComplete="off"
                     spellCheck="false"
@@ -173,7 +173,7 @@ export const Hero: React.FC<HeroProps> = ({
                 {/* Primary CTA Submit */}
                 <button
                   type="submit"
-                  className="mt-2 sm:mt-0 min-h-[48px] px-6 py-3 rounded-xl sm:rounded-full bg-[#0F172A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 active:scale-[0.98] text-white font-bold text-[15px] flex items-center justify-center gap-2 shadow-md transition-all whitespace-nowrap cursor-pointer"
+                  className="mt-2 sm:mt-0 min-h-[48px] px-6 py-3 rounded-xl sm:rounded-full bg-ink hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 active:scale-[0.98] text-white font-bold text-[15px] flex items-center justify-center gap-2 shadow-md transition-all whitespace-nowrap cursor-pointer"
                 >
                   <span>{t.cta}</span>
                   <ArrowRight className="w-4 h-4 rtl:rotate-180" />
@@ -216,7 +216,7 @@ export const Hero: React.FC<HeroProps> = ({
 
           {/* Right Column: 45% split (lg:col-span-5) */}
           <div className="lg:col-span-5 relative flex items-center justify-center">
-            <HeroDepthScene isRtl={isRtl} />
+            <HeroDepthScene isRtl={isRtl} labels={dictionary[locale].depthScene} />
             
             {/* Phone Mockup with scroll-linked parallax, rotation, and gentle float */}
             <motion.div
@@ -233,17 +233,12 @@ export const Hero: React.FC<HeroProps> = ({
                 animate={{
                   opacity: 1,
                   scale: 1,
-                  y: [0, -10, 0]
+                  y: 0
                 }}
                 transition={{
-                  opacity: { duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] },
-                  scale: { duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] },
-                  y: {
-                    duration: 4.8,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                    delay: 1.0
-                  }
+                  duration: 0.8,
+                  delay: 0.2,
+                  ease: [0.16, 1, 0.3, 1]
                 }}
                 className="w-full flex justify-center"
               >

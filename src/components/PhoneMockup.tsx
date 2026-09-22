@@ -43,12 +43,12 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
 
   return (
     <div
-      className={`relative mx-auto w-full max-w-[295px] sm:max-w-[320px] md:max-w-[340px] bg-[#0F172A] rounded-[48px] p-3 shadow-[0_28px_70px_rgba(15,23,42,0.24)] border-[6px] select-none transition-transform duration-300 hover:scale-[1.01] raloa-phone-mockup raloa-template-skin-${template.id} ${className}`}
+      className={`relative mx-auto w-full max-w-[295px] sm:max-w-[320px] md:max-w-[340px] bg-ink rounded-[48px] p-3 shadow-[0_28px_70px_rgba(15,23,42,0.24)] border-[6px] select-none transition-transform duration-300 hover:scale-[1.01] raloa-phone-mockup raloa-template-skin-${template.id} ${className}`}
       style={{ borderColor: template.themeColor }}
       data-template-id={template.id}
     >
       {/* Screen Frame */}
-      <div className="relative bg-[#F8FAFC] rounded-[38px] overflow-hidden flex flex-col min-h-[580px] max-h-[640px] shadow-inner text-slate-800 raloa-phone-screen">
+      <div className="relative bg-surface-alt rounded-[38px] overflow-hidden flex flex-col min-h-[580px] max-h-[640px] shadow-inner text-slate-800 raloa-phone-screen">
         
         {/* Dynamic Island & Status Bar */}
         <div className="pt-3 px-6 pb-2 flex items-center justify-between text-[11px] font-semibold text-slate-900 z-20 phone-status-bar">
@@ -91,7 +91,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
             {template.name}
           </p>
           <p className="text-[12px] font-medium text-slate-500 mt-1">
-            {template.role}
+            {isRtl ? template.roleAr : template.role}
           </p>
           <p className="text-[11px] text-slate-600 mt-1 px-4 leading-relaxed max-w-[260px]">
             {isRtl ? template.bioAr : template.bio}
@@ -195,7 +195,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
         </div>
 
         {/* iPhone Home Bar */}
-        <div className="py-2 flex justify-center bg-[#F8FAFC]">
+        <div className="py-2 flex justify-center bg-surface-alt">
           <div className="w-28 h-1 bg-slate-300 rounded-full" />
         </div>
       </div>

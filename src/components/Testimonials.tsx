@@ -22,7 +22,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ locale, onSeeMoreSto
             <span className="text-[12px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block mb-2">
               {t.eyebrow}
             </span>
-            <h2 className="text-[32px] sm:text-[40px] md:text-[46px] font-extrabold text-[#0F172A] dark:text-white tracking-tight leading-tight">
+            <h2 className="text-[32px] sm:text-[40px] md:text-[46px] font-extrabold text-ink dark:text-white tracking-tight leading-tight">
               {t.headline}
             </h2>
           </div>
@@ -71,9 +71,9 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ locale, onSeeMoreSto
                 </div>
 
                 <div>
-                  <h4 className="font-extrabold text-[15px] text-slate-900 dark:text-white leading-tight">
+                  <h3 className="font-extrabold text-[15px] text-slate-900 dark:text-white leading-tight">
                     {isRtl ? item.authorAr : item.author}
-                  </h4>
+                  </h3>
                   <p className="text-[12px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
                     {isRtl ? item.roleAr : item.role}
                   </p>

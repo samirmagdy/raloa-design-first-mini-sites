@@ -3,6 +3,7 @@ import { CalendarDays, Link2, ShoppingBag } from 'lucide-react';
 
 interface HeroDepthSceneProps {
   isRtl?: boolean;
+  labels: { links: string; bookings: string; products: string };
 }
 
 /**
@@ -11,7 +12,7 @@ interface HeroDepthSceneProps {
  * The phone remains the interactive focal point; this layer only reinforces the
  * product story and has no interaction dependency.
  */
-export const HeroDepthScene: React.FC<HeroDepthSceneProps> = ({ isRtl = false }) => {
+export const HeroDepthScene: React.FC<HeroDepthSceneProps> = ({ isRtl = false, labels }) => {
   const sceneRef = useRef<HTMLDivElement>(null);
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -45,15 +46,15 @@ export const HeroDepthScene: React.FC<HeroDepthSceneProps> = ({ isRtl = false })
 
       <div className="raloa-depth-node raloa-depth-node-links">
         <Link2 className="h-4 w-4" strokeWidth={2.2} />
-        <span>Links</span>
+        <span>{labels.links}</span>
       </div>
       <div className="raloa-depth-node raloa-depth-node-bookings">
         <CalendarDays className="h-4 w-4" strokeWidth={2.2} />
-        <span>Bookings</span>
+        <span>{labels.bookings}</span>
       </div>
       <div className="raloa-depth-node raloa-depth-node-products">
         <ShoppingBag className="h-4 w-4" strokeWidth={2.2} />
-        <span>Products</span>
+        <span>{labels.products}</span>
       </div>
     </div>
   );

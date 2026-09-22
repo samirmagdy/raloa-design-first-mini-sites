@@ -149,7 +149,7 @@ export const ProjectStatsModal: React.FC<ProjectStatsModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 id="project-stats-title" className="text-base font-extrabold text-[#0F172A] dark:text-white leading-tight">
+                <h3 id="project-stats-title" className="text-base font-extrabold text-ink dark:text-white leading-tight">
                   {isRtl ? 'إحصائيات المشروع والزيارات' : 'Creator Project Stats'}
                 </h3>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 font-bold border border-emerald-200/80 dark:border-emerald-800/60">
@@ -224,7 +224,7 @@ export const ProjectStatsModal: React.FC<ProjectStatsModalProps> = ({
                 </div>
               </div>
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-black text-[#0F172A] dark:text-white">
+                <span className="text-2xl font-black text-ink dark:text-white">
                   {totals.totalViews.toLocaleString()}
                 </span>
                 <span className="inline-flex items-center text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
@@ -245,7 +245,7 @@ export const ProjectStatsModal: React.FC<ProjectStatsModalProps> = ({
                 </div>
               </div>
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-black text-[#0F172A] dark:text-white">
+                <span className="text-2xl font-black text-ink dark:text-white">
                   {totals.totalClicks.toLocaleString()}
                 </span>
                 <span className="inline-flex items-center text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
@@ -266,7 +266,7 @@ export const ProjectStatsModal: React.FC<ProjectStatsModalProps> = ({
                 </div>
               </div>
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-black text-[#0F172A] dark:text-white">
+                <span className="text-2xl font-black text-ink dark:text-white">
                   {totals.ctr}%
                 </span>
                 <span className="inline-flex items-center text-[11px] font-bold text-indigo-600 dark:text-indigo-400">

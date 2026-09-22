@@ -110,7 +110,7 @@ export const EasterEggOverlay: React.FC<EasterEggOverlayProps> = ({
           }}
         >
           {/* Radiant Background Aura */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-tr from-amber-500/20 via-indigo-600/25 to-pink-500/20 blur-[130px] rounded-full pointer-events-none animate-pulse duration-1000" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-tr from-amber-500/20 via-indigo-600/25 to-pink-500/20 blur-[130px] rounded-full pointer-events-none animate-pulse [animation-duration:1s]" />
 
           {/* Floating celebratory ambient particles */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -276,7 +276,7 @@ export const EasterEggOverlay: React.FC<EasterEggOverlayProps> = ({
               <button
                 type="button"
                 onClick={handleShareSecret}
-                className="w-full sm:w-auto px-4 py-3 rounded-full bg-slate-800 hover:bg-slate-750 text-slate-200 hover:text-white border border-slate-700 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-auto px-4 py-3 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 {copied ? (
                   <>

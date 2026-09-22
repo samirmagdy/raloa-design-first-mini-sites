@@ -47,14 +47,14 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({ locale, onContactSup
               <span className="text-[12px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                 {t.eyebrow}
               </span>
-              <span className="text-slate-300 dark:text-slate-700 select-none">•</span>
+              <span className="text-slate-500 dark:text-slate-400 select-none">•</span>
               <ReadTimeBadge
                 formatted={readTime.formatted}
                 wordCount={readTime.wordCount}
                 locale={locale}
               />
             </div>
-            <h2 className="text-[34px] sm:text-[42px] font-extrabold text-[#0F172A] dark:text-white tracking-tight leading-tight mb-4">
+            <h2 className="text-[34px] sm:text-[42px] font-extrabold text-ink dark:text-white tracking-tight leading-tight mb-4">
               {t.headline}
             </h2>
             <p className="text-[15px] sm:text-[16px] text-slate-600 dark:text-slate-300 font-normal">
@@ -83,7 +83,7 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({ locale, onContactSup
                     aria-controls={`faq-answer-${item.id}`}
                     className="w-full py-4.5 px-6 flex items-center justify-between text-left rtl:text-right hover:bg-slate-50/80 dark:hover:bg-slate-850 transition-colors cursor-pointer select-none"
                   >
-                    <span className="font-bold text-[16px] text-[#0F172A] dark:text-white tracking-tight pr-4 rtl:pr-0 rtl:pl-4">
+                    <span className="font-bold text-[16px] text-ink dark:text-white tracking-tight pr-4 rtl:pr-0 rtl:pl-4">
                       {isRtl ? item.questionAr : item.question}
                     </span>
                     <div

@@ -120,7 +120,7 @@ export const SoundToggle: React.FC<SoundToggleProps> = ({
         id="global-sound-toggle-btn"
         onClick={onToggle}
         aria-label={label}
-        className={`relative p-2 rounded-full border transition-all duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 ${
+        className={`relative p-2 rounded-full border transition-all duration-150 inline-grid place-items-center min-h-11 min-w-11 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 ${
           enabled
             ? 'bg-indigo-50/90 dark:bg-indigo-950/60 border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 shadow-[0_0_12px_rgba(99,102,241,0.2)]'
             : 'bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 border-transparent text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'

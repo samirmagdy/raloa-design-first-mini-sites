@@ -38,12 +38,12 @@ export const TrustAndBenefits: React.FC<TrustAndBenefitsProps> = ({ locale }) =>
     <section id="benefits" className="pt-4 pb-14 sm:pb-18 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden transition-colors duration-200">
       {/* Approved trust row: quiet static brand proof, not a competing content carousel. */}
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-8">
-        <p className="text-center text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500 mb-5">
-          {isRtl ? 'موثوق من صناع المحتوى والمستقلين والشركات حول العالم' : 'Trusted by creators, freelancers and businesses worldwide'}
+        <p className="text-center text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-5">
+          {isRtl ? 'يعمل مع المنصات التي تستخدمها بالفعل' : 'Works with the platforms you already use'}
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 items-center gap-5 text-slate-500 dark:text-slate-400">
           {trustedBrands.map(({ name, asset }) => (
-            <div key={name} className="flex items-center justify-center gap-1.5 text-[13px] sm:text-[14px] font-bold opacity-80">
+            <div key={name} className="flex items-center justify-center gap-1.5 text-[13px] sm:text-[14px] font-bold">
               <img
                 src={`/brand/trusted/${asset}.svg`}
                 alt=""
@@ -72,9 +72,9 @@ export const TrustAndBenefits: React.FC<TrustAndBenefitsProps> = ({ locale }) =>
                 {getIcon(benefit.icon, benefit.color)}
               </div>
 
-              <h3 className="font-extrabold text-[17px] text-[#0F172A] dark:text-white tracking-tight leading-snug mb-2">
+              <h2 className="font-extrabold text-[17px] text-ink dark:text-white tracking-tight leading-snug mb-2">
                 {isRtl ? benefit.titleAr : benefit.title}
-              </h3>
+              </h2>
 
               <p className="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                 {isRtl ? benefit.bodyAr : benefit.body}

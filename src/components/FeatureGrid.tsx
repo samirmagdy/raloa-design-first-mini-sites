@@ -45,7 +45,7 @@ export const FeatureGrid: React.FC<FeatureGridProps> = ({ locale, onExploreFeatu
   };
 
   return (
-    <section id="features" className="py-20 md:py-28 bg-[#F8FAFC] dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
+    <section id="features" className="py-20 md:py-28 bg-surface-alt dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -54,7 +54,7 @@ export const FeatureGrid: React.FC<FeatureGridProps> = ({ locale, onExploreFeatu
             <span className="text-[12px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block mb-2">
               {t.eyebrow}
             </span>
-            <h2 className="text-[32px] sm:text-[40px] md:text-[46px] font-extrabold text-[#0F172A] dark:text-white tracking-tight leading-[1.1]">
+            <h2 className="text-[32px] sm:text-[40px] md:text-[46px] font-extrabold text-ink dark:text-white tracking-tight leading-[1.1]">
               {t.headline}
             </h2>
             <p className="text-[16px] sm:text-[18px] text-slate-600 dark:text-slate-300 mt-2 font-normal">
@@ -85,7 +85,7 @@ export const FeatureGrid: React.FC<FeatureGridProps> = ({ locale, onExploreFeatu
                 {renderIcon(item.icon)}
               </div>
 
-              <h3 className="font-extrabold text-[17px] text-[#0F172A] dark:text-white tracking-tight mb-1.5 leading-snug">
+              <h3 className="font-extrabold text-[17px] text-ink dark:text-white tracking-tight mb-1.5 leading-snug">
                 {isRtl ? item.titleAr : item.title}
               </h3>
 

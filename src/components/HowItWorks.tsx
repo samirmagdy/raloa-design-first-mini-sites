@@ -23,10 +23,10 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ locale }) => {
     >
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative mb-8 md:mb-10">
-          <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
+          <span className="text-[11px] font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
             {t.eyebrow}
           </span>
-          <h2 className="mt-2 text-[30px] sm:text-[36px] md:text-[40px] font-extrabold text-[#0F172A] dark:text-white tracking-tight leading-tight">
+          <h2 className="mt-2 text-[30px] sm:text-[36px] md:text-[40px] font-extrabold text-ink dark:text-white tracking-tight leading-tight">
             {t.headline}
           </h2>
           <p className="text-[16px] sm:text-[18px] text-slate-600 dark:text-slate-300 mt-2">
@@ -59,7 +59,7 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ locale }) => {
                   {React.cloneElement(step.icon, { className: 'w-3.5 h-3.5' })}
                 </span>
               </div>
-              <h3 className="font-extrabold text-[18px] text-[#0F172A] dark:text-white tracking-tight mb-2">
+              <h3 className="font-extrabold text-[18px] text-ink dark:text-white tracking-tight mb-2">
                 {step.title}
               </h3>
               <p className="text-[14px] sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed max-w-sm">

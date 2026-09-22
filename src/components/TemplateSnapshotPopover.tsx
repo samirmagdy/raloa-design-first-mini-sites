@@ -92,7 +92,7 @@ export const TemplateSnapshotPopover: React.FC<TemplateSnapshotPopoverProps> = (
               <span className="w-1 h-1 rounded-full bg-indigo-400" />
             </div>
             <span className="text-[9px] font-medium text-slate-400 block truncate">
-              {template.role}
+              {isRtl ? template.roleAr : template.role}
             </span>
           </div>
 

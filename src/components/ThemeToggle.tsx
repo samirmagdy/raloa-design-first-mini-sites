@@ -117,7 +117,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
         id="theme-toggle-button"
         onClick={onToggleTheme}
         aria-label={label}
-        className={`group relative p-2 rounded-full border transition-all duration-200 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 ${
+        className={`group relative p-2 rounded-full border transition-all duration-200 inline-grid place-items-center min-h-11 min-w-11 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 ${
           isDark
             ? 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-amber-400 hover:text-amber-300 shadow-xs'
             : 'bg-white hover:bg-slate-50 border-slate-200/90 text-slate-600 hover:text-indigo-600 shadow-2xs hover:border-slate-300'

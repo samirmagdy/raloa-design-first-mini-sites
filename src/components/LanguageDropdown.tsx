@@ -138,7 +138,7 @@ export const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
           <Globe className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors shrink-0" />
           <span className="leading-none">{displayedLanguage.nativeLabel}</span>
           <ChevronDown
-            className={`w-3.5 h-3.5 text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-transform duration-200 shrink-0 ${
+            className={`w-3.5 h-3.5 text-slate-500 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-transform duration-200 shrink-0 ${
               isOpen ? 'rotate-180' : ''
             }`}
           />
@@ -158,9 +158,9 @@ export const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
             aria-labelledby="language-switcher-trigger"
           >
             {/* Header label inside dropdown */}
-            <div className="px-3 py-1.5 flex items-center justify-between text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase border-b border-slate-100 dark:border-slate-800 mb-1">
+            <div className="px-3 py-1.5 flex items-center justify-between text-[11px] font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase border-b border-slate-100 dark:border-slate-800 mb-1">
               <span>{isRtl ? 'اختر اللغة' : 'Select Language'}</span>
-              <span className="text-[10px] text-slate-400/80 dark:text-slate-500 font-normal">
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal">
                 {isRtl ? 'تفضيل محفوظ' : 'Auto-saved'}
               </span>
             </div>
@@ -194,7 +194,7 @@ export const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
                       </span>
                       <div className="flex flex-col min-w-0">
                         <span className="text-[13px] leading-snug">{lang.nativeLabel}</span>
-                        <span className="text-[11px] text-slate-400 dark:text-slate-500 leading-none">
+                        <span className="text-[11px] text-slate-500 dark:text-slate-400 leading-none">
                           {lang.code === 'ar' ? 'العربية · RTL' : 'English · LTR'}
                         </span>
                       </div>

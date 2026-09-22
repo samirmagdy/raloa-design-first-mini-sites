@@ -4,6 +4,7 @@ export interface TemplateItem {
   id: string;
   name: string;
   role: string;
+  roleAr: string;
   category: 'Portfolio' | 'Creative' | 'Business' | 'Professional' | 'Fitness' | 'Travel' | 'Food' | 'Personal';
   avatar: string;
   coverImage: string;

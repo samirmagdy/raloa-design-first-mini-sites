@@ -119,7 +119,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
                 <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
                   {template.category}
                 </span>
-                <span className="text-xs font-medium text-slate-400 dark:text-slate-500">
+                <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
                   ID: #{template.id}
                 </span>
               </div>
@@ -163,7 +163,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
                 {template.name}
               </h2>
               <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mt-1">
-                {template.role}
+                {isRtl ? template.roleAr : template.role}
               </p>
               <p className="text-sm text-slate-600 dark:text-slate-400 mt-3 leading-relaxed">
                 {isRtl ? template.bioAr : template.bio}
@@ -237,7 +237,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
               id="copy-template-url-btn"
               type="button"
               onClick={handleCopyUrl}
-              className="w-full sm:w-auto px-5 py-3.5 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-2xs group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              className="w-full sm:w-auto px-5 py-3.5 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-2xs group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               aria-label={isRtl ? 'نسخ رابط القالب' : 'Copy Template URL'}
             >
               {copied ? (

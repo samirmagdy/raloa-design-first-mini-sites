@@ -45,7 +45,7 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ locale, onOpenStudio }) => {
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Banner with gradient matching tokens: linear-gradient(90deg, #5B5CF6 0%, #8B5CF6 100%) */}
-        <div className="raloa-cta-depth relative rounded-[32px] overflow-hidden p-8 sm:p-12 lg:p-16 text-white shadow-[0_20px_50px_rgba(91,92,246,0.25)] dark:shadow-[0_20px_50px_rgba(91,92,246,0.15)] bg-gradient-to-r from-[#5B5CF6] via-[#6366F1] to-[#8B5CF6]">
+        <div className="raloa-cta-depth relative rounded-[32px] overflow-hidden p-8 sm:p-12 lg:p-16 text-white shadow-[0_20px_50px_rgba(91,92,246,0.25)] dark:shadow-[0_20px_50px_rgba(91,92,246,0.15)] bg-gradient-to-r from-[#4338CA] via-[#4F46E5] to-[#6D28D9]">
           
           {/* Directional depth accents */}
           <div className="absolute top-4 left-6 opacity-30 select-none pointer-events-none">
@@ -84,7 +84,7 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ locale, onOpenStudio }) => {
                 }`}
               >
                 <div className="flex items-center flex-1 min-h-11 px-3 py-2 sm:py-0">
-                  <span className="text-[14px] font-semibold text-slate-400 dark:text-slate-500 select-none ltr:mr-1 rtl:ml-1">
+                  <span className="text-[14px] font-semibold text-slate-500 dark:text-slate-400 select-none ltr:mr-1 rtl:ml-1">
                     raloa.app/@
                   </span>
                   <input
@@ -92,14 +92,14 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ locale, onOpenStudio }) => {
                     value={username}
                     onChange={handleInputChange}
                     placeholder={locale === 'ar' ? 'اسمك' : 'yourname'}
-                    className="w-full min-h-11 bg-transparent text-[15px] font-semibold text-[#0F172A] dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
+                    className="w-full min-h-11 bg-transparent text-[15px] font-semibold text-ink dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
                     aria-label="Username for final CTA"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="mt-2 sm:mt-0 min-h-[46px] px-6 py-2.5 rounded-xl sm:rounded-full bg-[#0F172A] hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 active:scale-[0.98] text-white font-bold text-[14px] flex items-center justify-center gap-2 shadow-md transition-all whitespace-nowrap cursor-pointer"
+                  className="mt-2 sm:mt-0 min-h-[46px] px-6 py-2.5 rounded-xl sm:rounded-full bg-ink hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 active:scale-[0.98] text-white font-bold text-[14px] flex items-center justify-center gap-2 shadow-md transition-all whitespace-nowrap cursor-pointer"
                 >
                   <span>{t.cta}</span>
                   <ArrowRight className="w-4 h-4 rtl:rotate-180" />
@@ -107,7 +107,7 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ locale, onOpenStudio }) => {
               </div>
 
               {error && (
-                <div className="flex items-center justify-center gap-1.5 mt-2 text-white bg-rose-500/80 rounded-lg py-1 px-3 text-xs font-semibold">
+                <div className="flex items-center justify-center gap-1.5 mt-2 text-white bg-rose-600 rounded-lg py-1 px-3 text-xs font-semibold">
                   <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                   <span>{error}</span>
                 </div>

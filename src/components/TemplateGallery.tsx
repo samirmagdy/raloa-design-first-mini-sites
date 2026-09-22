@@ -73,7 +73,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
   };
 
   return (
-    <section id="templates" className="py-20 md:py-28 bg-[#F8FAFC] dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
+    <section id="templates" className="py-20 md:py-28 bg-surface-alt dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -82,7 +82,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
             <span className="text-[12px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block mb-2">
               {t.eyebrow}
             </span>
-            <h2 className="text-[32px] sm:text-[40px] md:text-[46px] font-extrabold text-[#0F172A] dark:text-white tracking-tight leading-[1.1]">
+            <h2 className="text-[32px] sm:text-[40px] md:text-[46px] font-extrabold text-ink dark:text-white tracking-tight leading-[1.1]">
               <span>{t.headline} </span>
               <span className="bg-gradient-to-r from-[#7C3AED] to-[#2563EB] dark:from-[#9061F9] dark:to-[#3B82F6] bg-clip-text text-transparent">
                 {t.headlineGradient}
@@ -125,7 +125,10 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
         {/* Horizontal Visual Gallery */}
         <div
           ref={scrollRef}
-          className="flex items-stretch gap-3 overflow-x-auto no-scrollbar pb-6 pt-2 snap-x snap-mandatory lg:overflow-visible"
+          role="group"
+          aria-label={locale === 'ar' ? 'معرض القوالب' : 'Template gallery'}
+          tabIndex={0}
+          className="flex items-stretch gap-3 overflow-x-auto no-scrollbar pb-6 pt-2 snap-x snap-mandatory focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-xl"
           style={{ scrollbarWidth: 'none' }}
         >
           {templatesData.map((template) => (
@@ -139,7 +142,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
               onMouseLeave={handleMouseLeave}
               onFocus={(e) => handleMouseEnter(template, e as unknown as React.MouseEvent<HTMLDivElement>)}
               onBlur={handleMouseLeave}
-              className="raloa-depth-card w-[108px] shrink-0 snap-start bg-white dark:bg-slate-900 rounded-2xl p-2 border border-slate-200 dark:border-slate-800 shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:shadow-[0_16px_36px_rgba(15,23,42,0.12)] dark:hover:shadow-[0_16px_36px_rgba(0,0,0,0.6)] hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col"
+              className="raloa-depth-card w-[168px] shrink-0 snap-start bg-white dark:bg-slate-900 rounded-2xl p-2 border border-slate-200 dark:border-slate-800 shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:shadow-[0_16px_36px_rgba(15,23,42,0.12)] dark:hover:shadow-[0_16px_36px_rgba(0,0,0,0.6)] hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col"
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
@@ -184,7 +187,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
           {/* "+ More templates" Card */}
           <div
             onClick={onBrowseAll}
-            className="raloa-depth-card w-[108px] shrink-0 snap-start bg-white/70 hover:bg-white dark:bg-slate-900/70 dark:hover:bg-slate-900 rounded-2xl p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shadow-2xs hover:shadow-md transition-all duration-300 cursor-pointer group flex flex-col items-center justify-center text-center"
+            className="raloa-depth-card w-[168px] shrink-0 snap-start bg-white/70 hover:bg-white dark:bg-slate-900/70 dark:hover:bg-slate-900 rounded-2xl p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shadow-2xs hover:shadow-md transition-all duration-300 cursor-pointer group flex flex-col items-center justify-center text-center"
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
@@ -201,7 +204,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
               {t.moreTemplates}
             </span>
             <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
-              {locale === 'ar' ? 'استكشف ٢٤+ قالباً' : 'Explore 24+ layouts'}
+              {locale === 'ar' ? 'تصفّح كامل المعرض' : 'Browse the full gallery'}
             </span>
           </div>
         </div>

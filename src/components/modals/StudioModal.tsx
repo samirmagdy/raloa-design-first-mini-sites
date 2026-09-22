@@ -46,7 +46,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
   const [username, setUsername] = useState(initialUsername || 'alex');
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateItem>(defaultTemplate);
   const [displayName, setDisplayName] = useState(defaultTemplate.name);
-  const [role, setRole] = useState(defaultTemplate.role);
+  const [role, setRole] = useState(isRtl ? defaultTemplate.roleAr : defaultTemplate.role);
   const [bio, setBio] = useState(isRtl ? defaultTemplate.bioAr : defaultTemplate.bio);
   const [avatar, setAvatar] = useState(defaultTemplate.avatar);
   
@@ -103,7 +103,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
   const handleTemplateSwitch = (tmpl: TemplateItem) => {
     setSelectedTemplate(tmpl);
     setDisplayName(tmpl.name);
-    setRole(tmpl.role);
+    setRole(isRtl ? tmpl.roleAr : tmpl.role);
     setBio(isRtl ? tmpl.bioAr : tmpl.bio);
     setAvatar(tmpl.avatar);
     setLinks(
@@ -190,7 +190,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
           <div className="flex items-center gap-3">
             <RaloaMark size={34} theme="monochrome-black" />
             <div>
-              <h2 id="studio-modal-title" className="text-sm font-extrabold text-[#0F172A] leading-tight flex items-center gap-1.5">
+              <h2 id="studio-modal-title" className="text-sm font-extrabold text-ink leading-tight flex items-center gap-1.5">
                 <span>RALOA Studio</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-bold border border-indigo-100 print:hidden">
                   {isRtl ? 'مباشر' : 'Live Editor'}
@@ -261,7 +261,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
 
             <button
               onClick={handleStartOrPublishSite}
-              className="px-4 py-2 rounded-full bg-[#0F172A] hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2 rounded-full bg-ink hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <Rocket className="w-3.5 h-3.5 text-indigo-400" />
               <span>{isDraftSaved ? (isRtl ? 'تم حفظ المسودة' : 'Draft Saved') : (isRtl ? 'حفظ المسودة' : 'Save Draft')}</span>
@@ -605,7 +605,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setActiveTab('share')}
-                      className="w-full sm:w-auto px-5 py-2.5 bg-[#0F172A] hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
+                      className="w-full sm:w-auto px-5 py-2.5 bg-ink hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <Check className="w-3.5 h-3.5 text-emerald-400" />
                       <span>{isRtl ? 'متابعة إلى النشر والمشاركة' : 'Continue to Publish'}</span>

@@ -210,16 +210,16 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="col-span-2 md:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-8">
             {Object.entries(footerLinks).map(([key, group]) => (
               <div key={key}>
-                <h4 className="font-extrabold text-[13px] text-[#0F172A] dark:text-white uppercase tracking-wider mb-4">
+                <h2 className="font-extrabold text-[13px] text-ink dark:text-white uppercase tracking-wider mb-4">
                   {group.title}
-                </h4>
+                </h2>
                 <ul className="space-y-2.5">
                   {group.links.map((link) => (
                     <li key={link.label}>
                       <a
                         href={link.href}
                         onClick={(e) => handleLinkClick(e, link.label, link.href)}
-                        className="inline-flex min-h-11 items-center text-[13px] text-slate-500 dark:text-slate-400 hover:text-[#0F172A] dark:hover:text-white transition-colors"
+                        className="inline-flex min-h-11 items-center text-[13px] text-slate-500 dark:text-slate-400 hover:text-ink dark:hover:text-white transition-colors"
                       >
                         {link.label}
                       </a>
@@ -233,7 +233,7 @@ export const Footer: React.FC<FooterProps> = ({
         </div>
 
         {/* Bottom Bar: Copyright & Attribution */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-slate-400 dark:text-slate-500">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-slate-500 dark:text-slate-400">
           <p>{t.copyright}</p>
           <div className="flex flex-wrap items-center justify-center gap-5 sm:gap-6">
             <button

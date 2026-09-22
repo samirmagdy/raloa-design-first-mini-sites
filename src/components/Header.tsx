@@ -128,7 +128,7 @@ export const Header: React.FC<HeaderProps> = ({
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="inline-flex min-h-11 items-center whitespace-nowrap text-[14px] font-medium text-slate-600 dark:text-slate-300 hover:text-[#0F172A] dark:hover:text-white transition-colors relative px-1"
+                className="inline-flex min-h-11 items-center whitespace-nowrap text-[14px] font-medium text-slate-600 dark:text-slate-300 hover:text-ink dark:hover:text-white transition-colors relative px-1"
               >
                 {link.label}
               </a>
@@ -157,7 +157,7 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Primary CTA Button */}
               <button
                 onClick={() => onOpenStudio()}
-                className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap px-5 py-2.5 rounded-full bg-[#0F172A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-[14px] font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 cursor-pointer"
+                className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap px-5 py-2.5 rounded-full bg-ink hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-[14px] font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 cursor-pointer"
               >
                 <span>{t.createPage}</span>
                 <ArrowRight className="w-4 h-4 rtl:rotate-180" />
@@ -181,7 +181,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-50 lg:hidden bg-slate-950/60 backdrop-blur-xs transition-opacity"
+          className="fixed inset-0 z-50 lg:hidden bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-300"
           onClick={() => setMobileMenuOpen(false)}
         >
           <div
@@ -192,7 +192,7 @@ export const Header: React.FC<HeaderProps> = ({
             aria-label={isRtl ? 'قائمة التنقل' : 'Navigation menu'}
             className={`fixed top-0 bottom-0 ${
               isRtl ? 'left-0' : 'right-0'
-            } w-[310px] bg-white dark:bg-slate-900 shadow-2xl p-6 flex flex-col justify-between transition-transform duration-300 ease-out border-s border-slate-200 dark:border-slate-800`}
+            } w-[310px] bg-white dark:bg-slate-900 shadow-2xl p-6 flex flex-col justify-between animate-in slide-in-from-end-full duration-300 border-s border-slate-200 dark:border-slate-800`}
             onClick={(e) => e.stopPropagation()}
             dir={isRtl ? 'rtl' : 'ltr'}
           >
@@ -276,7 +276,7 @@ export const Header: React.FC<HeaderProps> = ({
                   setMobileMenuOpen(false);
                   onOpenStudio();
                 }}
-                className="w-full py-3 rounded-xl bg-[#0F172A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-[14px] font-bold shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-3 rounded-xl bg-ink hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-[14px] font-bold shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>{t.createPage}</span>
                 <ArrowRight className="w-4 h-4 rtl:rotate-180" />

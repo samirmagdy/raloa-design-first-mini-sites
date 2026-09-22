@@ -124,7 +124,7 @@ export const PlanCheckoutModal: React.FC<PlanCheckoutModalProps> = ({
                   </p>
                 </div>
                 <div className="text-right rtl:text-left">
-                  <span className="text-2xl font-black text-[#0F172A]">
+                  <span className="text-2xl font-black text-ink">
                     {plan.priceMonthly === 0 ? '$0' : `$${price.toFixed(price % 1 === 0 ? 0 : 2)}`}
                   </span>
                   <span className="text-xs text-slate-500 font-medium">
@@ -181,7 +181,7 @@ export const PlanCheckoutModal: React.FC<PlanCheckoutModalProps> = ({
 
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-xl bg-[#0F172A] hover:bg-slate-800 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-3.5 rounded-xl bg-ink hover:bg-slate-800 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>
                   {plan.priceMonthly === 0

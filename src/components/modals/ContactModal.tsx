@@ -114,7 +114,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ locale, onClose }) =
 
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl bg-[#0F172A] hover:bg-slate-800 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-3 rounded-xl bg-ink hover:bg-slate-800 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>{isRtl ? 'إرسال الرسالة' : 'Send Inquiry'}</span>

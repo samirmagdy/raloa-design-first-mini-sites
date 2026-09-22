@@ -14,7 +14,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
   const t = dictionary[locale].pricingSection;
 
   return (
-    <section id="pricing" className="py-20 md:py-28 bg-[#F8FAFC] dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
+    <section id="pricing" className="py-20 md:py-28 bg-surface-alt dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -22,7 +22,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
           <span className="text-[12px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block mb-2">
             {t.eyebrow}
           </span>
-          <h2 className="text-[34px] sm:text-[42px] md:text-[48px] font-extrabold text-[#0F172A] dark:text-white tracking-tight leading-tight">
+          <h2 className="text-[34px] sm:text-[42px] md:text-[48px] font-extrabold text-ink dark:text-white tracking-tight leading-tight">
             {t.headline}
           </h2>
           <p className="text-[16px] sm:text-[18px] text-slate-600 dark:text-slate-300 mt-2 font-normal">
@@ -35,7 +35,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
               onClick={() => setIsYearly(false)}
               className={`min-h-11 px-5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 !isYearly
-                  ? 'bg-[#0F172A] dark:bg-white text-white dark:text-slate-900 shadow-xs'
+                  ? 'bg-ink dark:bg-white text-white dark:text-slate-900 shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -45,7 +45,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
               onClick={() => setIsYearly(true)}
               className={`inline-flex min-h-11 items-center gap-1.5 px-5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 isYearly
-                  ? 'bg-[#0F172A] dark:bg-white text-white dark:text-slate-900 shadow-xs'
+                  ? 'bg-ink dark:bg-white text-white dark:text-slate-900 shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -82,7 +82,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
 
                 <div>
                   {/* Plan Name & Desc */}
-                  <h3 className="font-extrabold text-[22px] text-[#0F172A] dark:text-white tracking-tight mb-1">
+                  <h3 className="font-extrabold text-[22px] text-ink dark:text-white tracking-tight mb-1">
                     {isRtl ? plan.nameAr : plan.name}
                   </h3>
                   <p className="text-[13px] text-slate-500 dark:text-slate-400 mb-6 min-h-[38px]">
@@ -91,7 +91,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
 
                   {/* Price */}
                   <div className="flex items-baseline gap-1.5 mb-7">
-                    <span className="text-[44px] font-black text-[#0F172A] dark:text-white tracking-tight leading-none">
+                    <span className="text-[44px] font-black text-ink dark:text-white tracking-tight leading-none">
                       {formattedPrice}
                     </span>
                     <span className="text-[14px] text-slate-500 dark:text-slate-400 font-medium">
@@ -119,8 +119,8 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
                   onClick={() => onSelectPlan(plan, isYearly)}
                   className={`w-full py-3.5 px-6 rounded-full font-bold text-[14px] transition-all flex items-center justify-center gap-2 cursor-pointer ${
                     isPopular
-                      ? 'bg-[#0F172A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 shadow-md hover:scale-[1.01]'
-                      : 'bg-white hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-750 text-[#0F172A] dark:text-white border border-slate-300 dark:border-slate-700'
+                      ? 'bg-ink hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 shadow-md hover:scale-[1.01]'
+                      : 'bg-white hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-ink dark:text-white border border-slate-300 dark:border-slate-700'
                   }`}
                 >
                   <span>{isRtl ? plan.ctaTextAr : plan.ctaText}</span>

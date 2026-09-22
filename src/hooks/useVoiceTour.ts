@@ -39,10 +39,6 @@ export const TOUR_SCRIPTS: Record<string, VoiceTourSectionScript> = {
     en: 'Frequently asked questions. Learn about custom domains, zero fees on digital products, calendar sync, and seamless migration from other platforms.',
     ar: 'الأسئلة الشائعة والدعم الفني. إجابات شاملة حول النطاقات المخصصة، البيع بدون عمولة، والتحويل السلس من المنصات الأخرى.'
   },
-  newsletter: {
-    en: 'Weekly creator newsletter. Subscribe for curated insights on mini-site growth, new high-converting templates, and product updates.',
-    ar: 'النشرة البريدية الأسبوعية. اشترك للحصول على أحدث النصائح، قوالب حصرية، وتحديثات منتجات رالوا مباشرة في بريدك.'
-  }
 };
 
 const TRACKED_SECTIONS = [
@@ -54,7 +50,6 @@ const TRACKED_SECTIONS = [
   'testimonials',
   'pricing',
   'faq',
-  'newsletter'
 ];
 
 export interface UseVoiceTourOptions {

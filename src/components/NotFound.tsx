@@ -291,7 +291,7 @@ export const NotFound: React.FC<NotFoundProps> = ({
             transition={{ duration: 0.4, delay: 0.25 }}
             className="flex items-center justify-center gap-2 text-xs font-mono px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 mb-8 max-w-md w-full overflow-hidden text-ellipsis whitespace-nowrap"
           >
-            <span className="text-slate-400 dark:text-slate-500 font-sans">{t.brokenPathLabel}</span>
+            <span className="text-slate-500 dark:text-slate-400 font-sans">{t.brokenPathLabel}</span>
             <span className="text-indigo-600 dark:text-indigo-400 font-bold truncate">{attemptedPath}</span>
           </motion.div>
         )}
@@ -347,7 +347,7 @@ export const NotFound: React.FC<NotFoundProps> = ({
               >
                 {isRtl ? 'المميزات' : 'Features'}
               </button>
-              <span className="text-slate-300 dark:text-slate-700">·</span>
+              <span className="text-slate-500 dark:text-slate-400">·</span>
               <button
                 type="button"
                 onClick={() => onNavigateToSection('pricing')}
@@ -355,7 +355,7 @@ export const NotFound: React.FC<NotFoundProps> = ({
               >
                 {t.viewPricing}
               </button>
-              <span className="text-slate-300 dark:text-slate-700">·</span>
+              <span className="text-slate-500 dark:text-slate-400">·</span>
               <button
                 type="button"
                 onClick={() => onNavigateToSection('faq')}
@@ -369,7 +369,7 @@ export const NotFound: React.FC<NotFoundProps> = ({
       </main>
 
       {/* Minimalist Sub-footer */}
-      <footer className="relative z-10 w-full py-6 text-center text-xs text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-900">
+      <footer className="relative z-10 w-full py-6 text-center text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-900">
         <p>© {new Date().getFullYear()} RALOA Inc. {isRtl ? 'جميع الحقوق محفوظة' : 'All rights reserved.'}</p>
       </footer>
     </div>

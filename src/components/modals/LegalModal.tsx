@@ -61,7 +61,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ title, locale, onClose }
         <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end">
           <button
             onClick={onClose}
-            className="px-5 py-2 bg-[#0F172A] text-white text-xs font-bold rounded-xl hover:bg-slate-800 transition-colors"
+            className="px-5 py-2 bg-ink text-white text-xs font-bold rounded-xl hover:bg-slate-800 transition-colors"
           >
             {isRtl ? 'إغلاق' : 'Close'}
           </button>

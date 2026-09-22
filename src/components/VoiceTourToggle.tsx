@@ -22,8 +22,7 @@ const SECTION_LABELS: Record<string, { en: string; ar: string }> = {
   features: { en: 'Creator Features', ar: 'مميزات المبدعين' },
   testimonials: { en: 'Creator Stories', ar: 'قصص المبدعين' },
   pricing: { en: 'Pricing Plans', ar: 'خطط الأسعار' },
-  faq: { en: 'Support & FAQ', ar: 'الأسئلة الشائعة' },
-  newsletter: { en: 'Creator Newsletter', ar: 'النشرة البريدية' }
+  faq: { en: 'Support & FAQ', ar: 'الأسئلة الشائعة' }
 };
 
 export const VoiceTourToggle: React.FC<VoiceTourToggleProps> = ({
@@ -146,7 +145,7 @@ export const VoiceTourToggle: React.FC<VoiceTourToggleProps> = ({
             <button
               type="button"
               onClick={onReplay}
-              className="p-1.5 rounded-lg text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              className="inline-grid place-items-center min-h-11 min-w-11 rounded-lg text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
               title={isRtl ? 'إعادة تشغيل المقطع الحالي' : 'Replay section narration'}
               aria-label={isRtl ? 'إعادة تشغيل المقطع الحالي' : 'Replay narration'}
             >
@@ -156,7 +155,7 @@ export const VoiceTourToggle: React.FC<VoiceTourToggleProps> = ({
           <button
             type="button"
             onClick={onToggle}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="inline-grid place-items-center min-h-11 min-w-11 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             title={isRtl ? 'إنهاء الجولة الصوتية' : 'Stop voice tour'}
             aria-label={isRtl ? 'إنهاء الجولة الصوتية' : 'Close voice tour'}
           >
@@ -194,7 +193,7 @@ export const VoiceTourToggle: React.FC<VoiceTourToggleProps> = ({
       <button
         type="button"
         onClick={onToggle}
-        className={`relative p-2 rounded-full border transition-all cursor-pointer ${
+        className={`relative p-2 rounded-full border transition-all cursor-pointer inline-grid place-items-center min-h-11 min-w-11 ${
           enabled
             ? 'bg-indigo-50 dark:bg-indigo-950/80 border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-300 shadow-2xs'
             : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700'

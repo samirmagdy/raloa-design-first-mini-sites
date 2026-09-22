@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
+import { MotionConfig } from 'motion/react';
 import { Locale, TemplateItem, PricingPlan } from './types';
 import { templatesData, pricingPlans } from './data/content';
 import { Header } from './components/Header';
@@ -14,7 +15,6 @@ import { FinalCTA } from './components/FinalCTA';
 import { Footer } from './components/Footer';
 import { ScrollProgressBar } from './components/ScrollProgressBar';
 import { BackToTop } from './components/BackToTop';
-import { FadeInSection } from './components/FadeInSection';
 import { NotFound } from './components/NotFound';
 
 // Interactive Modals
@@ -29,7 +29,6 @@ const KeyboardShortcutsModal = lazy(() => import('./components/modals/KeyboardSh
 const ProjectStatsModal = lazy(() => import('./components/modals/ProjectStatsModal').then((module) => ({ default: module.ProjectStatsModal })));
 const ReferralModal = lazy(() => import('./components/modals/ReferralModal').then((module) => ({ default: module.ReferralModal })));
 const EasterEggOverlay = lazy(() => import('./components/EasterEggOverlay').then((module) => ({ default: module.EasterEggOverlay })));
-import { LoadingOverlay } from './components/LoadingOverlay';
 import { CustomCursor } from './components/CustomCursor';
 import { getInitialLocale, persistLocale } from './utils/locale';
 import { Theme, getInitialTheme, applyTheme } from './utils/theme';
@@ -44,7 +43,6 @@ export default function App() {
   const [locale, setLocale] = useState<Locale>(() => getInitialLocale());
   const [theme, setTheme] = useState<Theme>(() => getInitialTheme());
   const [soundEnabled, setSoundEnabled] = useState<boolean>(() => getInitialSoundEnabled());
-  const [isLoading, setIsLoading] = useState(true);
 
   // Client Routing State for Handling 404 and Broken Links Gracefully
   const [currentRoute, setCurrentRoute] = useState<'home' | '404'>(() => {
@@ -158,15 +156,6 @@ export default function App() {
     document.documentElement.lang = locale;
     persistLocale(locale);
   }, [locale]);
-
-  // Initial page load branded overlay dismissal
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 750);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   // Synchronize theme with document element and persistence
   useEffect(() => {
@@ -464,13 +453,13 @@ export default function App() {
   ]);
 
   return (
-    <div className={`min-h-screen bg-white dark:bg-slate-950 text-[#0F172A] dark:text-slate-100 transition-colors duration-200 ${locale === 'ar' ? 'font-sans' : 'font-sans'}`}>
+    <MotionConfig reducedMotion="user">
+    <div className="min-h-screen bg-white dark:bg-slate-950 text-ink dark:text-slate-100 transition-colors duration-200 font-sans">
       
       {/* Custom Spring-Based Trailing Cursor */}
       <CustomCursor theme={theme} />
 
       {/* Global Branded Loading Overlay */}
-      <LoadingOverlay isLoading={isLoading} locale={locale} theme={theme} />
 
       {/* 404 Page Not Found or Standard Landing Page */}
       {currentRoute === '404' ? (
@@ -518,28 +507,28 @@ export default function App() {
         />
 
         {/* 02 Trust & Benefits Section with Auto-Scrolling Marquee */}
-        <FadeInSection id="trust-reveal">
+        <div id="trust-reveal">
           <TrustAndBenefits
             locale={locale}
           />
-        </FadeInSection>
+        </div>
 
         {/* 03 Templates Carousel Section */}
-        <FadeInSection id="templates-reveal">
+        <div id="templates-reveal">
           <TemplateGallery
             locale={locale}
             onSelectTemplate={handleSelectTemplate}
             onBrowseAll={() => handleSelectTemplate(templatesData[0])}
           />
-        </FadeInSection>
+        </div>
 
         {/* 04 How It Works Section */}
-        <FadeInSection id="how-it-works-reveal">
+        <div id="how-it-works-reveal">
           <HowItWorks locale={locale} />
-        </FadeInSection>
+        </div>
 
         {/* 05 Feature Grid Section */}
-        <FadeInSection id="features-reveal">
+        <div id="features-reveal">
           <FeatureGrid
             locale={locale}
             onExploreFeatures={() => {
@@ -547,45 +536,45 @@ export default function App() {
               pricingEl?.scrollIntoView({ behavior: 'smooth' });
             }}
           />
-        </FadeInSection>
+        </div>
 
         {/* 06 Testimonials Section */}
-        <FadeInSection id="testimonials-reveal">
+        <div id="testimonials-reveal">
           <Testimonials
             locale={locale}
             onSeeMoreStories={() => {
               handleSelectTemplate(templatesData[1]);
             }}
           />
-        </FadeInSection>
+        </div>
 
         {/* 07 Pricing Table Section */}
-        <FadeInSection id="pricing-reveal">
+        <div id="pricing-reveal">
           <PricingTable
             locale={locale}
             onSelectPlan={handleSelectPlan}
           />
-        </FadeInSection>
+        </div>
 
         {/* 08 FAQ Accordion Section */}
-        <FadeInSection id="faq-reveal">
+        <div id="faq-reveal">
           <FAQAccordion
             locale={locale}
             onContactSupport={() => setContactOpen(true)}
           />
-        </FadeInSection>
+        </div>
 
         {/* 09 Final CTA Banner */}
-        <FadeInSection id="final-cta-reveal">
+        <div id="final-cta-reveal">
           <FinalCTA
             locale={locale}
             onOpenStudio={handleOpenStudio}
           />
-        </FadeInSection>
+        </div>
       </main>
 
       {/* 10 Footer */}
-      <FadeInSection id="footer-reveal">
+      <div id="footer-reveal">
         <Footer
           locale={locale}
           theme={theme}
@@ -596,7 +585,7 @@ export default function App() {
           onOpenReferral={() => setReferralModalOpen(true)}
           onTriggerNotFound={handleTriggerNotFound}
         />
-      </FadeInSection>
+      </div>
 
       {/* Floating Back to Top Button */}
       <BackToTop locale={locale} />
@@ -728,5 +717,6 @@ export default function App() {
       </Suspense>
 
     </div>
+    </MotionConfig>
   );
 }

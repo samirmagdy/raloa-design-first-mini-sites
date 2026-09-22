@@ -5,11 +5,12 @@ export const templatesData: TemplateItem[] = [
     id: 'elena',
     name: 'Elena',
     role: 'Art Director & Architectural Photographer',
+    roleAr: 'مديرة فنية ومصورة معمارية',
     category: 'Portfolio',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
     coverImage: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
-    bio: 'Art Director & Architectural Photographer. Exploring light, concrete and minimal spaces.',
-    bioAr: 'مديرة فنية ومصورة معمارية. استكشاف الضوء والخرسانة والمساحات البسيطة.',
+    bio: 'Exploring light, concrete and minimal spaces.',
+    bioAr: 'استكشاف الضوء والخرسانة والمساحات البسيطة.',
     themeColor: '#5B5CF6',
     accentGradient: 'from-indigo-500 to-violet-600',
     sampleLinks: [
@@ -66,6 +67,7 @@ export const templatesData: TemplateItem[] = [
     id: 'mateo',
     name: 'Mateo',
     role: 'Filmmaker & Visual Storyteller',
+    roleAr: 'مخرج سينمائي وراوي قصص بصرية',
     category: 'Creative',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
     coverImage: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=600&q=80',
@@ -86,8 +88,9 @@ export const templatesData: TemplateItem[] = [
   },
   {
     id: 'studio',
-    name: 'STUDIO',
+    name: 'Studio',
     role: 'Modern Interior & Object Design',
+    roleAr: 'تصميم داخلي وأثاث معاصر',
     category: 'Business',
     avatar: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
     coverImage: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=600&q=80',
@@ -110,6 +113,7 @@ export const templatesData: TemplateItem[] = [
     id: 'dr-ahmed',
     name: 'Dr. Ahmed',
     role: 'Consultant Dermatologist',
+    roleAr: 'استشاري أمراض جلدية',
     category: 'Professional',
     avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80',
     coverImage: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=600&q=80',
@@ -132,6 +136,7 @@ export const templatesData: TemplateItem[] = [
     id: 'fitlife',
     name: 'FitLife',
     role: 'Certified Strength & Nutrition Coach',
+    roleAr: 'مدرب لياقة وتغذية معتمد',
     category: 'Fitness',
     avatar: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=80',
     coverImage: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80',
@@ -154,6 +159,7 @@ export const templatesData: TemplateItem[] = [
     id: 'wander',
     name: 'Wander',
     role: 'Travel Journalist & Expedition Leader',
+    roleAr: 'صحفي سفر وقائد بعثات استكشافية',
     category: 'Travel',
     avatar: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
     coverImage: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80',
@@ -176,6 +182,7 @@ export const templatesData: TemplateItem[] = [
     id: 'savor',
     name: 'Savor',
     role: 'Artisan Baker & Culinary Educator',
+    roleAr: 'خبّاز حرفي ومدرّب طهي',
     category: 'Food',
     avatar: 'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=400&q=80',
     coverImage: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80',
@@ -198,6 +205,7 @@ export const templatesData: TemplateItem[] = [
     id: 'nova',
     name: 'Nova',
     role: 'Electronic Music Producer & Sound Designer',
+    roleAr: 'منتج موسيقى إلكترونية ومصمم صوت',
     category: 'Personal',
     avatar: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=400&q=80',
     coverImage: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=600&q=80',
@@ -272,8 +280,8 @@ export const pricingPlans: PricingPlan[] = [
       'تحليلات دقيقة ولحظية للزوار والنقرات',
       'إزالة شعار رالوا بالكامل'
     ],
-    ctaText: 'Start Pro',
-    ctaTextAr: 'ابدأ باقة المحترفين',
+    ctaText: 'Upgrade to Pro',
+    ctaTextAr: 'الترقية إلى باقة المحترفين',
     ctaVariant: 'dark'
   },
   {
@@ -300,8 +308,8 @@ export const pricingPlans: PricingPlan[] = [
       'دعم فني مخصص ذو أولوية على مدار الساعة',
       'أسبقية الوصول للميزات الجديدة والتحديثات'
     ],
-    ctaText: 'Start Business',
-    ctaTextAr: 'ابدأ باقة الشركات',
+    ctaText: 'Upgrade to Business',
+    ctaTextAr: 'الترقية إلى باقة الشركات',
     ctaVariant: 'secondary'
   }
 ];
@@ -531,11 +539,16 @@ export const dictionary = {
       signIn: 'Sign in',
       createPage: 'Create your page'
     },
+    depthScene: {
+      links: 'Links',
+      bookings: 'Bookings',
+      products: 'Products',
+    },
     hero: {
       eyebrow: 'MINI-SITES FOR CREATORS · ENGLISH + ARABIC',
       headlineStart: 'Your story.',
       headlineGradient: 'One beautiful link.',
-      subheadline: 'Turn your links, content and bookings into a stunning mini-site in minutes. No coding. No limits.',
+      subheadline: 'Turn your links, content and bookings into a stunning mini‑site in minutes. No coding required.',
       prefix: 'raloa.app/@',
       placeholder: 'yourname',
       cta: 'Create your page',
@@ -559,7 +572,7 @@ export const dictionary = {
     howItWorksSection: {
       eyebrow: 'GET STARTED TODAY',
       headline: 'How RALOA works',
-      subheadline: 'Three simple steps to your stunning mini-site.',
+      subheadline: 'Three steps from sign-up to a live page.',
       doodleText: 'From idea to impact in minutes',
       steps: [
         {
@@ -593,7 +606,7 @@ export const dictionary = {
     pricingSection: {
       eyebrow: 'SIMPLE & TRANSPARENT',
       headline: 'Pricing for every creator',
-      subheadline: 'Powerful features designed for your stunning mini-site.',
+      subheadline: 'Simple plans that grow with your audience.',
       monthly: 'Monthly',
       yearly: 'Yearly',
       saveBadge: 'Save 20%',
@@ -632,11 +645,16 @@ export const dictionary = {
       signIn: 'تسجيل الدخول',
       createPage: 'أنشئ صفحتك'
     },
+    depthScene: {
+      links: 'روابط',
+      bookings: 'حجوزات',
+      products: 'منتجات',
+    },
     hero: {
       eyebrow: 'مواقع مصغرة للمبدعين · باللغتين العربية والإنجليزية',
       headlineStart: 'قصتك وتأثيرك.',
       headlineGradient: 'في رابط واحد مذهل.',
-      subheadline: 'حوّل روابطك ومحتواك ومواعيدك إلى موقع شخصي مصغر في دقائق معدودة. بلا أي برمجة وبلا قيود.',
+      subheadline: 'حوّل روابطك ومحتواك ومواعيدك إلى موقع شخصي مصغر في دقائق معدودة. بدون أي برمجة.',
       prefix: 'raloa.app/@',
       placeholder: 'اسمك',
       cta: 'أنشئ صفحتك الآن',
@@ -660,7 +678,7 @@ export const dictionary = {
     howItWorksSection: {
       eyebrow: 'ابدأ اليوم بسهولة',
       headline: 'كيف يعمل رالوا',
-      subheadline: 'ثلاث خطوات بسيطة فقط لتنطلق بموقعك المصغر الجذاب.',
+      subheadline: 'ثلاث خطوات من التسجيل حتى نشر صفحتك.',
       doodleText: 'من الفكرة إلى الإطلاق في دقائق',
       steps: [
         {
@@ -694,7 +712,7 @@ export const dictionary = {
     pricingSection: {
       eyebrow: 'خطط بسيطة وشفافة',
       headline: 'أسعار مناسبة لكل صانع محتوى',
-      subheadline: 'ميزات قوية صُممت خصيصاً لموقعك المصغر المتميز.',
+      subheadline: 'باقات بسيطة تنمو مع جمهورك.',
       monthly: 'شهري',
       yearly: 'سنوي',
       saveBadge: 'وفّر ٢٠٪',

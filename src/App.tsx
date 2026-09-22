@@ -10,7 +10,6 @@ import { FeatureGrid } from './components/FeatureGrid';
 import { Testimonials } from './components/Testimonials';
 import { PricingTable } from './components/PricingTable';
 import { FAQAccordion } from './components/FAQAccordion';
-import { Newsletter } from './components/Newsletter';
 import { FinalCTA } from './components/FinalCTA';
 import { Footer } from './components/Footer';
 import { ScrollProgressBar } from './components/ScrollProgressBar';
@@ -524,10 +523,6 @@ export default function App() {
         <FadeInSection id="trust-reveal">
           <TrustAndBenefits
             locale={locale}
-            onOpenPublishedSite={(site) => {
-              const username = site.handle.replace('raloa.app/@', '');
-              handleOpenStudio(username);
-            }}
           />
         </FadeInSection>
 
@@ -582,12 +577,7 @@ export default function App() {
           />
         </FadeInSection>
 
-        {/* 09 Newsletter Signup Section */}
-        <FadeInSection id="newsletter-reveal">
-          <Newsletter locale={locale} />
-        </FadeInSection>
-
-        {/* 10 Final CTA Banner */}
+        {/* 09 Final CTA Banner */}
         <FadeInSection id="final-cta-reveal">
           <FinalCTA
             locale={locale}

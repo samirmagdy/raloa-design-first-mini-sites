@@ -105,19 +105,21 @@ export const RaloaLogo: React.FC<RaloaLogoProps> = ({
 
   return (
     <div
-      className={`inline-flex items-center select-none overflow-hidden ${className}`}
+      className={`inline-flex items-center select-none overflow-visible ${showTagline ? 'flex-col justify-center' : ''} ${className}`}
       role="banner"
       dir={isRtl ? 'rtl' : 'ltr'}
       style={{ width: width || current.width, height: height || current.height }}
     >
-      <BrandPicture
-      sources={horizontalSources[theme]}
-      alt="RALOA"
-      pictureClassName="w-full h-full"
-      className="h-full w-full object-cover object-center"
-      />
+      <div className={showTagline ? 'h-[78%] w-full' : 'h-full w-full'}>
+        <BrandPicture
+          sources={horizontalSources[theme]}
+          alt="RALOA"
+          pictureClassName="w-full h-full"
+          className="h-full w-full object-cover object-center"
+        />
+      </div>
       {showTagline && (
-        <span className={`absolute translate-y-7 text-[10px] font-semibold tracking-tight ${
+        <span className={`text-[9px] leading-none font-semibold tracking-tight ${
           theme === 'on-dark' || theme === 'monochrome-white' ? 'text-slate-300' : 'text-slate-500'
         }`}>
           {isRtl ? 'مواقع مصغرة تركز على التصميم' : 'Design-first mini-sites'}

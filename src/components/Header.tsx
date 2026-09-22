@@ -118,7 +118,7 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center gap-2 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg"
             aria-label="RALOA Home"
           >
-            <RaloaLogo isRtl={isRtl} theme={isDark ? 'on-dark' : 'primary'} />
+            <RaloaLogo isRtl={isRtl} theme={isDark ? 'on-dark' : 'primary'} showTagline />
           </a>
 
           {/* Center Navigation Links (Desktop) */}
@@ -138,40 +138,12 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Right Action Controls */}
           <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             <div className="hidden lg:flex items-center gap-2 sm:gap-2.5">
-              {/* Voice-over Tour Toggle */}
-              {onToggleVoiceTour && (
-                <VoiceTourToggle
-                  enabled={voiceTourEnabled}
-                  isSpeaking={voiceTourSpeaking}
-                  onToggle={onToggleVoiceTour}
-                  currentSection={currentSection}
-                  onReplay={onReplayVoiceTour}
-                  variant="header"
-                  locale={locale}
-                />
-              )}
-
-              {/* Ambient Sound Toggle */}
-              <SoundToggle
-                enabled={soundEnabled}
-                onToggle={onToggleSound}
-                variant="header"
-                locale={locale}
-              />
-
-              {/* Global Theme Toggle */}
-              <ThemeToggle
-                theme={theme}
-                onToggleTheme={onToggleTheme}
-                variant="header"
-                locale={locale}
-              />
-
-              {/* Language Switcher Dropdown */}
+              {/* Approved header language action */}
               <LanguageDropdown
                 currentLocale={locale}
                 onSelectLocale={handleSelectLanguage}
                 variant="header"
+                showTargetLanguage
               />
 
               {/* Sign in Button */}

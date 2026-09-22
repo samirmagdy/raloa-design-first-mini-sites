@@ -33,7 +33,7 @@ export const Footer: React.FC<FooterProps> = ({
     { label: 'Instagram', href: import.meta.env.VITE_RALOA_INSTAGRAM_URL, icon: Instagram },
     { label: 'YouTube', href: import.meta.env.VITE_RALOA_YOUTUBE_URL, icon: Youtube },
     { label: 'LinkedIn', href: import.meta.env.VITE_RALOA_LINKEDIN_URL, icon: Linkedin }
-  ].filter((link): link is { label: string; href: string; icon: typeof Twitter } => Boolean(link.href));
+  ];
   const [copied, setCopied] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -70,25 +70,25 @@ export const Footer: React.FC<FooterProps> = ({
         { label: locale === 'ar' ? 'المميزات' : 'Features', href: '#features' },
         { label: locale === 'ar' ? 'القوالب' : 'Templates', href: '#templates' },
         { label: locale === 'ar' ? 'الأسعار' : 'Pricing', href: '#pricing' },
-        { label: locale === 'ar' ? 'اكسب رصيداً' : 'Earn Credits', href: '#referral' },
-        { label: locale === 'ar' ? 'إحصائيات المشروع' : 'Project Stats', href: '#project-stats' }
+        { label: locale === 'ar' ? 'سجل التحديثات' : 'Changelog', href: '#features' }
       ]
     },
     company: {
       title: t.company,
       links: [
         { label: locale === 'ar' ? 'نبذة عن رالوا' : 'About RALOA', href: '#benefits' },
-        { label: locale === 'ar' ? 'قصص المبدعين' : 'Creator Stories', href: '#testimonials' },
-        { label: locale === 'ar' ? 'تواصل معنا' : 'Contact Support', href: '#faq' }
+        { label: locale === 'ar' ? 'المدونة' : 'Blog', href: '#testimonials' },
+        { label: locale === 'ar' ? 'الوظائف' : 'Careers', href: '#faq' },
+        { label: locale === 'ar' ? 'تواصل معنا' : 'Contact', href: '#faq' }
       ]
     },
     resources: {
       title: t.resources,
       links: [
         { label: locale === 'ar' ? 'مركز المساعدة' : 'Help Center', href: '#faq' },
-        { label: locale === 'ar' ? 'دليل الاستخدام' : 'Getting Started', href: '#how-it-works' },
-        { label: locale === 'ar' ? 'قصص المجتمع' : 'Community Stories', href: '#testimonials' },
-        { label: locale === 'ar' ? 'صفحة 404 (معاينة)' : '404 Demo Page', href: '/404' }
+        { label: locale === 'ar' ? 'الأدلة' : 'Guides', href: '#how-it-works' },
+        { label: locale === 'ar' ? 'المجتمع' : 'Community', href: '#testimonials' },
+        { label: locale === 'ar' ? 'حالة الخدمة' : 'Status', href: '#footer-reveal' }
       ]
     },
     legal: {
@@ -133,29 +133,28 @@ export const Footer: React.FC<FooterProps> = ({
           
           {/* Brand Info (4 cols) */}
           <div className="col-span-2 md:col-span-4 flex flex-col items-start">
-            <RaloaLogo isRtl={isRtl} size="md" theme={theme === 'dark' ? 'on-dark' : 'primary'} />
+            <RaloaLogo isRtl={isRtl} size="md" theme={theme === 'dark' ? 'on-dark' : 'primary'} showTagline />
             <p className="text-[13px] text-slate-500 dark:text-slate-400 mt-4 max-w-xs leading-relaxed">
               {isRtl
                 ? 'المنصة الرائدة لبناء المواقع المصغرة الأنيقة لصناع المحتوى والمستقلين وأصحاب الأعمال.'
                 : 'A fast, design-first mini-site builder for creators, freelancers and businesses.'}
             </p>
 
-            {socialLinks.length > 0 && (
-              <div className="mt-6 flex items-center gap-3">
-                {socialLinks.map(({ label, href, icon: Icon }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`RALOA on ${label}`}
-                    className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center transition-colors border border-slate-200 dark:border-slate-800 shadow-2xs"
-                  >
-                    <Icon className="w-4 h-4" />
+            <div className="mt-6 flex items-center gap-3">
+              {socialLinks.map(({ label, href, icon: Icon }) => {
+                const content = <Icon className="w-4 h-4" />;
+                const className = "w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center transition-colors border border-slate-200 dark:border-slate-800 shadow-2xs";
+                return href ? (
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={`RALOA on ${label}`} className={className}>
+                    {content}
                   </a>
-                ))}
-              </div>
-            )}
+                ) : (
+                  <span key={label} role="img" aria-label={`${label} link not configured`} className={`${className} opacity-80`}>
+                    {content}
+                  </span>
+                );
+              })}
+            </div>
 
             {/* Quick Share / Copy URL button & Earn Credits */}
             <div className="mt-5 flex flex-wrap items-center gap-2">

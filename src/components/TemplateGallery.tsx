@@ -125,7 +125,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
         {/* Horizontal Visual Gallery */}
         <div
           ref={scrollRef}
-          className="flex items-stretch gap-5 overflow-x-auto no-scrollbar pb-6 pt-2 snap-x snap-mandatory"
+          className="flex items-stretch gap-3 overflow-x-auto no-scrollbar pb-6 pt-2 snap-x snap-mandatory lg:overflow-visible"
           style={{ scrollbarWidth: 'none' }}
         >
           {templatesData.map((template) => (
@@ -139,7 +139,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
               onMouseLeave={handleMouseLeave}
               onFocus={(e) => handleMouseEnter(template, e as unknown as React.MouseEvent<HTMLDivElement>)}
               onBlur={handleMouseLeave}
-              className="w-[180px] sm:w-[200px] shrink-0 snap-start bg-white dark:bg-slate-900 rounded-[22px] p-3 border border-slate-200 dark:border-slate-800 shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:shadow-[0_16px_36px_rgba(15,23,42,0.12)] dark:hover:shadow-[0_16px_36px_rgba(0,0,0,0.6)] hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col"
+              className="w-[108px] shrink-0 snap-start bg-white dark:bg-slate-900 rounded-2xl p-2 border border-slate-200 dark:border-slate-800 shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:shadow-[0_16px_36px_rgba(15,23,42,0.12)] dark:hover:shadow-[0_16px_36px_rgba(0,0,0,0.6)] hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col"
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
@@ -171,7 +171,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
 
               {/* Info text */}
               <div className="px-1 pb-1">
-                <h3 className="font-extrabold text-[15px] text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight">
+                <h3 className="font-extrabold text-[13px] text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight truncate">
                   {template.name}
                 </h3>
                 <span className="text-[12px] font-medium text-slate-500 dark:text-slate-400 block mt-0.5">
@@ -184,7 +184,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
           {/* "+ More templates" Card */}
           <div
             onClick={onBrowseAll}
-            className="w-[180px] sm:w-[200px] shrink-0 snap-start bg-white/70 hover:bg-white dark:bg-slate-900/70 dark:hover:bg-slate-900 rounded-[22px] p-6 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shadow-2xs hover:shadow-md transition-all duration-300 cursor-pointer group flex flex-col items-center justify-center text-center"
+            className="w-[108px] shrink-0 snap-start bg-white/70 hover:bg-white dark:bg-slate-900/70 dark:hover:bg-slate-900 rounded-2xl p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shadow-2xs hover:shadow-md transition-all duration-300 cursor-pointer group flex flex-col items-center justify-center text-center"
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
@@ -194,8 +194,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
               }
             }}
           >
-            <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-950/80 text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 flex items-center justify-center mb-3 transition-colors">
-              <Plus className="w-6 h-6" />
+            <div className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-950/80 text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 flex items-center justify-center mb-2 transition-colors">
+              <Plus className="w-5 h-5" />
             </div>
             <span className="font-bold text-[14px] text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
               {t.moreTemplates}

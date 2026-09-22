@@ -10,19 +10,24 @@ interface LanguageDropdownProps {
   onSelectLocale: (locale: Locale) => void;
   className?: string;
   variant?: 'header' | 'mobile';
+  showTargetLanguage?: boolean;
 }
 
 export const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
   currentLocale,
   onSelectLocale,
   className = '',
-  variant = 'header'
+  variant = 'header',
+  showTargetLanguage = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   const activeLanguage = SUPPORTED_LANGUAGES.find((lang) => lang.code === currentLocale) || SUPPORTED_LANGUAGES[0];
+  const displayedLanguage = showTargetLanguage
+    ? SUPPORTED_LANGUAGES.find((lang) => lang.code !== currentLocale) || activeLanguage
+    : activeLanguage;
   const isRtl = currentLocale === 'ar';
 
   // Close dropdown on click outside
@@ -131,7 +136,7 @@ export const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
           }`}
         >
           <Globe className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors shrink-0" />
-          <span className="leading-none">{activeLanguage.nativeLabel}</span>
+          <span className="leading-none">{displayedLanguage.nativeLabel}</span>
           <ChevronDown
             className={`w-3.5 h-3.5 text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-transform duration-200 shrink-0 ${
               isOpen ? 'rotate-180' : ''

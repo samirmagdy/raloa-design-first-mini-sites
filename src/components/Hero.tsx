@@ -85,16 +85,18 @@ export const Hero: React.FC<HeroProps> = ({
     <section
       ref={heroRef}
       id="hero"
-      className="relative pt-[100px] md:pt-[124px] pb-16 md:pb-24 overflow-hidden bg-gradient-to-br from-[#EEF2FF] via-[#F8FAFC] to-[#F5F3FF] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-200"
+      className="relative pt-[88px] md:pt-[96px] pb-10 md:pb-12 overflow-hidden bg-gradient-to-br from-[#EEF2FF] via-[#F8FAFC] to-[#F5F3FF] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-200"
     >
       {/* Decorative ambient subtle glow with scroll parallax */}
       <motion.div
         style={{ y: glowY, scale: glowScale }}
         className="absolute top-10 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-indigo-200/30 to-purple-200/20 dark:from-indigo-600/10 dark:to-purple-600/10 blur-3xl rounded-full pointer-events-none -z-10"
       />
+      <div className="absolute -right-[220px] top-[-180px] h-[760px] w-[760px] rounded-full bg-gradient-to-br from-blue-100/80 via-indigo-100/40 to-purple-200/70 blur-2xl dark:from-indigo-950/40 dark:via-slate-900/20 dark:to-purple-950/40 pointer-events-none" />
+      <div className="absolute -right-[80px] top-[160px] h-[620px] w-[620px] rounded-full border border-indigo-200/50 dark:border-indigo-800/30 pointer-events-none" />
 
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center min-h-[600px] lg:min-h-[660px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-4 items-center min-h-[520px] lg:min-h-[540px]">
           
           {/* Left Column: 55% split (lg:col-span-7) */}
           <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left rtl:lg:text-right">
@@ -221,7 +223,7 @@ export const Hero: React.FC<HeroProps> = ({
                 rotate: phoneRotate,
                 scale: phoneScale
               }}
-              className="relative z-10 w-full max-w-[340px] flex justify-center"
+              className="relative z-10 w-full max-w-[380px] flex justify-center"
             >
               {/* Dynamic entrance glide + infinite subtle breathing oscillation */}
               <motion.div
@@ -246,6 +248,7 @@ export const Hero: React.FC<HeroProps> = ({
                 <PhoneMockup
                   template={heroTemplate}
                   isRtl={isRtl}
+                  className="!max-w-[380px]"
                   onOpenAction={onOpenPhoneAction}
                 />
               </motion.div>
@@ -320,4 +323,3 @@ export const Hero: React.FC<HeroProps> = ({
     </section>
   );
 };
-

@@ -102,6 +102,266 @@ html {
   }
 }
 
+/* Hero depth layer: meaningful product primitives orbit the mini-site preview. */
+.raloa-hero-depth {
+  --scene-rotate-x: 0deg;
+  --scene-rotate-y: 0deg;
+  perspective: 1100px;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--scene-rotate-x)) rotateY(var(--scene-rotate-y));
+  transition: transform 240ms cubic-bezier(0.2, 0, 0, 1);
+  z-index: 0;
+}
+
+.raloa-depth-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(90%, 410px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  transform: translate(-50%, -50%) rotateX(66deg) rotateZ(-18deg);
+}
+
+.raloa-depth-orbit::after {
+  content: '';
+  position: absolute;
+  inset: 16%;
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  border-radius: inherit;
+  transform: translateZ(12px);
+}
+
+.raloa-depth-orbit-one {
+  animation: raloa-depth-orbit 18s linear infinite;
+}
+
+.raloa-depth-orbit-two {
+  width: min(70%, 320px);
+  border-color: rgba(124, 58, 237, 0.14);
+  transform: translate(-50%, -50%) rotateX(72deg) rotateZ(42deg);
+  animation: raloa-depth-orbit-reverse 24s linear infinite;
+}
+
+.raloa-depth-node {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 18px 35px rgba(30, 41, 59, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  color: #334155;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.raloa-depth-node svg {
+  color: #5b5cf6;
+}
+
+.raloa-depth-node-links {
+  top: 18%;
+  left: 2%;
+  transform: translateZ(42px) rotate(-8deg);
+  animation: raloa-depth-float-one 5.2s ease-in-out infinite;
+}
+
+.raloa-depth-node-bookings {
+  right: 1%;
+  top: 39%;
+  transform: translateZ(70px) rotate(7deg);
+  animation: raloa-depth-float-two 6.4s ease-in-out infinite;
+}
+
+.raloa-depth-node-products {
+  bottom: 14%;
+  left: 12%;
+  transform: translateZ(54px) rotate(-5deg);
+  animation: raloa-depth-float-three 5.8s ease-in-out infinite;
+}
+
+@keyframes raloa-depth-orbit {
+  from { transform: translate(-50%, -50%) rotateX(66deg) rotateZ(-18deg); }
+  to { transform: translate(-50%, -50%) rotateX(66deg) rotateZ(342deg); }
+}
+
+@keyframes raloa-depth-orbit-reverse {
+  from { transform: translate(-50%, -50%) rotateX(72deg) rotateZ(42deg); }
+  to { transform: translate(-50%, -50%) rotateX(72deg) rotateZ(-318deg); }
+}
+
+@keyframes raloa-depth-float-one {
+  0%, 100% { margin-top: 0; }
+  50% { margin-top: -9px; }
+}
+
+@keyframes raloa-depth-float-two {
+  0%, 100% { margin-top: 0; }
+  50% { margin-top: 8px; }
+}
+
+@keyframes raloa-depth-float-three {
+  0%, 100% { margin-top: 0; }
+  50% { margin-top: -7px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .raloa-hero-depth,
+  .raloa-depth-orbit,
+  .raloa-depth-node {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .raloa-depth-node {
+    transform: translateZ(28px) scale(0.9);
+  }
+}
+
+/* Shared premium depth treatments. These are interaction-led, not ambient 3D decoration. */
+.raloa-depth-card,
+.raloa-step-depth,
+.raloa-plan-depth,
+.raloa-testimonial-depth,
+.raloa-modal-depth-stage,
+.raloa-studio-depth-stage,
+.raloa-cta-depth {
+  transform-style: preserve-3d;
+}
+
+.raloa-depth-card {
+  perspective: 900px;
+  transform: perspective(900px) rotateX(0deg) translateZ(0);
+}
+
+.raloa-depth-card:hover,
+.raloa-depth-card:focus-visible {
+  transform: perspective(900px) rotateX(2deg) rotateY(-2deg) translateZ(7px) translateY(-6px);
+}
+
+.raloa-step-depth {
+  perspective: 900px;
+  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.raloa-step-depth:hover {
+  transform: perspective(900px) rotateX(1deg) translateZ(8px);
+}
+
+.raloa-step-markers {
+  transform-style: preserve-3d;
+}
+
+.raloa-step-markers > span:first-child {
+  box-shadow: 0 10px 18px rgba(91, 92, 246, 0.24), 0 2px 0 rgba(255, 255, 255, 0.7) inset;
+  transform: translateZ(14px);
+}
+
+.raloa-step-markers > span:nth-child(2) {
+  box-shadow: 0 8px 14px rgba(91, 92, 246, 0.12);
+  transform: translateZ(22px) rotateY(-8deg);
+}
+
+.raloa-plan-depth {
+  perspective: 1000px;
+  transition: transform 240ms cubic-bezier(0.2, 0, 0, 1), box-shadow 240ms ease;
+}
+
+.raloa-plan-depth:hover {
+  transform: perspective(1000px) rotateX(1deg) translateZ(7px) translateY(-3px);
+}
+
+.raloa-plan-depth-popular:hover {
+  transform: perspective(1000px) rotateX(1deg) translateZ(7px) translateY(-11px);
+}
+
+.raloa-testimonial-depth {
+  perspective: 900px;
+  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1), box-shadow 220ms ease;
+}
+
+.raloa-testimonial-depth:hover {
+  transform: perspective(900px) rotateX(1deg) rotateY(-1deg) translateZ(5px) translateY(-3px);
+}
+
+.raloa-avatar-depth {
+  box-shadow: 0 8px 15px rgba(15, 23, 42, 0.16);
+  transform: translateZ(16px);
+}
+
+.raloa-cta-depth {
+  isolation: isolate;
+  transform: perspective(1200px) rotateX(0deg) translateZ(0);
+  transition: transform 260ms cubic-bezier(0.2, 0, 0, 1), box-shadow 260ms ease;
+}
+
+.raloa-cta-depth::before,
+.raloa-cta-depth::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 28px;
+  transform: translateZ(-18px) rotate(-3deg);
+  inset: 16px -12px -12px 16px;
+  z-index: -1;
+}
+
+.raloa-cta-depth::after {
+  inset: 24px -20px -20px 26px;
+  opacity: 0.55;
+  transform: translateZ(-30px) rotate(3deg);
+}
+
+.raloa-modal-depth-stage,
+.raloa-studio-depth-stage {
+  perspective: 1100px;
+}
+
+.raloa-modal-depth-stage .raloa-phone-mockup,
+.raloa-studio-depth-stage .raloa-phone-mockup {
+  transform: rotateY(-4deg) rotateX(1deg) translateZ(22px);
+  transform-style: preserve-3d;
+  transition: transform 320ms cubic-bezier(0.2, 0, 0, 1), box-shadow 320ms ease;
+}
+
+.raloa-modal-depth-stage:hover .raloa-phone-mockup,
+.raloa-studio-depth-stage:hover .raloa-phone-mockup {
+  transform: rotateY(-1deg) rotateX(0deg) translateZ(36px) rotateZ(0.5deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .raloa-depth-card,
+  .raloa-step-depth,
+  .raloa-plan-depth,
+  .raloa-testimonial-depth,
+  .raloa-cta-depth,
+  .raloa-modal-depth-stage .raloa-phone-mockup,
+  .raloa-studio-depth-stage .raloa-phone-mockup {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .raloa-modal-depth-stage .raloa-phone-mockup,
+  .raloa-studio-depth-stage .raloa-phone-mockup {
+    transform: none;
+  }
+}
+
 [dir="rtl"] .animate-marquee-track {
   animation: marquee-scroll-reverse 38s linear infinite;
 }

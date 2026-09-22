@@ -41,7 +41,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ locale, onSeeMoreSto
           {testimonialsData.map((item) => (
             <div
               key={item.id}
-              className="bg-white dark:bg-slate-900 rounded-[22px] p-7 border border-slate-200/90 dark:border-slate-800 shadow-[0_6px_20px_rgba(15,23,42,0.04)] dark:shadow-[0_6px_20px_rgba(0,0,0,0.3)] flex flex-col justify-between hover:shadow-[0_12px_32px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_12px_32px_rgba(0,0,0,0.5)] transition-all duration-300"
+              className="raloa-testimonial-depth bg-white dark:bg-slate-900 rounded-[22px] p-7 border border-slate-200/90 dark:border-slate-800 shadow-[0_6px_20px_rgba(15,23,42,0.04)] dark:shadow-[0_6px_20px_rgba(0,0,0,0.3)] flex flex-col justify-between hover:shadow-[0_12px_32px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_12px_32px_rgba(0,0,0,0.5)] transition-all duration-300"
             >
               <div className="space-y-4">
                 {/* 5 Golden Stars */}
@@ -63,7 +63,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ locale, onSeeMoreSto
                   <img
                     src={item.avatar}
                     alt={item.author}
-                    className="w-11 h-11 rounded-full object-cover border border-slate-200 dark:border-slate-700"
+                    className="raloa-avatar-depth w-11 h-11 rounded-full object-cover border border-slate-200 dark:border-slate-700"
                   />
                   <div className="absolute -bottom-0.5 -right-0.5 bg-white dark:bg-slate-900 rounded-full p-0.5 shadow-2xs">
                     <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 fill-blue-600 text-white" />

@@ -139,7 +139,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
               onMouseLeave={handleMouseLeave}
               onFocus={(e) => handleMouseEnter(template, e as unknown as React.MouseEvent<HTMLDivElement>)}
               onBlur={handleMouseLeave}
-              className="w-[108px] shrink-0 snap-start bg-white dark:bg-slate-900 rounded-2xl p-2 border border-slate-200 dark:border-slate-800 shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:shadow-[0_16px_36px_rgba(15,23,42,0.12)] dark:hover:shadow-[0_16px_36px_rgba(0,0,0,0.6)] hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col"
+              className="raloa-depth-card w-[108px] shrink-0 snap-start bg-white dark:bg-slate-900 rounded-2xl p-2 border border-slate-200 dark:border-slate-800 shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:shadow-[0_16px_36px_rgba(15,23,42,0.12)] dark:hover:shadow-[0_16px_36px_rgba(0,0,0,0.6)] hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col"
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
@@ -184,7 +184,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
           {/* "+ More templates" Card */}
           <div
             onClick={onBrowseAll}
-            className="w-[108px] shrink-0 snap-start bg-white/70 hover:bg-white dark:bg-slate-900/70 dark:hover:bg-slate-900 rounded-2xl p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shadow-2xs hover:shadow-md transition-all duration-300 cursor-pointer group flex flex-col items-center justify-center text-center"
+            className="raloa-depth-card w-[108px] shrink-0 snap-start bg-white/70 hover:bg-white dark:bg-slate-900/70 dark:hover:bg-slate-900 rounded-2xl p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shadow-2xs hover:shadow-md transition-all duration-300 cursor-pointer group flex flex-col items-center justify-center text-center"
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {

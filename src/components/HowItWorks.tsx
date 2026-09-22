@@ -44,14 +44,14 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ locale }) => {
 
         <div className="relative grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-8">
           {steps.map((step) => (
-            <article key={step.number} className="relative z-10 bg-white dark:bg-slate-950 md:bg-transparent md:dark:bg-transparent">
+            <article key={step.number} className="raloa-step-depth relative z-10 bg-white dark:bg-slate-950 md:bg-transparent md:dark:bg-transparent">
               {step.number < steps.length && (
                 <div
                   className="hidden md:block absolute top-5 left-24 right-[-3.25rem] h-px bg-slate-200 dark:bg-slate-800"
                   aria-hidden="true"
                 />
               )}
-              <div className="flex items-center gap-3 mb-3">
+              <div className="raloa-step-markers flex items-center gap-3 mb-3">
                 <span className="relative z-10 w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[15px] font-extrabold shadow-md ring-3 ring-white dark:ring-slate-950">
                   {step.number}
                 </span>

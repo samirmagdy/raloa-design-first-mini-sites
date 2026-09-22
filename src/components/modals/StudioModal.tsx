@@ -731,7 +731,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
           </div>
 
           {/* Right Column: Live Phone / Social Mockup Stage (lg:col-span-5) */}
-          <div className="hidden lg:flex lg:col-span-5 flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-100 via-indigo-50/30 to-purple-50/20 overflow-y-auto studio-preview-column print:flex! print:p-2! print:bg-white! print:overflow-visible!">
+          <div className="raloa-studio-depth-stage hidden lg:flex lg:col-span-5 flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-100 via-indigo-50/30 to-purple-50/20 overflow-y-auto studio-preview-column print:flex! print:p-2! print:bg-white! print:overflow-visible!">
             
             {/* View Mode Switcher Pill */}
             <div className="mb-3 flex items-center gap-1 p-1 bg-white/90 backdrop-blur-md rounded-xl border border-slate-200/80 shadow-2xs print:hidden">

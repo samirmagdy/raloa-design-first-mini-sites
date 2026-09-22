@@ -4,6 +4,7 @@ import { motion, useTransform } from 'motion/react';
 import { Locale, TemplateItem } from '../types';
 import { dictionary } from '../data/content';
 import { PhoneMockup } from './PhoneMockup';
+import { HeroDepthScene } from './HeroDepthScene';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import {
   AnnotationCard,
@@ -215,6 +216,7 @@ export const Hero: React.FC<HeroProps> = ({
 
           {/* Right Column: 45% split (lg:col-span-5) */}
           <div className="lg:col-span-5 relative flex items-center justify-center">
+            <HeroDepthScene isRtl={isRtl} />
             
             {/* Phone Mockup with scroll-linked parallax, rotation, and gentle float */}
             <motion.div

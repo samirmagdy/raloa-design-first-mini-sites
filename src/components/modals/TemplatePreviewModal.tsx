@@ -104,7 +104,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
         )}
 
         {/* Left Side: Mobile Phone Device Preview */}
-        <div className="md:w-1/2 bg-gradient-to-br from-slate-100 via-indigo-50/40 to-slate-200 dark:from-slate-950 dark:via-indigo-950/30 dark:to-slate-900 p-6 flex flex-col items-center justify-center overflow-y-auto">
+        <div className="raloa-modal-depth-stage md:w-1/2 bg-gradient-to-br from-slate-100 via-indigo-50/40 to-slate-200 dark:from-slate-950 dark:via-indigo-950/30 dark:to-slate-900 p-6 flex flex-col items-center justify-center overflow-y-auto">
           <div className="w-full max-w-[280px] sm:max-w-[300px]">
             <PhoneMockup template={template} isRtl={isRtl} />
           </div>

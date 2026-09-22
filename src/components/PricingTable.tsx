@@ -67,7 +67,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
             return (
               <div
                 key={plan.id}
-                className={`relative bg-white dark:bg-slate-900 rounded-[24px] p-8 border transition-all duration-300 flex flex-col justify-between ${
+                className={`raloa-plan-depth ${isPopular ? 'raloa-plan-depth-popular' : ''} relative bg-white dark:bg-slate-900 rounded-[24px] p-8 border transition-all duration-300 flex flex-col justify-between ${
                   isPopular
                     ? 'border-indigo-500 dark:border-indigo-500 ring-2 ring-indigo-500/20 dark:ring-indigo-500/40 shadow-[0_16px_40px_rgba(91,92,246,0.12)] dark:shadow-[0_16px_40px_rgba(91,92,246,0.25)] lg:-translate-y-2'
                     : 'border-slate-200 dark:border-slate-800 shadow-[0_6px_20px_rgba(15,23,42,0.04)] dark:shadow-[0_6px_20px_rgba(0,0,0,0.3)] hover:shadow-lg dark:hover:shadow-2xl'

@@ -14,8 +14,9 @@ import {
 } from 'lucide-react';
 import { Locale } from '../types';
 import { mockRepository } from '../services/mockRepository';
-import { ProfileBlock, PublicProfile } from '../services/repository';
+import { PublicProfile } from '../services/repository';
 import { ThemeProvider } from '../theme/ThemeProvider';
+import { ProfileBlockView } from './profile/BlockRenderer';
 
 interface PublicProfilePageProps {
   username: string;
@@ -81,35 +82,6 @@ const ProfileMessageState: React.FC<{ title: string; body: string; action?: () =
     </section>
   </main>
 );
-
-const ProfileBlockView: React.FC<{ block: ProfileBlock; locale: Locale; accent: string }> = ({ block, locale, accent }) => {
-  if (!block.visible) return null;
-  const title = block.title || (locale === 'ar' ? 'رابط' : 'Open link');
-  const subtitle = block.subtitle;
-
-  if (block.type === 'spacer') return <div aria-hidden="true" className="h-5" />;
-  if (block.type === 'section') {
-    return <h2 className="px-1 pt-3 text-start text-xs font-extrabold uppercase tracking-[0.14em] text-slate-500">{title}</h2>;
-  }
-
-  return (
-    <a
-      href={block.url || '#'}
-      target={block.url?.startsWith('http') ? '_blank' : undefined}
-      rel={block.url?.startsWith('http') ? 'noreferrer' : undefined}
-      className="group flex min-h-16 items-center gap-3 rounded-2xl border border-slate-200/90 bg-white/90 px-4 py-3 text-start shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_12px_28px_rgba(15,23,42,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-    >
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${accent}18`, color: accent }}>
-        <Link2 className="h-5 w-5" aria-hidden="true" />
-      </span>
-      <span className="min-w-0 flex-1">
-        <strong className="block truncate text-sm font-extrabold text-slate-900">{title}</strong>
-        {subtitle && <span className="mt-0.5 block truncate text-xs text-slate-500">{subtitle}</span>}
-      </span>
-      <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-400 transition group-hover:text-slate-700" aria-hidden="true" />
-    </a>
-  );
-};
 
 export const PublicProfilePage: React.FC<PublicProfilePageProps> = ({ username, locale }) => {
   const isRtl = locale === 'ar';

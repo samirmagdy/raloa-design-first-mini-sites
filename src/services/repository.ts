@@ -22,7 +22,28 @@ export type BlockType =
   | 'event'
   | 'map'
   | 'phone'
-  | 'email';
+  | 'email'
+  | 'spotify'
+  | 'apple-music'
+  | 'soundcloud'
+  | 'mp3'
+  | 'youtube'
+  | 'vimeo'
+  | 'tiktok'
+  | 'direct-video'
+  | 'calendly'
+  | 'file-download'
+  | 'location'
+  | 'music-pre-save'
+  | 'instagram-grid'
+  | 'scheduled'
+  | 'highlighted'
+  | 'hidden'
+  | 'badge'
+  | 'icon'
+  | 'password-gate';
+
+export type BlockDataValue = string | number | boolean | string[];
 
 export interface ProfileSocial {
   id: string;
@@ -38,6 +59,7 @@ export interface ProfileBlock {
   subtitle?: string;
   url?: string;
   content?: string;
+  data?: Record<string, BlockDataValue>;
   visible: boolean;
   children?: ProfileBlock[];
 }

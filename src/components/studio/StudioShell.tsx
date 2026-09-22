@@ -1,214 +1,493 @@
-import React, { useEffect, useState } from 'react';
-import { ChevronDown, FileText, LayoutDashboard, LogOut, Menu, MonitorPlay, Settings, X } from 'lucide-react';
-import { Locale } from '../../types';
-import { mockRepository } from '../../services/mockRepository';
-import { ProfilePage, PublicProfile } from '../../services/repository';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  CloudUpload,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  MonitorPlay,
+  Palette,
+  Settings,
+  Layers3,
+  X
+} from 'lucide-react';
+import type { Locale } from '../../types';
+import { navigate, type StudioSection } from '../../app/router';
+import { useRepository, useSession } from '../../services/RepositoryContext';
+import { useAsyncResource } from '../../services/useAsyncResource';
+import { useAutosave } from '../../services/useAutosave';
+import type { ProfilePage, PublicProfile, RepositoryError, ThemeConfig } from '../../services';
 import { RaloaMark } from '../brand/RaloaLogo';
-import { BlockEditorWorkspace } from './BlockEditorWorkspace';
-import { StudioPreviewWorkspace } from './StudioPreviewWorkspace';
 import { Button } from '../ui/Button';
+import { Select } from '../ui/Select';
 import { Surface } from '../ui/Surface';
-import { Toast } from '../ui/Toast';
+import { ConfirmDialog } from '../ui/ConfirmDialog';
+import { LoadingState, ErrorState, EmptyState } from '../ui/States';
+import { useToast } from '../ui/Toast';
+import { ui, text, tx } from '../../i18n/ui';
+import { BlockEditorWorkspace } from './BlockEditorWorkspace';
+import { ThemeEditor } from './ThemeEditor';
+import { PagesWorkspace } from './PagesWorkspace';
+import { StudioPreviewWorkspace } from './StudioPreviewWorkspace';
 
 interface StudioShellProps {
   locale: Locale;
+  section: StudioSection;
   onReturnHome: () => void;
 }
 
-type StudioSection = 'overview' | 'editor' | 'preview' | 'settings';
+const clone = <T,>(value: T): T => (typeof structuredClone === 'function' ? structuredClone(value) : (JSON.parse(JSON.stringify(value)) as T));
 
-const StudioLoading: React.FC = () => (
-  <main className="min-h-screen bg-slate-50 p-4 sm:p-6" aria-busy="true" aria-label="Loading Studio">
-    <div className="mx-auto max-w-[1440px] animate-pulse space-y-5">
-      <div className="h-16 rounded-2xl bg-white" />
-      <div className="grid gap-5 lg:grid-cols-[250px_1fr]">
-        <div className="h-[620px] rounded-2xl bg-white" />
-        <div className="h-[620px] rounded-2xl bg-white" />
-      </div>
-    </div>
-  </main>
-);
+const NAV: Array<{ id: StudioSection; icon: React.ComponentType<{ className?: string }> }> = [
+  { id: 'overview', icon: LayoutDashboard },
+  { id: 'editor', icon: FileText },
+  { id: 'theme', icon: Palette },
+  { id: 'pages', icon: Layers3 },
+  { id: 'preview', icon: MonitorPlay }
+];
 
-const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
+const sectionLabel = (section: StudioSection, locale: Locale): string => {
+  const map: Record<StudioSection, { en: string; ar: string }> = {
+    overview: ui.studio.overview,
+    editor: ui.studio.editor,
+    theme: ui.studio.theme,
+    pages: ui.studio.pages,
+    preview: ui.studio.preview
+  };
+  return tx(map[section], locale);
+};
 
-export const StudioShell: React.FC<StudioShellProps> = ({ locale, onReturnHome }) => {
+export const StudioShell: React.FC<StudioShellProps> = ({ locale, section, onReturnHome }) => {
+  const repository = useRepository();
+  const toast = useToast();
   const isRtl = locale === 'ar';
-  const [profiles, setProfiles] = useState<PublicProfile[]>([]);
-  const [savedProfiles, setSavedProfiles] = useState<PublicProfile[]>([]);
-  const [selectedProfileId, setSelectedProfileId] = useState('');
-  const [selectedPageId, setSelectedPageId] = useState('');
-  const [section, setSection] = useState<StudioSection>('overview');
+  const { status } = useSession();
+
+  const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+  const [activePageId, setActivePageId] = useState<string | null>(null);
+  const [profile, setProfile] = useState<PublicProfile | null>(null);
+  const [pages, setPages] = useState<ProfilePage[]>([]);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [confirmDiscard, setConfirmDiscard] = useState(false);
-  const [toast, setToast] = useState<{ title: string; message?: string } | null>(null);
+
+  const profiles = useAsyncResource(() => repository.profiles.list(), []);
+
+  const document_ = useAsyncResource(
+    async () => {
+      const list = await repository.profiles.list();
+      if (!list.ok) return list;
+      const wanted = activeProfileId ?? list.data[0]?.id ?? '';
+      const profileResult = await repository.profiles.get(wanted);
+      if (!profileResult.ok) return profileResult;
+      if (!profileResult.data) return { ok: true as const, data: null };
+      const pagesResult = await repository.pages.list(profileResult.data.id);
+      if (!pagesResult.ok) return pagesResult;
+      return { ok: true as const, data: { profile: profileResult.data, pages: pagesResult.data } };
+    },
+    [activeProfileId],
+    { enabled: status === 'signed-in' }
+  );
 
   useEffect(() => {
-    let active = true;
-    mockRepository.listProfiles().then((result) => {
-      if (!active) return;
-      setProfiles(result.data);
-      setSavedProfiles(clone(result.data));
-      setSelectedProfileId(result.data[0]?.id ?? '');
-      setSelectedPageId(result.data[0]?.pages[0]?.id ?? '');
-    }).catch(() => {
-      if (active) setError(true);
-    }).finally(() => {
-      if (active) setIsLoading(false);
-    });
-    return () => { active = false; };
-  }, []);
+    if (!document_.data) return;
+    setProfile(clone(document_.data.profile));
+    setPages(clone(document_.data.pages));
+    setActiveProfileId(document_.data.profile.id);
+    setActivePageId((current) => current ?? document_.data!.pages[0]?.id ?? null);
+  }, [document_.data]);
 
-  const selectedProfile = profiles.find((profile) => profile.id === selectedProfileId) ?? null;
-  const selectedPage = selectedProfile?.pages.find((page) => page.id === selectedPageId) ?? selectedProfile?.pages[0] ?? null;
+  const activePage = useMemo(
+    () => pages.find((page) => page.id === activePageId) ?? pages[0] ?? null,
+    [activePageId, pages]
+  );
 
-  const navItems = [
-    { id: 'overview' as const, label: isRtl ? 'نظرة عامة' : 'Overview', icon: LayoutDashboard },
-    { id: 'editor' as const, label: isRtl ? 'محرر الصفحة' : 'Page editor', icon: FileText },
-    { id: 'preview' as const, label: isRtl ? 'معاينة ونشر' : 'Preview & publish', icon: MonitorPlay },
-    { id: 'settings' as const, label: isRtl ? 'الإعدادات' : 'Settings', icon: Settings }
-  ];
+  const savedIdentity = document_.data?.profile ?? null;
 
-  const selectProfile = (id: string) => {
-    const profile = profiles.find((item) => item.id === id);
-    setSelectedProfileId(id);
-    setSelectedPageId(profile?.pages[0]?.id ?? '');
-    setHasUnsavedChanges(false);
+  /** Identity + theme edits are a debounce-save document; blocks are written per action. */
+  const identity = useMemo(
+    () =>
+      profile
+        ? { displayName: profile.displayName, role: profile.role, bio: profile.bio, avatarUrl: profile.avatarUrl, seo: profile.seo, socials: profile.socials }
+        : null,
+    [profile]
+  );
+  const savedIdentityFields = useMemo(
+    () =>
+      savedIdentity
+        ? { displayName: savedIdentity.displayName, role: savedIdentity.role, bio: savedIdentity.bio, avatarUrl: savedIdentity.avatarUrl, seo: savedIdentity.seo, socials: savedIdentity.socials }
+        : null,
+    [savedIdentity]
+  );
+
+  const autosave = useAutosave({
+    draft: { identity, theme: profile?.theme ?? null },
+    saved: { identity: savedIdentityFields, theme: savedIdentity?.theme ?? null },
+    enabled: Boolean(profile && savedIdentity),
+    persist: async (draft) => {
+      if (!profile || !draft.identity || !draft.theme) return { ok: true as const, data: null };
+      const identityResult = await repository.profiles.update(profile.id, draft.identity, profile.version);
+      if (!identityResult.ok) return identityResult;
+      const themeResult = await repository.themes.save(profile.id, draft.theme, identityResult.data.version);
+      if (!themeResult.ok) return themeResult;
+      setProfile((current) => (current ? { ...current, ...draft.identity, theme: themeResult.data, version: identityResult.data.version } : current));
+      setPages((current) => current.map((page) => ({ ...page })));
+      document_.setData((current) =>
+        current ? { profile: { ...current.profile, ...draft.identity, theme: themeResult.data, version: identityResult.data.version }, pages: current.pages } : current
+      );
+      return { ok: true as const, data: themeResult.data };
+    },
+    onReset: () => {
+      if (!document_.data) return;
+      setProfile(clone(document_.data.profile));
+      setPages(clone(document_.data.pages));
+    }
+  });
+
+  const fail = useCallback(
+    (error: RepositoryError, retry?: () => void) => {
+      const run = retry ?? (() => void autosave.retry());
+      toast({
+        title: tx(ui.common.saveFailed, locale),
+        message: text(error.message, locale),
+        tone: 'error',
+        action: error.retryable ? { label: tx(ui.common.retry, locale), onClick: run } : undefined
+      });
+    },
+    [toast, locale, autosave]
+  );
+
+  const updateProfile = (patch: Partial<PublicProfile>) => setProfile((current) => (current ? { ...current, ...patch } : current));
+
+  const replacePage = (nextPage: ProfilePage) => setPages((current) => current.map((page) => (page.id === nextPage.id ? nextPage : page)));
+
+  const publish = async () => {
+    if (!profile || !activePage) return;
+    await autosave.saveNow();
+    const pageResult = await repository.pages.setPublished(activePage.id, true);
+    if (!pageResult.ok) return fail(pageResult.error);
+    const profileResult = await repository.profiles.setPublished(profile.id, true);
+    if (!profileResult.ok) return fail(profileResult.error);
+    setProfile((current) => (current ? { ...current, published: true, version: profileResult.data.version } : current));
+    replacePage(pageResult.data);
+    document_.setData((current) => (current ? { profile: profileResult.data, pages: current.pages.map((page) => (page.id === pageResult.data.id ? pageResult.data : page)) } : current));
+    toast({ title: tx(ui.studio.publishedToast, locale), message: tx(ui.studio.publishedToastBody, locale), tone: 'success' });
   };
 
-  const saveChanges = async () => {
-    if (!selectedProfile) return;
-    const result = await mockRepository.saveProfile(selectedProfile);
-    setSavedProfiles((current) => current.map((profile) => profile.id === result.data.id ? clone(result.data) : profile));
-    setHasUnsavedChanges(false);
-    setToast({ title: isRtl ? 'تم حفظ التغييرات' : 'Changes saved', message: isRtl ? 'تم الحفظ على هذا الجهاز.' : 'Saved locally on this device.' });
+  const selectProfile = async (profileId: string) => {
+    const saved = await autosave.saveNow();
+    if (!saved) toast({ title: tx(ui.common.unsaved, locale), message: isRtl ? 'لم يُحفظ تعديلك بعد.' : 'Your edits are not saved yet.', tone: 'error' });
+    setActiveProfileId(profileId);
+    setActivePageId(null);
+    document_.reload();
   };
 
-  const resetChanges = () => {
-    setProfiles(clone(savedProfiles));
-    setHasUnsavedChanges(false);
-    setConfirmDiscard(false);
-    setToast({ title: isRtl ? 'تم تجاهل التغييرات' : 'Changes discarded', message: isRtl ? 'تمت استعادة آخر نسخة محفوظة.' : 'The last saved version is active.' });
-  };
+  if (status === 'loading') return <LoadingState label={tx(ui.common.loading, locale)} variant="card" />;
 
-  const publishProfile = async () => {
-    if (!selectedProfile) return;
-    const publishedProfile: PublicProfile = {
-      ...selectedProfile,
-      published: true,
-      pages: selectedProfile.pages.map((page) => page.id === selectedPage?.id ? { ...page, published: true } : page)
-    };
-    setProfiles((current) => current.map((profile) => profile.id === publishedProfile.id ? publishedProfile : profile));
-    const result = await mockRepository.saveProfile(publishedProfile);
-    setSavedProfiles((current) => current.map((profile) => profile.id === result.data.id ? clone(result.data) : profile));
-    setHasUnsavedChanges(false);
-    setToast({ title: isRtl ? 'تم نشر الصفحة' : 'Page published', message: isRtl ? 'صفحتك متاحة الآن للزوار.' : 'Your public page is now available to visitors.' });
-  };
+  if (status === 'signed-out') {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-surface-alt p-6">
+        <EmptyState
+          icon={CloudUpload}
+          title={tx(ui.auth.signInRequired, locale)}
+          body={tx(ui.auth.demoNotice, locale)}
+          action={{ label: tx(ui.auth.signIn, locale), onClick: () => navigate('/signin') }}
+          secondaryAction={{ label: tx(ui.studio.backToWebsite, locale), onClick: onReturnHome }}
+        />
+      </main>
+    );
+  }
 
-  const updateSelectedPage = (nextPage: ProfilePage) => {
-    setProfiles((current) => current.map((profile) => profile.id === selectedProfileId
-      ? { ...profile, pages: profile.pages.map((page) => page.id === nextPage.id ? nextPage : page) }
-      : profile));
-  };
+  if (profiles.isLoading || document_.isLoading) {
+    return (
+      <main className="min-h-screen bg-surface-alt p-4 sm:p-6">
+        <div className="mx-auto max-w-[1400px]">
+          <LoadingState label={tx(ui.common.loading, locale)} variant="card" />
+        </div>
+      </main>
+    );
+  }
 
-  if (isLoading) return <StudioLoading />;
-  if (error) return <StudioError onReturnHome={onReturnHome} locale={locale} />;
-  if (!selectedProfile) return <StudioEmpty onReturnHome={onReturnHome} locale={locale} />;
+  if (profiles.error || document_.error || !profile) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-surface-alt p-6">
+        <div className="w-full max-w-md">
+          <ErrorState
+            title={tx(ui.studio.cannotLoad, locale)}
+            body={text(document_.error?.message ?? profiles.error?.message ?? ui.studio.cannotLoadBody, locale)}
+            onRetry={() => {
+              profiles.reload();
+              document_.reload();
+            }}
+            retryLabel={tx(ui.common.retry, locale)}
+            action={{ label: tx(ui.studio.backToWebsite, locale), onClick: onReturnHome }}
+          />
+        </div>
+      </main>
+    );
+  }
+
+  const saveLabel =
+    autosave.status === 'saving'
+      ? tx(ui.common.saving, locale)
+      : autosave.status === 'failed'
+        ? tx(ui.common.saveFailed, locale)
+        : autosave.dirty
+          ? tx(ui.common.saveChanges, locale)
+          : tx(ui.common.saved, locale);
 
   return (
-    <main dir={isRtl ? 'rtl' : 'ltr'} className="min-h-screen bg-slate-50 text-ink">
+    <main dir={isRtl ? 'rtl' : 'ltr'} className="min-h-screen bg-surface-alt text-ink">
       <div className="mx-auto flex min-h-screen max-w-[1600px]">
-        {mobileNavOpen && <button type="button" className="fixed inset-0 z-30 bg-slate-950/40 lg:hidden" aria-label={isRtl ? 'إغلاق القائمة' : 'Close navigation'} onClick={() => setMobileNavOpen(false)} />}
+        {mobileNavOpen && (
+          <button
+            type="button"
+            className="fixed inset-0 z-30 bg-slate-950/40 lg:hidden"
+            aria-label={tx(ui.studio.closeNav, locale)}
+            onClick={() => setMobileNavOpen(false)}
+          />
+        )}
 
-        <aside className={`fixed inset-y-0 start-0 z-40 flex w-[280px] flex-col border-e border-slate-200 bg-white p-5 shadow-xl transition-transform lg:static lg:z-auto lg:translate-x-0 lg:shadow-none rtl:start-auto rtl:end-0 ${mobileNavOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full'}`}>
+        <aside
+          className={`fixed inset-y-0 start-0 z-40 flex w-[280px] flex-col border-e border-slate-200 bg-white p-5 shadow-xl transition-transform lg:static lg:z-auto lg:translate-x-0 lg:shadow-none ${
+            mobileNavOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full lg:rtl:translate-x-0'
+          }`}
+        >
           <div className="flex items-center justify-between">
-            <a href="/" className="flex items-center gap-2 text-sm font-extrabold" onClick={(event) => { event.preventDefault(); onReturnHome(); }}>
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-ink"><RaloaMark size={25} theme="on-dark" /></span>
-              <span>RALOA Studio</span>
+            <a href="/" onClick={(event) => { event.preventDefault(); onReturnHome(); }} className="flex items-center gap-2 text-sm font-extrabold">
+              <span className="flex h-9 w-9 items-center justify-center rounded-control bg-ink">
+                <RaloaMark size={25} theme="on-dark" />
+              </span>
+              <span>{tx(ui.studio.title, locale)}</span>
             </a>
-            <button type="button" onClick={() => setMobileNavOpen(false)} className="flex h-11 w-11 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 lg:hidden" aria-label={isRtl ? 'إغلاق القائمة' : 'Close navigation'}><X className="h-4 w-4" /></button>
+            <button
+              type="button"
+              onClick={() => setMobileNavOpen(false)}
+              aria-label={tx(ui.studio.closeNav, locale)}
+              className="flex h-11 w-11 items-center justify-center rounded-pill text-slate-500 hover:bg-slate-100 lg:hidden"
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
           </div>
 
-          <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-3">
-            <label htmlFor="studio-profile" className="mb-2 block text-[11px] font-extrabold uppercase tracking-wider text-slate-500">{isRtl ? 'الملف الشخصي' : 'Profile'}</label>
-            <div className="relative">
-              <select id="studio-profile" value={selectedProfile.id} onChange={(event) => selectProfile(event.target.value)} className="min-h-11 w-full appearance-none rounded-xl border border-slate-200 bg-white px-3 pe-9 text-sm font-bold outline-none focus:border-indigo-500 focus:ring-3 focus:ring-indigo-100">
-                {profiles.map((profile) => <option key={profile.id} value={profile.id}>@{profile.username}</option>)}
-              </select>
-              <ChevronDown className="pointer-events-none absolute end-3 top-3.5 h-4 w-4 text-slate-500" aria-hidden="true" />
-            </div>
+          <div className="mt-8 rounded-panel border border-slate-200 bg-surface-alt p-3">
+            <Select
+              name="studio-profile"
+              label={tx(ui.studio.switchProfile, locale)}
+              value={profile.id}
+              onChange={(event) => void selectProfile(event.target.value)}
+              options={(profiles.data ?? []).map((item) => ({ value: item.id, label: `@${item.username}` }))}
+            />
           </div>
 
-          <nav className="mt-8 space-y-1" aria-label={isRtl ? 'تنقل الاستوديو' : 'Studio navigation'}>
-            {navItems.map(({ id, label, icon: Icon }) => (
-              <button key={id} type="button" onClick={() => { setSection(id); setMobileNavOpen(false); }} className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-bold transition ${section === id ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}>
-                <Icon className="h-4 w-4" aria-hidden="true" />{label}
+          <nav className="mt-8 space-y-1" aria-label={tx(ui.studio.navLabel, locale)}>
+            {NAV.map(({ id, icon: Icon }) => (
+              <button
+                key={id}
+                type="button"
+                aria-current={section === id ? 'page' : undefined}
+                onClick={() => {
+                  navigate(`/studio/${id}`);
+                  setMobileNavOpen(false);
+                }}
+                className={`flex min-h-11 w-full items-center gap-3 rounded-control px-3 text-sm font-bold transition ${
+                  section === id ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
+              >
+                <Icon className="h-4 w-4" aria-hidden="true" />
+                {sectionLabel(id, locale)}
               </button>
             ))}
           </nav>
 
-          <div className="mt-auto border-t border-slate-100 pt-4">
-            <button type="button" onClick={onReturnHome} className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900"><LogOut className="h-4 w-4" aria-hidden="true" />{isRtl ? 'العودة للموقع' : 'Back to website'}</button>
+          <div className="mt-auto space-y-1 border-t border-slate-100 pt-4">
+            <button
+              type="button"
+              onClick={() => navigate('/settings/profile')}
+              className="flex min-h-11 w-full items-center gap-3 rounded-control px-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+            >
+              <Settings className="h-4 w-4" aria-hidden="true" />
+              {tx(ui.studio.settings, locale)}
+            </button>
+            <button
+              type="button"
+              onClick={onReturnHome}
+              className="flex min-h-11 w-full items-center gap-3 rounded-control px-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+            >
+              <LogOut className="h-4 w-4" aria-hidden="true" />
+              {tx(ui.studio.backToWebsite, locale)}
+            </button>
           </div>
         </aside>
 
         <section className="min-w-0 flex-1">
           <header className="sticky top-0 z-20 flex min-h-16 items-center justify-between gap-3 border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6">
             <div className="flex min-w-0 items-center gap-3">
-              <button type="button" onClick={() => setMobileNavOpen(true)} className="flex h-11 w-11 items-center justify-center rounded-xl text-slate-700 hover:bg-slate-100 lg:hidden" aria-label={isRtl ? 'فتح القائمة' : 'Open navigation'}><Menu className="h-5 w-5" /></button>
+              <button
+                type="button"
+                onClick={() => setMobileNavOpen(true)}
+                aria-label={tx(ui.studio.openNav, locale)}
+                className="flex h-11 w-11 items-center justify-center rounded-control text-slate-700 hover:bg-slate-100 lg:hidden"
+              >
+                <Menu className="h-5 w-5" aria-hidden="true" />
+              </button>
               <div className="min-w-0">
-                <h1 className="truncate text-base font-extrabold sm:text-lg">{navItems.find((item) => item.id === section)?.label}</h1>
-                <p className="truncate text-xs text-slate-500">raloa.app/@{selectedProfile.username}</p>
+                <h1 className="truncate text-base font-extrabold sm:text-lg">{sectionLabel(section, locale)}</h1>
+                <p className="truncate text-xs text-slate-500">raloa.app/@{profile.username}</p>
               </div>
             </div>
+
             <div className="flex shrink-0 items-center gap-2">
-              {hasUnsavedChanges && <span className="hidden items-center gap-1.5 text-xs font-bold text-amber-700 sm:flex"><span className="h-2 w-2 rounded-full bg-amber-500" />{isRtl ? 'تغييرات غير محفوظة' : 'Unsaved changes'}</span>}
-              <Button size="sm" variant={hasUnsavedChanges ? 'primary' : 'secondary'} onClick={hasUnsavedChanges ? saveChanges : () => setHasUnsavedChanges(true)}>{hasUnsavedChanges ? (isRtl ? 'حفظ' : 'Save changes') : (isRtl ? 'تعديل' : 'Make an edit')}</Button>
+              <SaveIndicator autosave={autosave} locale={locale} onRetry={() => void autosave.retry()} />
+              <Button size="sm" variant="secondary" onClick={() => navigate('/analytics')}>
+                {tx(ui.settings.heading, locale)}
+              </Button>
+              <Button size="sm" variant={profile.published ? 'secondary' : 'primary'} onClick={() => void publish()}>
+                {profile.published ? tx(ui.studio.publishChanges, locale) : tx(ui.studio.publishPage, locale)}
+              </Button>
             </div>
           </header>
 
           <div className="mx-auto max-w-[1200px] space-y-6 p-4 sm:p-6 lg:p-8">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-              <div><p className="text-xs font-extrabold uppercase tracking-[0.14em] text-indigo-600">{isRtl ? 'مساحة العمل' : 'Workspace'}</p><h2 className="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">{selectedProfile.displayName}</h2><p className="mt-1 text-sm text-slate-600">{isRtl ? selectedProfile.roleAr : selectedProfile.role}</p></div>
-              <div className="relative w-full sm:w-64"><label htmlFor="studio-page" className="sr-only">{isRtl ? 'اختر الصفحة' : 'Select page'}</label><select id="studio-page" value={selectedPage?.id ?? ''} onChange={(event) => { setSelectedPageId(event.target.value); setHasUnsavedChanges(true); }} className="min-h-11 w-full appearance-none rounded-xl border border-slate-300 bg-white px-3 pe-9 text-sm font-bold outline-none focus:border-indigo-500 focus:ring-3 focus:ring-indigo-100">{selectedProfile.pages.map((page) => <option key={page.id} value={page.id}>{page.title}</option>)}</select><ChevronDown className="pointer-events-none absolute end-3 top-3.5 h-4 w-4 text-slate-500" aria-hidden="true" /></div>
+              <div className="min-w-0">
+                <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-indigo-600">{tx(ui.studio.workspace, locale)}</p>
+                <h2 className="mt-2 truncate text-2xl font-extrabold tracking-tight sm:text-3xl">{profile.displayName}</h2>
+                <p className="mt-1 truncate text-sm text-slate-600">{text(profile.role, locale)}</p>
+              </div>
+              <Select
+                name="studio-page"
+                label={tx(ui.common.page, locale)}
+                value={activePage?.id ?? ''}
+                onChange={(event) => setActivePageId(event.target.value)}
+                options={pages.map((page) => ({ value: page.id, label: text(page.title, locale) }))}
+                className="sm:w-64"
+              />
             </div>
 
-            {section === 'overview' && <Overview profile={selectedProfile} page={selectedPage} locale={locale} onEdit={() => { setSection('editor'); setHasUnsavedChanges(true); }} />}
-            {section === 'editor' && <BlockEditorWorkspace page={selectedPage} locale={locale} onPageChange={updateSelectedPage} onDirty={() => setHasUnsavedChanges(true)} />}
-            {section === 'preview' && <StudioPreviewWorkspace profile={selectedProfile} page={selectedPage} locale={locale} onPublish={publishProfile} />}
-            {section === 'settings' && <SettingsWorkspace profile={selectedProfile} locale={locale} onDirty={() => setHasUnsavedChanges(true)} />}
+            {section === 'overview' && (
+              <OverviewPanel profile={profile} page={activePage} locale={locale} pages={pages} onEdit={() => navigate('/studio/editor')} />
+            )}
+            {section === 'editor' && activePage && (
+              <BlockEditorWorkspace
+                page={activePage}
+                profile={profile}
+                locale={locale}
+                onPagesChange={setPages}
+                onError={fail}
+              />
+            )}
+            {section === 'theme' && (
+              <ThemeEditor theme={profile.theme} locale={locale} onChange={(theme: ThemeConfig) => updateProfile({ theme })} onReset={autosave.reset} />
+            )}
+            {section === 'pages' && (
+              <PagesWorkspace
+                profile={profile}
+                pages={pages}
+                locale={locale}
+                activePageId={activePage?.id ?? ''}
+                onPagesChange={setPages}
+                onError={fail}
+                onOpenPage={(pageId) => {
+                  setActivePageId(pageId);
+                  navigate('/studio/editor');
+                }}
+              />
+            )}
+            {section === 'preview' && (
+              <StudioPreviewWorkspace profile={profile} page={activePage} locale={locale} onPublish={publish} onReload={document_.reload} />
+            )}
 
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-5">
-              <span className="text-xs text-slate-500">{isRtl ? 'المعاينة المحلية — لا يوجد نشر متصل بعد.' : 'Local preview — publishing is not connected yet.'}</span>
-              {hasUnsavedChanges && <button type="button" onClick={() => setConfirmDiscard(true)} className="min-h-11 rounded-full px-3 text-xs font-bold text-slate-600 hover:bg-slate-100">{isRtl ? 'تجاهل التغييرات' : 'Discard changes'}</button>}
+              <p className="text-xs text-slate-500">{tx(ui.common.demoNote, locale)}</p>
+              {autosave.dirty && (
+                <Button variant="ghost" size="sm" onClick={() => setConfirmDiscard(true)}>
+                  {tx(ui.common.discardChanges, locale)}
+                </Button>
+              )}
             </div>
           </div>
         </section>
       </div>
 
-      {toast && <div className="fixed bottom-5 start-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2"><Toast title={toast.title} message={toast.message} tone="success" onDismiss={() => setToast(null)} /></div>}
-      {confirmDiscard && <ConfirmDialog locale={locale} onCancel={() => setConfirmDiscard(false)} onConfirm={resetChanges} />}
+      <ConfirmDialog
+        open={confirmDiscard}
+        title={tx(ui.common.discardTitle, locale)}
+        body={tx(ui.common.discardBody, locale)}
+        confirm={{ label: tx(ui.common.discard, locale), tone: 'danger' }}
+        cancelLabel={tx(ui.common.cancel, locale)}
+        onCancel={() => setConfirmDiscard(false)}
+        onConfirm={() => {
+          autosave.reset();
+          setConfirmDiscard(false);
+          toast({ title: tx(ui.common.discard, locale), message: isRtl ? 'استعيدت آخر نسخة محفوظة.' : 'The last saved version is active.', tone: 'info' });
+        }}
+      />
     </main>
   );
 };
 
-const Overview: React.FC<{ profile: PublicProfile; page: ProfilePage | null; locale: Locale; onEdit: () => void }> = ({ profile, page, locale, onEdit }) => (
+const SaveIndicator: React.FC<{
+  autosave: ReturnType<typeof useAutosave>;
+  locale: Locale;
+  onRetry: () => void;
+}> = ({ autosave, locale, onRetry }) => {
+  const tone =
+    autosave.status === 'failed' ? 'text-rose-700' : autosave.dirty ? 'text-amber-700' : autosave.isSaving ? 'text-indigo-700' : 'text-emerald-700';
+  const dot = autosave.status === 'failed' ? 'bg-rose-500' : autosave.dirty ? 'bg-amber-500' : autosave.isSaving ? 'bg-indigo-500' : 'bg-emerald-500';
+
+  return (
+    <span className={`hidden items-center gap-2 text-xs font-bold sm:flex ${tone}`} aria-live="polite">
+      <span className={`h-2 w-2 rounded-full ${dot}`} aria-hidden="true" />
+      {autosave.status === 'failed' ? (
+        <button type="button" onClick={onRetry} className="underline underline-offset-2">
+          {`${autosave.error?.message ? text(autosave.error.message, locale) : ''} · ${tx(ui.common.retry, locale)}`}
+        </button>
+      ) : (
+        autosave.status === 'saving'
+          ? tx(ui.common.saving, locale)
+          : autosave.dirty
+            ? tx(ui.common.unsaved, locale)
+            : autosave.lastSavedAt
+            ? tx(ui.common.saved, locale)
+            : tx(ui.common.demoNote, locale)
+      )}
+    </span>
+  );
+};
+
+const OverviewPanel: React.FC<{
+  profile: PublicProfile;
+  page: ProfilePage | null;
+  pages: ProfilePage[];
+  locale: Locale;
+  onEdit: () => void;
+}> = ({ profile, page, pages, locale, onEdit }) => (
   <div className="grid gap-5 lg:grid-cols-[1.25fr_0.75fr]">
-    <Surface className="p-5 sm:p-6"><div className="flex items-center gap-4"><img src={profile.avatarUrl} alt="" className="h-16 w-16 rounded-2xl object-cover" /><div><h3 className="text-lg font-extrabold">{profile.displayName}</h3><p className="text-sm text-slate-500">raloa.app/@{profile.username}</p></div></div><p className="mt-5 max-w-xl text-sm leading-relaxed text-slate-600">{locale === 'ar' ? profile.bioAr : profile.bio}</p><Button className="mt-5" onClick={onEdit}>{locale === 'ar' ? 'فتح المحرر' : 'Open page editor'}</Button></Surface>
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1"><Metric label={locale === 'ar' ? 'الصفحة الحالية' : 'Current page'} value={page?.title ?? '—'} /><Metric label={locale === 'ar' ? 'الروابط المنشورة' : 'Published blocks'} value={String(page?.blocks.filter((block) => block.visible).length ?? 0)} /></div>
+    <Surface className="p-5 sm:p-6">
+      <div className="flex items-center gap-4">
+        <img src={profile.avatarUrl} alt="" className="h-16 w-16 rounded-panel object-cover" />
+        <div className="min-w-0">
+          <h3 className="truncate text-lg font-extrabold">{profile.displayName}</h3>
+          <p className="truncate text-sm text-slate-500">raloa.app/@{profile.username}</p>
+        </div>
+      </div>
+      <p className="mt-5 max-w-xl text-sm leading-relaxed text-slate-600">{text(profile.bio, locale)}</p>
+      <Button className="mt-5" onClick={onEdit}>
+        {tx(ui.studio.openEditor, locale)}
+      </Button>
+    </Surface>
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
+      <Metric label={tx(ui.common.pages, locale)} value={String(pages.length)} />
+      <Metric label={tx(ui.studio.visibleBlocks, locale)} value={String(page?.blocks.filter((block) => block.visible && !block.parentId).length ?? 0)} />
+      <Metric label={tx(ui.common.published, locale)} value={profile.published ? tx(ui.common.published, locale) : tx(ui.common.draft, locale)} />
+      <Metric label={tx(ui.studio.lastUpdated, locale)} value={new Date(profile.updatedAt).toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-GB')} />
+    </div>
   </div>
 );
 
-const SettingsWorkspace: React.FC<{ profile: PublicProfile; locale: Locale; onDirty: () => void }> = ({ profile, locale, onDirty }) => (
-  <Surface className="max-w-3xl p-5 sm:p-8"><h3 className="text-lg font-extrabold">{locale === 'ar' ? 'إعدادات الملف الشخصي' : 'Profile settings'}</h3><p className="mt-1 text-sm text-slate-600">{locale === 'ar' ? 'تتصل نماذج الإعدادات بخدمة الملف الشخصي في مرحلة لاحقة.' : 'Profile settings will connect to the profile service in a later phase.'}</p><div className="mt-6 grid gap-4 sm:grid-cols-2"><ReadOnlySetting label={locale === 'ar' ? 'اسم المستخدم' : 'Username'} value={`@${profile.username}`} /><ReadOnlySetting label={locale === 'ar' ? 'حالة النشر' : 'Publication status'} value={profile.published ? (locale === 'ar' ? 'منشور' : 'Published') : (locale === 'ar' ? 'مسودة' : 'Draft')} /></div><button type="button" onClick={onDirty} className="mt-6 min-h-11 rounded-full border border-slate-300 px-4 text-sm font-bold text-slate-800 hover:bg-slate-50">{locale === 'ar' ? 'تعديل إعدادات الملف' : 'Edit profile settings'}</button></Surface>
+const Metric: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+  <Surface className="p-5">
+    <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{label}</p>
+    <p className="mt-2 truncate text-xl font-extrabold text-ink">{value}</p>
+  </Surface>
 );
-
-const Metric: React.FC<{ label: string; value: string }> = ({ label, value }) => <Surface className="p-5"><p className="text-xs font-bold uppercase tracking-wider text-slate-500">{label}</p><p className="mt-2 truncate text-xl font-extrabold text-ink">{value}</p></Surface>;
-const ReadOnlySetting: React.FC<{ label: string; value: string }> = ({ label, value }) => <div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-bold text-slate-500">{label}</p><p className="mt-1 text-sm font-extrabold text-slate-900">{value}</p></div>;
-
-const ConfirmDialog: React.FC<{ locale: Locale; onCancel: () => void; onConfirm: () => void }> = ({ locale, onCancel, onConfirm }) => <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4"><div role="dialog" aria-modal="true" className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl"><h2 className="text-lg font-extrabold">{locale === 'ar' ? 'تجاهل التغييرات؟' : 'Discard changes?'}</h2><p className="mt-2 text-sm text-slate-600">{locale === 'ar' ? 'ستفقد التعديلات المحلية غير المحفوظة.' : 'Your unsaved local changes will be removed.'}</p><div className="mt-6 flex gap-2"><Button variant="secondary" className="flex-1" onClick={onCancel}>{locale === 'ar' ? 'إلغاء' : 'Cancel'}</Button><Button variant="danger" className="flex-1" onClick={onConfirm}>{locale === 'ar' ? 'تجاهل' : 'Discard'}</Button></div></div></div>;
-const StudioError: React.FC<{ locale: Locale; onReturnHome: () => void }> = ({ locale, onReturnHome }) => <StudioMessage title={locale === 'ar' ? 'تعذر تحميل الاستوديو' : 'Studio could not load'} body={locale === 'ar' ? 'حاول إعادة تحميل الصفحة.' : 'Try reloading the workspace.'} action={onReturnHome} actionLabel={locale === 'ar' ? 'العودة للموقع' : 'Back to website'} />;
-const StudioEmpty: React.FC<{ locale: Locale; onReturnHome: () => void }> = ({ locale, onReturnHome }) => <StudioMessage title={locale === 'ar' ? 'لا توجد ملفات شخصية' : 'No profiles yet'} body={locale === 'ar' ? 'أنشئ ملفاً شخصياً لبدء استخدام الاستوديو.' : 'Create a profile to start using Studio.'} action={onReturnHome} actionLabel={locale === 'ar' ? 'العودة للموقع' : 'Back to website'} />;
-const StudioMessage: React.FC<{ title: string; body: string; action: () => void; actionLabel: string }> = ({ title, body, action, actionLabel }) => <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6 text-center"><Surface className="max-w-md p-8"><h1 className="text-xl font-extrabold">{title}</h1><p className="mt-2 text-sm text-slate-600">{body}</p><Button className="mt-5" onClick={action}>{actionLabel}</Button></Surface></main>;

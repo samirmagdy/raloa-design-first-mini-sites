@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { cloneTheme, getThemePreset, themeToCssVariables } from './themeRegistry';
-import { ThemeConfig } from '../services/repository';
+import type { ThemeConfig } from '../services/contracts/theme';
 
 interface ThemeContextValue {
   theme: ThemeConfig;

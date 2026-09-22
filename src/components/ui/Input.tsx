@@ -3,10 +3,11 @@ import React from 'react';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
+  hint?: string;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
-  { label, error, id, className = '', ...props },
+  { label, error, hint, id, className = '', ...props },
   ref
 ) {
   const inputId = id ?? `input-${props.name ?? 'field'}`;
@@ -17,10 +18,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
         ref={ref}
         id={inputId}
         aria-invalid={Boolean(error)}
-        aria-describedby={error ? `${inputId}-error` : undefined}
+        aria-describedby={error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined}
         className={`min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm text-ink outline-none transition focus:border-indigo-500 focus:ring-3 focus:ring-indigo-100 placeholder:text-slate-400 ${error ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-100' : ''} ${className}`}
         {...props}
       />
+      {hint && !error && (
+        <span id={`${inputId}-hint`} className="mt-1.5 block text-xs text-slate-500">
+          {hint}
+        </span>
+      )}
       {error && <span id={`${inputId}-error`} className="mt-1.5 block text-xs font-semibold text-rose-600">{error}</span>}
     </label>
   );

@@ -38,86 +38,86 @@ import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 import { useSEO } from './hooks/useSEO';
 import { useVoiceTour } from './hooks/useVoiceTour';
 import { VoiceTourToggle } from './components/VoiceTourToggle';
-import { getCurrentRoute } from './app/router';
+import { navigate } from './app/router';
+import { useRoute } from './app/navigation';
 import { PublicProfilePage } from './components/PublicProfilePage';
-import { AppRoute } from './app/router';
 import { StudioShell } from './components/studio/StudioShell';
 import { AnalyticsPage } from './components/AnalyticsPage';
 import { SettingsPage } from './components/SettingsPage';
 import { OnboardingPage } from './components/OnboardingPage';
 import { ImportPage } from './components/ImportPage';
+import { AuthPage } from './components/AuthPage';
 
 export default function App() {
   const [locale, setLocale] = useState<Locale>(() => getInitialLocale());
   const [theme, setTheme] = useState<Theme>(() => getInitialTheme());
   const [soundEnabled, setSoundEnabled] = useState<boolean>(() => getInitialSoundEnabled());
 
-  // Client Routing State for Handling 404 and Broken Links Gracefully
-  const [currentRoute, setCurrentRoute] = useState<'home' | '404'>(() => {
-    if (typeof window === 'undefined') return 'home';
-    return getCurrentRoute().name === 'home' && window.location.hash !== '#404' ? 'home' : '404';
-  });
-  const [appRoute, setAppRoute] = useState<AppRoute>(() => getCurrentRoute());
-  const [attemptedPath, setAttemptedPath] = useState<string>(() => {
-    if (typeof window === 'undefined') return '';
-    const path = window.location.pathname;
-    const hash = window.location.hash;
-    if (path !== '/' && path !== '' && path !== '/index.html') return path;
-    if (hash === '#404') return '#404';
-    return '';
-  });
+  // One route store; navigation is History-API only, so drafts survive moving between screens.
+  const route = useRoute();
+  const isLanding = route.name === 'home' && (typeof window === 'undefined' || window.location.hash !== '#404');
+  const attemptedPath = typeof window === 'undefined' ? '' : window.location.hash === '#404' ? '#404' : route.path;
+
 
   // Dynamic Section-Aware SEO Hook (updates document.title, canonical URL, OG, Twitter tags)
   useSEO({
     locale,
     customTitle:
-      appRoute.name === 'studio'
+      route.name === 'studio'
         ? locale === 'ar'
           ? 'الاستوديو — RALOA'
           : 'Studio — RALOA'
-        : appRoute.name === 'analytics'
+        : route.name === 'analytics'
         ? locale === 'ar'
           ? 'التحليلات — RALOA'
           : 'Analytics — RALOA'
-        : appRoute.name === 'settings'
+        : route.name === 'settings'
         ? locale === 'ar'
           ? 'الإعدادات — RALOA'
           : 'Settings — RALOA'
-        : appRoute.name === 'onboarding'
+        : route.name === 'onboarding'
         ? locale === 'ar'
           ? 'إنشاء صفحتك — RALOA'
           : 'Create your page — RALOA'
-        : appRoute.name === 'import'
+        : route.name === 'import'
         ? locale === 'ar'
           ? 'استيراد الملف — RALOA'
           : 'Import profile — RALOA'
-        : currentRoute === '404'
+        : route.name === 'signin'
+        ? locale === 'ar'
+          ? 'تسجيل الدخول — RALOA'
+          : 'Sign in — RALOA'
+        : route.name === 'not-found'
         ? locale === 'ar'
           ? '٤٠٤: الصفحة غير موجودة — RALOA'
           : '404: Page Not Found — RALOA'
         : undefined,
     customDescription:
-      appRoute.name === 'studio'
+      route.name === 'studio'
         ? locale === 'ar'
           ? 'أدر صفحاتك العامة من استوديو RALOA.'
           : 'Manage your RALOA public pages from Studio.'
-        : appRoute.name === 'analytics'
+        : route.name === 'analytics'
         ? locale === 'ar'
           ? 'تابع أداء صفحاتك العامة على RALOA.'
           : 'Track the performance of your public RALOA pages.'
-        : appRoute.name === 'settings'
+        : route.name === 'settings'
         ? locale === 'ar'
           ? 'حدّث إعدادات صفحاتك العامة على RALOA.'
           : 'Update your public RALOA page settings.'
-        : appRoute.name === 'onboarding'
+        : route.name === 'onboarding'
         ? locale === 'ar'
           ? 'أنشئ صفحة عامة جديدة على RALOA.'
           : 'Create a new public RALOA page.'
-        : appRoute.name === 'import'
+        : route.name === 'signin'
+        ? locale === 'ar'
+          ? 'افتح جلسة استوديو محلية على هذا الجهاز.'
+          : 'Open a local Studio session on this device.'
+        : route.name === 'import'
         ? locale === 'ar'
           ? 'استورد ملف RALOA محفوظاً إلى الاستوديو.'
           : 'Import a saved RALOA profile into Studio.'
-        : currentRoute === '404'
+        : !isLanding
         ? locale === 'ar'
           ? 'عذراً، الصفحة المطلوبة غير متوفرة. عد إلى الصفحة الرئيسية لرالوا.'
           : 'The link you followed may be broken. Return to RALOA home.'
@@ -236,63 +236,37 @@ export default function App() {
     };
   }, [soundEnabled]);
 
-  // Listen to popstate and hashchange events for browser history back/forward navigation
+  // Template deep links (?template=slug and #template-slug) still open the preview on back/forward.
   useEffect(() => {
-    const handleLocationChange = () => {
-      const appRoute = getCurrentRoute();
-      setAppRoute(appRoute);
-      const path = window.location.pathname;
-      const hash = window.location.hash;
+    const syncTemplate = () => {
       const params = new URLSearchParams(window.location.search);
-      const templateParam = params.get('template') || params.get('preview');
-      const matchedTemplate = templateParam
-        ? templatesData.find(
-            (t) =>
-              t.id.toLowerCase() === templateParam.toLowerCase() ||
-              t.name.toLowerCase() === templateParam.toLowerCase()
-          )
-        : hash.startsWith('#template-')
-          ? templatesData.find((t) => {
-              const value = hash.replace('#template-', '').toLowerCase();
-              return t.id.toLowerCase() === value || t.name.toLowerCase() === value;
-            })
-          : null;
-
-      setPreviewTemplate(matchedTemplate || null);
-      if (hash === '#404' || appRoute.name !== 'home') {
-        setCurrentRoute('404');
-        setAttemptedPath(path !== '/' && path !== '' ? path : hash);
-      } else {
-        setCurrentRoute('home');
-        setAttemptedPath('');
-      }
+      const query = (params.get('template') || params.get('preview') || '').toLowerCase();
+      const hash = window.location.hash.startsWith('#template-')
+        ? window.location.hash.replace('#template-', '').toLowerCase()
+        : '';
+      const match = templatesData.find((t) =>
+        t.id.toLowerCase() === query || t.name.toLowerCase() === query || t.id.toLowerCase() === hash || t.name.toLowerCase() === hash
+      );
+      setPreviewTemplate(match || null);
     };
 
-    window.addEventListener('popstate', handleLocationChange);
-    window.addEventListener('hashchange', handleLocationChange);
+    syncTemplate();
+    window.addEventListener('popstate', syncTemplate);
+    window.addEventListener('hashchange', syncTemplate);
     return () => {
-      window.removeEventListener('popstate', handleLocationChange);
-      window.removeEventListener('hashchange', handleLocationChange);
+      window.removeEventListener('popstate', syncTemplate);
+      window.removeEventListener('hashchange', syncTemplate);
     };
   }, []);
 
   const handleReturnHome = () => {
-    setAppRoute({ name: 'home', path: '/' });
-    setCurrentRoute('home');
-    setAttemptedPath('');
-    if (window.location.pathname !== '/' || window.location.hash !== '') {
-      window.history.pushState(null, '', '/');
-    }
+    navigate('/');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNavigateToSection = (sectionId: string) => {
-    setAppRoute({ name: 'home', path: '/' });
-    setCurrentRoute('home');
-    setAttemptedPath('');
-    if (window.location.pathname !== '/' || window.location.hash !== '') {
-      window.history.pushState(null, '', `/#${sectionId}`);
-    }
+    if (route.name !== 'home') navigate('/');
+    window.history.pushState(null, '', `/#${sectionId}`);
     setTimeout(() => {
       const el = document.getElementById(sectionId);
       if (el) {
@@ -432,7 +406,7 @@ export default function App() {
       handler: () => {
         if (isAnyModalOpen) {
           closeTopModal();
-        } else if (currentRoute === '404') {
+        } else if (!isLanding) {
           handleReturnHome();
         } else if (document.activeElement instanceof HTMLElement) {
           document.activeElement.blur();
@@ -476,7 +450,7 @@ export default function App() {
       description: 'Scroll to top or return home',
       ignoreInInputs: true,
       handler: () => {
-        if (currentRoute === '404') {
+        if (!isLanding) {
           handleReturnHome();
         } else {
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -503,19 +477,21 @@ export default function App() {
       {/* Global Branded Loading Overlay */}
 
       {/* 404 Page Not Found or Standard Landing Page */}
-      {appRoute.name === 'profile' ? (
-        <PublicProfilePage username={appRoute.username} locale={locale} />
-      ) : appRoute.name === 'studio' ? (
-        <StudioShell locale={locale} onReturnHome={handleReturnHome} />
-      ) : appRoute.name === 'analytics' ? (
+      {route.name === 'profile' ? (
+        <PublicProfilePage username={route.username ?? ''} locale={locale} onReturnHome={handleReturnHome} />
+      ) : route.name === 'studio' ? (
+        <StudioShell locale={locale} section={route.studioSection ?? 'overview'} onReturnHome={handleReturnHome} />
+      ) : route.name === 'settings' ? (
+        <SettingsPage locale={locale} section={route.settingsSection ?? 'profile'} onReturnHome={handleReturnHome} />
+      ) : route.name === 'analytics' ? (
         <AnalyticsPage locale={locale} onReturnHome={handleReturnHome} />
-      ) : appRoute.name === 'settings' ? (
-        <SettingsPage locale={locale} onReturnHome={handleReturnHome} />
-      ) : appRoute.name === 'onboarding' ? (
+      ) : route.name === 'onboarding' ? (
         <OnboardingPage locale={locale} onReturnHome={handleReturnHome} />
-      ) : appRoute.name === 'import' ? (
+      ) : route.name === 'import' ? (
         <ImportPage locale={locale} onReturnHome={handleReturnHome} />
-      ) : currentRoute === '404' ? (
+      ) : route.name === 'signin' ? (
+        <AuthPage locale={locale} onReturnHome={handleReturnHome} />
+      ) : !isLanding ? (
         <NotFound
           locale={locale}
           theme={theme}

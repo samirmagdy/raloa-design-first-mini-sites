@@ -4,6 +4,8 @@ import App from './App.tsx';
 import './index.css';
 import { initPerformanceTracking } from './utils/performance.ts';
 import { AppErrorBoundary } from './components/system/AppErrorBoundary.tsx';
+import { RepositoryProvider } from './services/RepositoryContext.tsx';
+import { ToastProvider } from './components/ui/Toast.tsx';
 
 // Initialize performance tracking for Web Vitals (FCP, LCP)
 initPerformanceTracking();
@@ -11,7 +13,11 @@ initPerformanceTracking();
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AppErrorBoundary>
-      <App />
+      <RepositoryProvider>
+        <ToastProvider>
+          <App />
+        </ToastProvider>
+      </RepositoryProvider>
     </AppErrorBoundary>
   </StrictMode>,
 );

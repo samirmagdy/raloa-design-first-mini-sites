@@ -26,7 +26,7 @@ import { fireSiteLaunchConfetti } from '../../utils/confetti';
 import { SocialPreviewGenerator } from '../studio/SocialPreviewGenerator';
 import { copyTextToClipboard } from '../../utils/clipboard';
 import { useModalAccessibility } from '../../hooks/useModalAccessibility';
-import { ThemeConfig } from '../../services/repository';
+import type { ThemeConfig } from '../../services/contracts/theme';
 import { cloneTheme, getThemePreset } from '../../theme/themeRegistry';
 import { ThemeEditor } from '../studio/ThemeEditor';
 
@@ -109,10 +109,6 @@ export const StudioModal: React.FC<StudioModalProps> = ({
     setIsDraftSaved(true);
     setActiveTab('share');
     fireSiteLaunchConfetti();
-  };
-
-  const saveThemeDraft = () => {
-    localStorage.setItem(`raloa_theme_draft_${username}`, JSON.stringify(themeConfig));
   };
 
   const resetThemeDraft = () => {
@@ -387,13 +383,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
                   </div>
                 </div>
 
-                <ThemeEditor
-                  theme={themeConfig}
-                  onChange={setThemeConfig}
-                  onSave={saveThemeDraft}
-                  onReset={resetThemeDraft}
-                  locale={locale}
-                />
+                <ThemeEditor theme={themeConfig} onChange={setThemeConfig} onReset={resetThemeDraft} locale={locale} />
 
                 {/* Handle & Username settings */}
                 <div className="pt-6 border-t border-slate-100">

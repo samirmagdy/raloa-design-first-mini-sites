@@ -277,15 +277,12 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
           </label>
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
-              <input
-                type="text"
-                readOnly
-                value={REFERRAL_LINK}
-                className="w-full pl-3.5 pr-10 rtl:pl-10 rtl:pr-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs sm:text-sm text-slate-900 dark:text-slate-100 select-all focus:outline-none"
+                <input
+                  type="text"
+                  readOnly
+                  value={REFERRAL_LINK}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs sm:text-sm text-slate-900 dark:text-slate-100 select-all focus:outline-none"
               />
-              <span className="absolute inset-y-0 right-3 rtl:right-auto rtl:left-3 flex items-center text-slate-400 text-[10px] uppercase font-bold tracking-wider pointer-events-none">
-                {REFERRAL_CODE}
-              </span>
             </div>
             <button
               type="button"
@@ -378,19 +375,19 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
                 {isRtl ? 'تتطلب خدمة إحالة مهيأة' : 'Requires a configured referral service'}
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch gap-2">
               <input
                 type="email"
                 placeholder={isRtl ? 'بريد الصديق (مثال: noor@gmail.com)...' : 'Friend email (e.g. noor@gmail.com)...'}
                 value={friendEmail}
                 onChange={(e) => setFriendEmail(e.target.value)}
-                className="flex-1 px-3 py-2 rounded-xl bg-white dark:bg-slate-850 border border-indigo-200 dark:border-indigo-800 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full min-w-0 flex-1 px-3 py-2 rounded-xl bg-white dark:bg-slate-850 border border-indigo-200 dark:border-indigo-800 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 required
               />
               <button
                 type="submit"
                 disabled={isSimulating}
-                className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0 transition-colors"
+                className="w-full sm:w-auto justify-center px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0 transition-colors"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>{isSimulating ? (isRtl ? 'جارٍ...' : 'Sending...') : (isRtl ? 'إرسال' : 'Send Invite')}</span>

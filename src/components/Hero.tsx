@@ -6,13 +6,7 @@ import { dictionary } from '../data/content';
 import { PhoneMockup } from './PhoneMockup';
 import { HeroDepthScene } from './HeroDepthScene';
 import { useScrollProgress } from '../hooks/useScrollProgress';
-import {
-  AnnotationCard,
-  CurvedArrowDownRight,
-  CurvedArrowUpRight,
-  CurvedArrowDownLeft,
-  FloatingMetricBadge
-} from './brand/Doodles';
+import { FloatingMetricBadge } from './brand/Doodles';
 
 interface HeroProps {
   locale: Locale;
@@ -45,9 +39,6 @@ export const Hero: React.FC<HeroProps> = ({
   const phoneRotate = useTransform(smoothProgress, [0, 1], [0, isRtl ? 3.5 : -3.5]);
   const phoneScale = useTransform(smoothProgress, [0, 0.7, 1], [1, 0.98, 0.94]);
 
-  const sticker1Y = useTransform(smoothProgress, [0, 1], [0, -45]);
-  const sticker2Y = useTransform(smoothProgress, [0, 1], [0, 55]);
-  const sticker3Y = useTransform(smoothProgress, [0, 1], [0, -50]);
   const badgeY = useTransform(smoothProgress, [0, 1], [0, 35]);
   const glowY = useTransform(smoothProgress, [0, 1], [0, 60]);
   const glowScale = useTransform(smoothProgress, [0, 1], [1, 1.15]);
@@ -251,61 +242,13 @@ export const Hero: React.FC<HeroProps> = ({
               </motion.div>
             </motion.div>
 
-            {/* Floating Annotation Sticker 1 (Top Left) */}
-            <motion.div
-              style={{ y: sticker1Y }}
-              initial={{ opacity: 0, scale: 0, rotate: -15 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 0.55 }}
-              className="hidden sm:block absolute -top-4 -left-6 md:-left-10 z-20 pointer-events-none"
-            >
-              <div className="flex flex-col items-end">
-                <AnnotationCard rotation="-rotate-3">
-                  <span>{t.allLinksSticker}</span>
-                </AnnotationCard>
-                <CurvedArrowDownRight className="mt-1 mr-4" />
-              </div>
-            </motion.div>
-
-            {/* Floating Annotation Sticker 2 (Bottom Left) */}
-            <motion.div
-              style={{ y: sticker2Y }}
-              initial={{ opacity: 0, scale: 0, rotate: 15 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 0.7 }}
-              className="hidden sm:block absolute bottom-12 -left-6 md:-left-8 z-20 pointer-events-none"
-            >
-              <div className="flex flex-col items-end">
-                <CurvedArrowUpRight className="mb-1 mr-2" />
-                <AnnotationCard rotation="rotate-2">
-                  <span>{t.templatesSticker}</span>
-                </AnnotationCard>
-              </div>
-            </motion.div>
-
-            {/* Floating Annotation Sticker 3 (Top Right) */}
-            <motion.div
-              style={{ y: sticker3Y }}
-              initial={{ opacity: 0, scale: 0, rotate: 20 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 0.62 }}
-              className="hidden sm:block absolute top-6 -right-6 md:-right-8 z-20 pointer-events-none"
-            >
-              <div className="flex flex-col items-start">
-                <AnnotationCard rotation="rotate-3">
-                  <span>{t.anyDeviceSticker}</span>
-                </AnnotationCard>
-                <CurvedArrowDownLeft className="mt-1 ml-4" />
-              </div>
-            </motion.div>
-
             {/* Floating Metric Badge (+300% More clicks) (Middle Right) */}
             <motion.div
               style={{ y: badgeY }}
               initial={{ opacity: 0, scale: 0.4, x: 25 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
               transition={{ type: 'spring', stiffness: 220, damping: 18, delay: 0.8 }}
-              className="hidden sm:block absolute top-1/2 -right-8 md:-right-12 -translate-y-1/2 z-20"
+              className="hidden xl:block absolute top-1/2 -right-8 -translate-y-1/2 z-20"
             >
               <FloatingMetricBadge
                 metric={locale === 'ar' ? '+٣٠٠٪' : '+300%'}

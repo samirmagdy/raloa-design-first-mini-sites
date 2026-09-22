@@ -1,11 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Instagram, Youtube, Linkedin, Twitter, Keyboard, BarChart3, Link2, Check, Share2, Gift } from 'lucide-react';
+import { Instagram, Youtube, Linkedin, Keyboard, BarChart3, Link2, Check, Share2, Gift } from 'lucide-react';
 import { RaloaLogo } from './brand/RaloaLogo';
 import { Locale } from '../types';
 import { Theme } from '../utils/theme';
 import { dictionary } from '../data/content';
 import { Tooltip } from './Tooltip';
 import { copyTextToClipboard } from '../utils/clipboard';
+
+const XBrand: React.FC<{ className?: string }> = ({ className }) => (
+  <img src="/brand/trusted/x.svg" alt="" aria-hidden="true" className={className} />
+);
 
 interface FooterProps {
   locale: Locale;
@@ -29,7 +33,7 @@ export const Footer: React.FC<FooterProps> = ({
   const isRtl = locale === 'ar';
   const t = dictionary[locale].footer;
   const socialLinks = [
-    { label: 'X', href: import.meta.env.VITE_RALOA_X_URL, icon: Twitter },
+    { label: 'X', href: import.meta.env.VITE_RALOA_X_URL, icon: XBrand },
     { label: 'Instagram', href: import.meta.env.VITE_RALOA_INSTAGRAM_URL, icon: Instagram },
     { label: 'YouTube', href: import.meta.env.VITE_RALOA_YOUTUBE_URL, icon: Youtube },
     { label: 'LinkedIn', href: import.meta.env.VITE_RALOA_LINKEDIN_URL, icon: Linkedin }

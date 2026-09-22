@@ -3,7 +3,6 @@ import {
   CheckCircle2,
   ChevronRight,
   Mail,
-  Twitter,
   Link2,
   Github
 } from 'lucide-react';
@@ -112,7 +111,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
               };
               const icons: Record<TemplateItem['socials'][number]['platform'], React.ReactNode> = {
                 instagram: <img src="/brand/trusted/instagram.svg" alt="" aria-hidden="true" className="w-4 h-4" />,
-                x: <Twitter className="w-3.5 h-3.5" />,
+                x: <img src="/brand/trusted/x.svg" alt="" aria-hidden="true" className="w-4 h-4" />,
                 youtube: <img src="/brand/trusted/youtube.svg" alt="" aria-hidden="true" className="w-4 h-4" />,
                 linkedin: <img src="/brand/trusted/linkedin.svg" alt="" aria-hidden="true" className="w-4 h-4" />,
                 email: <Mail className="w-3.5 h-3.5" />,
@@ -183,7 +182,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
 
           {/* Interactive Hint */}
           <div className="mt-4 pt-3 border-t border-slate-200/80 w-full flex items-center justify-center gap-1.5 text-[10px] text-slate-500 font-medium">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
             <span>{isRtl ? 'اضغط على الروابط لتجربة التفاعل المباشر' : 'Tap links to test live interactions'}</span>
           </div>
 

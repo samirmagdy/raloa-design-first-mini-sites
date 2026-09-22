@@ -37,7 +37,7 @@ export const HeroDepthScene: React.FC<HeroDepthSceneProps> = ({ isRtl = false, l
     <div
       ref={sceneRef}
       aria-hidden="true"
-      className="raloa-hero-depth pointer-events-auto absolute inset-[-18%] hidden sm:block"
+      className="raloa-hero-depth pointer-events-auto absolute inset-0 hidden xl:block"
       onPointerMove={handlePointerMove}
       onPointerLeave={resetPointer}
     >

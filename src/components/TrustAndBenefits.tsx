@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, Palette, TrendingUp, Monitor, Youtube, Instagram, Music2, Linkedin } from 'lucide-react';
+import { Zap, Palette, TrendingUp, Monitor } from 'lucide-react';
 import { Locale } from '../types';
 import { benefitsList } from '../data/content';
 
@@ -8,13 +8,13 @@ interface TrustAndBenefitsProps {
 }
 
 const trustedBrands = [
-  { name: 'YouTube', icon: Youtube },
-  { name: 'Instagram', icon: Instagram },
-  { name: 'TikTok', icon: Music2 },
-  { name: 'LinkedIn', icon: Linkedin },
-  { name: 'Adobe' },
-  { name: 'Spotify' },
-  { name: 'Notion' }
+  { name: 'YouTube', asset: 'youtube' },
+  { name: 'Instagram', asset: 'instagram' },
+  { name: 'TikTok', asset: 'tiktok' },
+  { name: 'LinkedIn', asset: 'linkedin' },
+  { name: 'Adobe', asset: 'adobe' },
+  { name: 'Spotify', asset: 'spotify' },
+  { name: 'Notion', asset: 'notion' }
 ];
 
 export const TrustAndBenefits: React.FC<TrustAndBenefitsProps> = ({ locale }) => {
@@ -42,9 +42,14 @@ export const TrustAndBenefits: React.FC<TrustAndBenefitsProps> = ({ locale }) =>
           {isRtl ? 'موثوق من صناع المحتوى والمستقلين والشركات حول العالم' : 'Trusted by creators, freelancers and businesses worldwide'}
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 items-center gap-5 text-slate-500 dark:text-slate-400">
-          {trustedBrands.map(({ name, icon: Icon }) => (
+          {trustedBrands.map(({ name, asset }) => (
             <div key={name} className="flex items-center justify-center gap-1.5 text-[13px] sm:text-[14px] font-bold opacity-80">
-              {Icon ? <Icon className="w-4 h-4" aria-hidden="true" /> : <span className="w-4 h-4 rounded-full border-2 border-current" aria-hidden="true" />}
+              <img
+                src={`/brand/trusted/${asset}.svg`}
+                alt=""
+                aria-hidden="true"
+                className="h-4 w-4 object-contain opacity-70 dark:invert"
+              />
               <span>{name}</span>
             </div>
           ))}

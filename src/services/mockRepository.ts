@@ -63,8 +63,9 @@ export const mockRepository: RaloaRepository = {
 
   async saveProfile(profile) {
     const { state } = readState();
-    const nextProfiles = state.profiles.filter((item) => item.id !== profile.id);
-    nextProfiles.push(clone(profile));
+    const nextProfiles = state.profiles.some((item) => item.id === profile.id)
+      ? state.profiles.map((item) => item.id === profile.id ? clone(profile) : item)
+      : [...state.profiles, clone(profile)];
     const nextState = { profiles: nextProfiles };
     persistState(nextState);
     return { data: clone(profile), source: 'local' };
@@ -79,4 +80,3 @@ export const mockRepository: RaloaRepository = {
     };
   }
 };
-

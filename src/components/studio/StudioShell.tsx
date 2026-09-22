@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronDown, FileText, LayoutDashboard, LogOut, Menu, PanelLeft, Settings, X } from 'lucide-react';
+import { ChevronDown, FileText, LayoutDashboard, LogOut, Menu, Settings, X } from 'lucide-react';
 import { Locale } from '../../types';
 import { mockRepository } from '../../services/mockRepository';
 import { ProfilePage, PublicProfile } from '../../services/repository';
 import { RaloaMark } from '../brand/RaloaLogo';
+import { BlockEditorWorkspace } from './BlockEditorWorkspace';
 import { Button } from '../ui/Button';
 import { Surface } from '../ui/Surface';
 import { Toast } from '../ui/Toast';
@@ -27,9 +28,12 @@ const StudioLoading: React.FC = () => (
   </main>
 );
 
+const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
+
 export const StudioShell: React.FC<StudioShellProps> = ({ locale, onReturnHome }) => {
   const isRtl = locale === 'ar';
   const [profiles, setProfiles] = useState<PublicProfile[]>([]);
+  const [savedProfiles, setSavedProfiles] = useState<PublicProfile[]>([]);
   const [selectedProfileId, setSelectedProfileId] = useState('');
   const [selectedPageId, setSelectedPageId] = useState('');
   const [section, setSection] = useState<StudioSection>('overview');
@@ -45,6 +49,7 @@ export const StudioShell: React.FC<StudioShellProps> = ({ locale, onReturnHome }
     mockRepository.listProfiles().then((result) => {
       if (!active) return;
       setProfiles(result.data);
+      setSavedProfiles(clone(result.data));
       setSelectedProfileId(result.data[0]?.id ?? '');
       setSelectedPageId(result.data[0]?.pages[0]?.id ?? '');
     }).catch(() => {
@@ -73,15 +78,23 @@ export const StudioShell: React.FC<StudioShellProps> = ({ locale, onReturnHome }
 
   const saveChanges = async () => {
     if (!selectedProfile) return;
-    await mockRepository.saveProfile(selectedProfile);
+    const result = await mockRepository.saveProfile(selectedProfile);
+    setSavedProfiles((current) => current.map((profile) => profile.id === result.data.id ? clone(result.data) : profile));
     setHasUnsavedChanges(false);
     setToast({ title: isRtl ? 'تم حفظ التغييرات' : 'Changes saved', message: isRtl ? 'تم الحفظ على هذا الجهاز.' : 'Saved locally on this device.' });
   };
 
   const resetChanges = () => {
+    setProfiles(clone(savedProfiles));
     setHasUnsavedChanges(false);
     setConfirmDiscard(false);
     setToast({ title: isRtl ? 'تم تجاهل التغييرات' : 'Changes discarded', message: isRtl ? 'تمت استعادة آخر نسخة محفوظة.' : 'The last saved version is active.' });
+  };
+
+  const updateSelectedPage = (nextPage: ProfilePage) => {
+    setProfiles((current) => current.map((profile) => profile.id === selectedProfileId
+      ? { ...profile, pages: profile.pages.map((page) => page.id === nextPage.id ? nextPage : page) }
+      : profile));
   };
 
   if (isLoading) return <StudioLoading />;
@@ -147,7 +160,7 @@ export const StudioShell: React.FC<StudioShellProps> = ({ locale, onReturnHome }
             </div>
 
             {section === 'overview' && <Overview profile={selectedProfile} page={selectedPage} locale={locale} onEdit={() => { setSection('editor'); setHasUnsavedChanges(true); }} />}
-            {section === 'editor' && <EditorWorkspace profile={selectedProfile} page={selectedPage} locale={locale} onDirty={() => setHasUnsavedChanges(true)} />}
+            {section === 'editor' && <BlockEditorWorkspace page={selectedPage} locale={locale} onPageChange={updateSelectedPage} onDirty={() => setHasUnsavedChanges(true)} />}
             {section === 'settings' && <SettingsWorkspace profile={selectedProfile} locale={locale} onDirty={() => setHasUnsavedChanges(true)} />}
 
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-5">
@@ -168,13 +181,6 @@ const Overview: React.FC<{ profile: PublicProfile; page: ProfilePage | null; loc
   <div className="grid gap-5 lg:grid-cols-[1.25fr_0.75fr]">
     <Surface className="p-5 sm:p-6"><div className="flex items-center gap-4"><img src={profile.avatarUrl} alt="" className="h-16 w-16 rounded-2xl object-cover" /><div><h3 className="text-lg font-extrabold">{profile.displayName}</h3><p className="text-sm text-slate-500">raloa.app/@{profile.username}</p></div></div><p className="mt-5 max-w-xl text-sm leading-relaxed text-slate-600">{locale === 'ar' ? profile.bioAr : profile.bio}</p><Button className="mt-5" onClick={onEdit}>{locale === 'ar' ? 'فتح المحرر' : 'Open page editor'}</Button></Surface>
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1"><Metric label={locale === 'ar' ? 'الصفحة الحالية' : 'Current page'} value={page?.title ?? '—'} /><Metric label={locale === 'ar' ? 'الروابط المنشورة' : 'Published blocks'} value={String(page?.blocks.filter((block) => block.visible).length ?? 0)} /></div>
-  </div>
-);
-
-const EditorWorkspace: React.FC<{ profile: PublicProfile; page: ProfilePage | null; locale: Locale; onDirty: () => void }> = ({ profile, page, locale, onDirty }) => (
-  <div className="grid gap-5 lg:grid-cols-[280px_1fr]">
-    <Surface className="p-4"><h3 className="text-sm font-extrabold">{locale === 'ar' ? 'محتوى الصفحة' : 'Page content'}</h3><div className="mt-4 space-y-2">{page?.blocks.map((block) => <button key={block.id} type="button" onClick={onDirty} className="flex min-h-11 w-full items-center justify-between rounded-xl border border-slate-200 px-3 text-start text-xs font-bold text-slate-700 hover:border-indigo-300 hover:bg-indigo-50"><span>{block.title || block.type}</span><span className={block.visible ? 'text-emerald-600' : 'text-slate-400'}>{block.visible ? 'On' : 'Off'}</span></button>)}</div></Surface>
-    <Surface className="min-h-[420px] p-5 sm:p-8"><div className="flex min-h-[360px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center"><PanelLeft className="h-8 w-8 text-indigo-500" /><h3 className="mt-4 text-lg font-extrabold">{locale === 'ar' ? 'مساحة تحرير الكتل' : 'Block editor workspace'}</h3><p className="mt-2 max-w-md text-sm leading-relaxed text-slate-600">{locale === 'ar' ? `سيتم توصيل أدوات إضافة وتعديل الكتل في المرحلة التالية. الصفحة المحددة: ${page?.title ?? '—'}` : `Add, reorder, and configure blocks will connect in Phase 5. Selected page: ${page?.title ?? '—'}`}</p><button type="button" onClick={onDirty} className="mt-5 min-h-11 rounded-full border border-slate-300 bg-white px-4 text-sm font-bold text-slate-800 hover:bg-slate-100">{locale === 'ar' ? 'بدء مسودة تعديل' : 'Start an edit draft'}</button></div></Surface>
   </div>
 );
 

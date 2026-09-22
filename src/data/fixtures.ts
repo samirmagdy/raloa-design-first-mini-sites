@@ -20,7 +20,7 @@ const defaultTheme: ThemeConfig = {
   }
 };
 
-export const publicProfileFixtures: PublicProfile[] = templatesData.slice(0, 3).map((template) => ({
+export const publicProfileFixtures: PublicProfile[] = templatesData.map((template) => ({
   id: `profile-${template.id}`,
   username: template.id,
   displayName: template.name,
@@ -55,4 +55,3 @@ export const publicProfileFixtures: PublicProfile[] = templatesData.slice(0, 3).
     enabled: true
   }))
 }));
-

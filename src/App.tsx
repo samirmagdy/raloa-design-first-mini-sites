@@ -39,6 +39,8 @@ import { useSEO } from './hooks/useSEO';
 import { useVoiceTour } from './hooks/useVoiceTour';
 import { VoiceTourToggle } from './components/VoiceTourToggle';
 import { getCurrentRoute } from './app/router';
+import { PublicProfilePage } from './components/PublicProfilePage';
+import { AppRoute } from './app/router';
 
 export default function App() {
   const [locale, setLocale] = useState<Locale>(() => getInitialLocale());
@@ -50,6 +52,7 @@ export default function App() {
     if (typeof window === 'undefined') return 'home';
     return getCurrentRoute().name === 'home' && window.location.hash !== '#404' ? 'home' : '404';
   });
+  const [appRoute, setAppRoute] = useState<AppRoute>(() => getCurrentRoute());
   const [attemptedPath, setAttemptedPath] = useState<string>(() => {
     if (typeof window === 'undefined') return '';
     const path = window.location.pathname;
@@ -192,6 +195,7 @@ export default function App() {
   useEffect(() => {
     const handleLocationChange = () => {
       const appRoute = getCurrentRoute();
+      setAppRoute(appRoute);
       const path = window.location.pathname;
       const hash = window.location.hash;
       const params = new URLSearchParams(window.location.search);
@@ -452,7 +456,9 @@ export default function App() {
       {/* Global Branded Loading Overlay */}
 
       {/* 404 Page Not Found or Standard Landing Page */}
-      {currentRoute === '404' ? (
+      {appRoute.name === 'profile' ? (
+        <PublicProfilePage username={appRoute.username} locale={locale} />
+      ) : currentRoute === '404' ? (
         <NotFound
           locale={locale}
           theme={theme}

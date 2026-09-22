@@ -15,7 +15,6 @@ interface FooterProps {
   onOpenShortcuts?: () => void;
   onOpenStats?: () => void;
   onOpenReferral?: () => void;
-  onTriggerNotFound?: (path: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
@@ -25,8 +24,7 @@ export const Footer: React.FC<FooterProps> = ({
   onOpenContact,
   onOpenShortcuts,
   onOpenStats,
-  onOpenReferral,
-  onTriggerNotFound
+  onOpenReferral
 }) => {
   const isRtl = locale === 'ar';
   const t = dictionary[locale].footer;
@@ -71,26 +69,21 @@ export const Footer: React.FC<FooterProps> = ({
       links: [
         { label: locale === 'ar' ? 'المميزات' : 'Features', href: '#features' },
         { label: locale === 'ar' ? 'القوالب' : 'Templates', href: '#templates' },
-        { label: locale === 'ar' ? 'الأسعار' : 'Pricing', href: '#pricing' },
-        { label: locale === 'ar' ? 'سجل التحديثات' : 'Changelog', href: '/changelog' }
+        { label: locale === 'ar' ? 'الأسعار' : 'Pricing', href: '#pricing' }
       ]
     },
     company: {
-      title: t.company,
+        title: t.company,
       links: [
         { label: locale === 'ar' ? 'نبذة عن رالوا' : 'About RALOA', href: '#benefits' },
-        { label: locale === 'ar' ? 'المدونة' : 'Blog', href: '/blog' },
-        { label: locale === 'ar' ? 'الوظائف' : 'Careers', href: '/careers' },
         { label: locale === 'ar' ? 'تواصل معنا' : 'Contact', href: '#faq' }
       ]
     },
     resources: {
       title: t.resources,
       links: [
-        { label: locale === 'ar' ? 'مركز المساعدة' : 'Help Center', href: '/help' },
-        { label: locale === 'ar' ? 'الأدلة' : 'Guides', href: '#how-it-works' },
-        { label: locale === 'ar' ? 'المجتمع' : 'Community', href: '/community' },
-        { label: locale === 'ar' ? 'حالة الخدمة' : 'Status', href: '/status' }
+        { label: locale === 'ar' ? 'مركز المساعدة' : 'Help Center', href: '#faq' },
+        { label: locale === 'ar' ? 'الأدلة' : 'Guides', href: '#how-it-works' }
       ]
     },
     legal: {
@@ -123,18 +116,11 @@ export const Footer: React.FC<FooterProps> = ({
     } else if (label === 'Earn Credits' || label === 'اكسب رصيداً') {
       e.preventDefault();
       if (onOpenReferral) onOpenReferral();
-    } else if (href === '/404' || href === '#404') {
-      e.preventDefault();
-      if (onTriggerNotFound) onTriggerNotFound('/404');
-    } else if (href.startsWith('/')) {
-      e.preventDefault();
-      onTriggerNotFound?.(href);
     } else if (href.startsWith('#')) {
       const targetId = href.replace('#', '');
       const el = document.getElementById(targetId);
-      if (!el && onTriggerNotFound) {
+      if (!el) {
         e.preventDefault();
-        onTriggerNotFound(href);
       }
     }
   };
@@ -219,7 +205,7 @@ export const Footer: React.FC<FooterProps> = ({
                       <a
                         href={link.href}
                         onClick={(e) => handleLinkClick(e, link.label, link.href)}
-                        className="inline-flex min-h-11 items-center text-[13px] text-slate-500 dark:text-slate-400 hover:text-ink dark:hover:text-white transition-colors"
+                        className="inline-flex min-h-11 min-w-11 items-center text-[13px] text-slate-500 dark:text-slate-400 hover:text-ink dark:hover:text-white transition-colors"
                       >
                         {link.label}
                       </a>

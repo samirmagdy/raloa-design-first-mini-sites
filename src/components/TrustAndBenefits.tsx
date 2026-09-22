@@ -58,6 +58,9 @@ export const TrustAndBenefits: React.FC<TrustAndBenefitsProps> = ({ locale }) =>
 
       {/* 02 Core Platform Value Pillars */}
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-5 sm:mt-8">
+        <h2 className="sr-only">
+          {isRtl ? 'لماذا يختار صناع المحتوى رالوا' : 'Why creators choose RALOA'}
+        </h2>
         {/* 4 Benefit Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {benefitsList.map((benefit) => (
@@ -72,9 +75,9 @@ export const TrustAndBenefits: React.FC<TrustAndBenefitsProps> = ({ locale }) =>
                 {getIcon(benefit.icon, benefit.color)}
               </div>
 
-              <h2 className="font-extrabold text-[17px] text-ink dark:text-white tracking-tight leading-snug mb-2">
+              <h3 className="font-extrabold text-[17px] text-ink dark:text-white tracking-tight leading-snug mb-2">
                 {isRtl ? benefit.titleAr : benefit.title}
-              </h2>
+              </h3>
 
               <p className="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                 {isRtl ? benefit.bodyAr : benefit.body}

@@ -151,29 +151,30 @@ export const MiniSiteDemoModal: React.FC<MiniSiteDemoModalProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                    <label htmlFor="booking-date" className="block text-xs font-semibold text-slate-700 mb-1.5">
                       {isRtl ? 'اختر اليوم' : 'Select Date'}
                     </label>
                     <input
+                      id="booking-date"
                       type="date"
                       value={selectedDate}
                       onChange={(e) => setSelectedDate(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full min-h-11 px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                    <span className="block text-xs font-semibold text-slate-700 mb-1.5">
                       {isRtl ? 'اختر الوقت' : 'Select Time Slot'}
-                    </label>
+                    </span>
                     <div className="grid grid-cols-3 gap-2">
                       {['10:00 AM', '02:00 PM', '04:30 PM'].map((slot) => (
                         <button
                           key={slot}
                           type="button"
                           onClick={() => setSelectedTime(slot)}
-                          className={`py-2 px-3 text-xs font-medium rounded-xl border transition-all ${
+                          className={`min-h-11 py-2 px-3 text-xs font-medium rounded-xl border transition-all ${
                             selectedTime === slot
                               ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
                               : 'bg-white text-slate-700 border-slate-200 hover:border-indigo-300'
@@ -186,21 +187,22 @@ export const MiniSiteDemoModal: React.FC<MiniSiteDemoModalProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                    <label htmlFor="booking-email" className="block text-xs font-semibold text-slate-700 mb-1.5">
                       {isRtl ? 'بريدك الإلكتروني' : 'Your Email'}
                     </label>
                     <input
+                      id="booking-email"
                       type="email"
                       placeholder="you@domain.com"
                       defaultValue="creator@raloa.app"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full min-h-11 px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       required
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full py-3 bg-ink text-white font-bold text-sm rounded-xl hover:bg-slate-800 transition-colors shadow-sm"
+                    className="w-full min-h-11 py-3 bg-ink text-white font-bold text-sm rounded-xl hover:bg-slate-800 transition-colors shadow-sm"
                   >
                     {isRtl ? 'تأكيد الحجز الفوري' : 'Confirm Instant Booking'}
                   </button>

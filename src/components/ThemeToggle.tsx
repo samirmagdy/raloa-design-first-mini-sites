@@ -57,7 +57,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
             onClick={() => {
               if (isDark) onToggleTheme();
             }}
-            className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-[13px] font-semibold transition-all duration-150 cursor-pointer ${
+            className={`flex min-h-11 items-center justify-center gap-2 py-2 px-3 rounded-lg text-[13px] font-semibold transition-all duration-150 cursor-pointer ${
               !isDark
                 ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60 font-bold'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -74,7 +74,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
             onClick={() => {
               if (!isDark) onToggleTheme();
             }}
-            className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-[13px] font-semibold transition-all duration-150 cursor-pointer ${
+            className={`flex min-h-11 items-center justify-center gap-2 py-2 px-3 rounded-lg text-[13px] font-semibold transition-all duration-150 cursor-pointer ${
               isDark
                 ? 'bg-slate-900 text-white shadow-xs border border-slate-700 font-bold'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'

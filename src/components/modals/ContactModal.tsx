@@ -71,38 +71,41 @@ export const ContactModal: React.FC<ContactModalProps> = ({ locale, onClose }) =
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label htmlFor="contact-name" className="block text-xs font-bold text-slate-700 mb-1">
                   {isRtl ? 'الاسم' : 'Your Name'}
                 </label>
                 <input
+                  id="contact-name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder={isRtl ? 'سارة المنصوري' : 'Alex Rivera'}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-full min-h-11 px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label htmlFor="contact-email" className="block text-xs font-bold text-slate-700 mb-1">
                   {isRtl ? 'البريد الإلكتروني' : 'Email Address'}
                 </label>
                 <input
+                  id="contact-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-full min-h-11 px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label htmlFor="contact-message" className="block text-xs font-bold text-slate-700 mb-1">
                   {isRtl ? 'كيف يمكننا مساعدتك؟' : 'How can we help?'}
                 </label>
                 <textarea
+                  id="contact-message"
                   rows={3}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
@@ -114,7 +117,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ locale, onClose }) =
 
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl bg-ink hover:bg-slate-800 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full min-h-11 py-3 rounded-xl bg-ink hover:bg-slate-800 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>{isRtl ? 'إرسال الرسالة' : 'Send Inquiry'}</span>

@@ -254,14 +254,6 @@ export default function App() {
     }, 60);
   };
 
-  const handleTriggerNotFound = (path: string) => {
-    setAttemptedPath(path);
-    setCurrentRoute('404');
-    const formattedUrl = path.startsWith('/') ? path : `/${path.replace(/^#/, '')}`;
-    window.history.pushState(null, '', formattedUrl);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   const handleToggleTheme = () => {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
@@ -583,7 +575,6 @@ export default function App() {
           onOpenShortcuts={() => setShortcutsModalOpen(true)}
           onOpenStats={() => setProjectStatsOpen(true)}
           onOpenReferral={() => setReferralModalOpen(true)}
-          onTriggerNotFound={handleTriggerNotFound}
         />
       </div>
 

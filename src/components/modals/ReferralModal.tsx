@@ -271,22 +271,23 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
 
         {/* Unique Referral Link Box */}
         <div className="mb-6">
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
+          <label htmlFor="referral-link" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
             {isRtl ? 'رابط الإحالة المخصص لك' : 'Your Unique Referral Link'}
           </label>
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
                 <input
+                  id="referral-link"
                   type="text"
                   readOnly
                   value={REFERRAL_LINK}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs sm:text-sm text-slate-900 dark:text-slate-100 select-all focus:outline-none"
+                className="w-full min-h-11 px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs sm:text-sm text-slate-900 dark:text-slate-100 select-all focus:outline-none"
               />
             </div>
             <button
               type="button"
               onClick={handleCopyLink}
-              className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 cursor-pointer shrink-0 shadow-xs"
+              className="min-h-11 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 cursor-pointer shrink-0 shadow-xs"
             >
               {copied ? (
                 <>
@@ -376,17 +377,19 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
             </div>
             <div className="flex flex-col sm:flex-row items-stretch gap-2">
               <input
+                id="referral-friend-email"
                 type="email"
                 placeholder={isRtl ? 'بريد الصديق (مثال: noor@gmail.com)...' : 'Friend email (e.g. noor@gmail.com)...'}
                 value={friendEmail}
                 onChange={(e) => setFriendEmail(e.target.value)}
-                className="w-full min-w-0 flex-1 px-3 py-2 rounded-xl bg-white dark:bg-slate-850 border border-indigo-200 dark:border-indigo-800 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                aria-label={isRtl ? 'بريد الصديق' : 'Friend email'}
+                className="w-full min-w-0 flex-1 min-h-11 px-3 py-2 rounded-xl bg-white dark:bg-slate-850 border border-indigo-200 dark:border-indigo-800 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 required
               />
               <button
                 type="submit"
                 disabled={isSimulating}
-                className="w-full sm:w-auto justify-center px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0 transition-colors"
+                className="w-full sm:w-auto min-h-11 justify-center px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0 transition-colors"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>{isSimulating ? (isRtl ? 'جارٍ...' : 'Sending...') : (isRtl ? 'إرسال' : 'Send Invite')}</span>

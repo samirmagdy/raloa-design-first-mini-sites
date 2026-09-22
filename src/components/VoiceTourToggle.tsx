@@ -74,7 +74,7 @@ export const VoiceTourToggle: React.FC<VoiceTourToggleProps> = ({
             onClick={() => {
               if (!enabled) onToggle();
             }}
-            className={`flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`flex min-h-11 items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               enabled
                 ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-2xs'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -91,7 +91,7 @@ export const VoiceTourToggle: React.FC<VoiceTourToggleProps> = ({
             onClick={() => {
               if (enabled) onToggle();
             }}
-            className={`flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`flex min-h-11 items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               !enabled
                 ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-2xs'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'

@@ -119,9 +119,9 @@ export const TemplateSnapshotPopover: React.FC<TemplateSnapshotPopoverProps> = (
 
           {/* Mini Social Icons Row */}
           <div className="flex items-center justify-center gap-1.5 mt-2.5 pt-2 border-t border-slate-800/60 text-slate-400">
-            <span className="w-3.5 h-3.5 rounded-full bg-slate-800 flex items-center justify-center text-[7px]">ig</span>
-            <span className="w-3.5 h-3.5 rounded-full bg-slate-800 flex items-center justify-center text-[7px]">x</span>
-            <span className="w-3.5 h-3.5 rounded-full bg-slate-800 flex items-center justify-center text-[7px]">yt</span>
+            <img src="/brand/trusted/instagram.svg" alt="Instagram" className="w-3.5 h-3.5 opacity-80" />
+            <img src="/brand/trusted/youtube.svg" alt="YouTube" className="w-3.5 h-3.5 opacity-80" />
+            <img src="/brand/trusted/linkedin.svg" alt="LinkedIn" className="w-3.5 h-3.5 opacity-80" />
           </div>
         </div>
 

@@ -148,15 +148,16 @@ export const PlanCheckoutModal: React.FC<PlanCheckoutModalProps> = ({
 
               {/* Email field */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                <label htmlFor="checkout-email" className="block text-xs font-bold text-slate-700 mb-1.5">
                   {isRtl ? 'بريدك الإلكتروني للحساب' : 'Account Email'}
                 </label>
                 <input
+                  id="checkout-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-full min-h-11 px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                   required
                 />
               </div>

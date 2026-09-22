@@ -134,7 +134,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
                   <button
                     type="button"
                     onClick={handleCopyUrl}
-                    className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-colors cursor-pointer"
+                    className="w-11 h-11 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-colors cursor-pointer"
                     aria-label={isRtl ? 'مشاركة رابط القالب' : 'Share template preview link'}
                   >
                     {copied ? (
@@ -181,7 +181,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
               <button
                 type="button"
                 onClick={handleCopyUrl}
-                className="shrink-0 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer group"
+                className="shrink-0 min-h-11 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer group"
                 aria-label={isRtl ? 'نسخ رابط القالب' : 'Copy template URL'}
               >
                 {copied ? (

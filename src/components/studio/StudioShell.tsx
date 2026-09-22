@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronDown, FileText, LayoutDashboard, LogOut, Menu, Settings, X } from 'lucide-react';
+import { ChevronDown, FileText, LayoutDashboard, LogOut, Menu, MonitorPlay, Settings, X } from 'lucide-react';
 import { Locale } from '../../types';
 import { mockRepository } from '../../services/mockRepository';
 import { ProfilePage, PublicProfile } from '../../services/repository';
 import { RaloaMark } from '../brand/RaloaLogo';
 import { BlockEditorWorkspace } from './BlockEditorWorkspace';
+import { StudioPreviewWorkspace } from './StudioPreviewWorkspace';
 import { Button } from '../ui/Button';
 import { Surface } from '../ui/Surface';
 import { Toast } from '../ui/Toast';
@@ -14,7 +15,7 @@ interface StudioShellProps {
   onReturnHome: () => void;
 }
 
-type StudioSection = 'overview' | 'editor' | 'settings';
+type StudioSection = 'overview' | 'editor' | 'preview' | 'settings';
 
 const StudioLoading: React.FC = () => (
   <main className="min-h-screen bg-slate-50 p-4 sm:p-6" aria-busy="true" aria-label="Loading Studio">
@@ -66,6 +67,7 @@ export const StudioShell: React.FC<StudioShellProps> = ({ locale, onReturnHome }
   const navItems = [
     { id: 'overview' as const, label: isRtl ? 'نظرة عامة' : 'Overview', icon: LayoutDashboard },
     { id: 'editor' as const, label: isRtl ? 'محرر الصفحة' : 'Page editor', icon: FileText },
+    { id: 'preview' as const, label: isRtl ? 'معاينة ونشر' : 'Preview & publish', icon: MonitorPlay },
     { id: 'settings' as const, label: isRtl ? 'الإعدادات' : 'Settings', icon: Settings }
   ];
 
@@ -89,6 +91,20 @@ export const StudioShell: React.FC<StudioShellProps> = ({ locale, onReturnHome }
     setHasUnsavedChanges(false);
     setConfirmDiscard(false);
     setToast({ title: isRtl ? 'تم تجاهل التغييرات' : 'Changes discarded', message: isRtl ? 'تمت استعادة آخر نسخة محفوظة.' : 'The last saved version is active.' });
+  };
+
+  const publishProfile = async () => {
+    if (!selectedProfile) return;
+    const publishedProfile: PublicProfile = {
+      ...selectedProfile,
+      published: true,
+      pages: selectedProfile.pages.map((page) => page.id === selectedPage?.id ? { ...page, published: true } : page)
+    };
+    setProfiles((current) => current.map((profile) => profile.id === publishedProfile.id ? publishedProfile : profile));
+    const result = await mockRepository.saveProfile(publishedProfile);
+    setSavedProfiles((current) => current.map((profile) => profile.id === result.data.id ? clone(result.data) : profile));
+    setHasUnsavedChanges(false);
+    setToast({ title: isRtl ? 'تم نشر الصفحة' : 'Page published', message: isRtl ? 'صفحتك متاحة الآن للزوار.' : 'Your public page is now available to visitors.' });
   };
 
   const updateSelectedPage = (nextPage: ProfilePage) => {
@@ -161,6 +177,7 @@ export const StudioShell: React.FC<StudioShellProps> = ({ locale, onReturnHome }
 
             {section === 'overview' && <Overview profile={selectedProfile} page={selectedPage} locale={locale} onEdit={() => { setSection('editor'); setHasUnsavedChanges(true); }} />}
             {section === 'editor' && <BlockEditorWorkspace page={selectedPage} locale={locale} onPageChange={updateSelectedPage} onDirty={() => setHasUnsavedChanges(true)} />}
+            {section === 'preview' && <StudioPreviewWorkspace profile={selectedProfile} page={selectedPage} locale={locale} onPublish={publishProfile} />}
             {section === 'settings' && <SettingsWorkspace profile={selectedProfile} locale={locale} onDirty={() => setHasUnsavedChanges(true)} />}
 
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-5">

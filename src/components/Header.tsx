@@ -107,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({
             : 'bg-white/80 dark:bg-slate-950/80 backdrop-blur-xs border-b border-transparent'
         }`}
       >
-        <div className="max-w-[1200px] mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <div className="max-w-[1440px] mx-auto h-full px-4 sm:px-6 lg:px-10 flex items-center justify-between gap-6">
           {/* Brand Logo */}
           <a
             href="/"
@@ -115,20 +115,20 @@ export const Header: React.FC<HeaderProps> = ({
               e.preventDefault();
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg"
+            className="flex items-center gap-2 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg"
             aria-label="RALOA Home"
           >
             <RaloaLogo isRtl={isRtl} theme={isDark ? 'on-dark' : 'primary'} />
           </a>
 
           {/* Center Navigation Links (Desktop) */}
-          <nav className="hidden md:flex items-center gap-7 lg:gap-9" aria-label="Main Navigation">
+          <nav className="hidden lg:flex flex-1 items-center justify-center gap-6 xl:gap-9 min-w-0" aria-label="Main Navigation">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="text-[14px] font-medium text-slate-600 dark:text-slate-300 hover:text-[#0F172A] dark:hover:text-white transition-colors relative py-1"
+                className="whitespace-nowrap text-[14px] font-medium text-slate-600 dark:text-slate-300 hover:text-[#0F172A] dark:hover:text-white transition-colors relative py-1"
               >
                 {link.label}
               </a>
@@ -136,64 +136,66 @@ export const Header: React.FC<HeaderProps> = ({
           </nav>
 
           {/* Right Action Controls */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
-            {/* Voice-over Tour Toggle */}
-            {onToggleVoiceTour && (
-              <VoiceTourToggle
-                enabled={voiceTourEnabled}
-                isSpeaking={voiceTourSpeaking}
-                onToggle={onToggleVoiceTour}
-                currentSection={currentSection}
-                onReplay={onReplayVoiceTour}
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            <div className="hidden lg:flex items-center gap-2 sm:gap-2.5">
+              {/* Voice-over Tour Toggle */}
+              {onToggleVoiceTour && (
+                <VoiceTourToggle
+                  enabled={voiceTourEnabled}
+                  isSpeaking={voiceTourSpeaking}
+                  onToggle={onToggleVoiceTour}
+                  currentSection={currentSection}
+                  onReplay={onReplayVoiceTour}
+                  variant="header"
+                  locale={locale}
+                />
+              )}
+
+              {/* Ambient Sound Toggle */}
+              <SoundToggle
+                enabled={soundEnabled}
+                onToggle={onToggleSound}
                 variant="header"
                 locale={locale}
               />
-            )}
 
-            {/* Ambient Sound Toggle */}
-            <SoundToggle
-              enabled={soundEnabled}
-              onToggle={onToggleSound}
-              variant="header"
-              locale={locale}
-            />
+              {/* Global Theme Toggle */}
+              <ThemeToggle
+                theme={theme}
+                onToggleTheme={onToggleTheme}
+                variant="header"
+                locale={locale}
+              />
 
-            {/* Global Theme Toggle */}
-            <ThemeToggle
-              theme={theme}
-              onToggleTheme={onToggleTheme}
-              variant="header"
-              locale={locale}
-            />
+              {/* Language Switcher Dropdown */}
+              <LanguageDropdown
+                currentLocale={locale}
+                onSelectLocale={handleSelectLanguage}
+                variant="header"
+              />
 
-            {/* Language Switcher Dropdown */}
-            <LanguageDropdown
-              currentLocale={locale}
-              onSelectLocale={handleSelectLanguage}
-              variant="header"
-            />
+              {/* Sign in Button */}
+              <button
+                onClick={() => onOpenAuth('signin')}
+                className="inline-flex whitespace-nowrap text-[14px] font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-3 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              >
+                {t.signIn}
+              </button>
 
-            {/* Sign in Button */}
-            <button
-              onClick={() => onOpenAuth('signin')}
-              className="hidden sm:inline-flex text-[14px] font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-3 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-            >
-              {t.signIn}
-            </button>
-
-            {/* Primary CTA Button */}
-            <button
-              onClick={() => onOpenStudio()}
-              className="hidden lg:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0F172A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-[14px] font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 cursor-pointer"
-            >
-              <span>{t.createPage}</span>
-              <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-            </button>
+              {/* Primary CTA Button */}
+              <button
+                onClick={() => onOpenStudio()}
+                className="inline-flex items-center gap-2 whitespace-nowrap px-5 py-2.5 rounded-full bg-[#0F172A] hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-[14px] font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 cursor-pointer"
+              >
+                <span>{t.createPage}</span>
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+              </button>
+            </div>
 
             {/* Mobile Menu Trigger */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 cursor-pointer"
+              className="lg:hidden p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 cursor-pointer"
               aria-label="Open navigation menu"
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-navigation-drawer"
@@ -207,7 +209,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-50 md:hidden bg-slate-950/60 backdrop-blur-xs transition-opacity"
+          className="fixed inset-0 z-50 lg:hidden bg-slate-950/60 backdrop-blur-xs transition-opacity"
           onClick={() => setMobileMenuOpen(false)}
         >
           <div

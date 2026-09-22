@@ -44,6 +44,8 @@ import { AppRoute } from './app/router';
 import { StudioShell } from './components/studio/StudioShell';
 import { AnalyticsPage } from './components/AnalyticsPage';
 import { SettingsPage } from './components/SettingsPage';
+import { OnboardingPage } from './components/OnboardingPage';
+import { ImportPage } from './components/ImportPage';
 
 export default function App() {
   const [locale, setLocale] = useState<Locale>(() => getInitialLocale());
@@ -81,6 +83,14 @@ export default function App() {
         ? locale === 'ar'
           ? 'الإعدادات — RALOA'
           : 'Settings — RALOA'
+        : appRoute.name === 'onboarding'
+        ? locale === 'ar'
+          ? 'إنشاء صفحتك — RALOA'
+          : 'Create your page — RALOA'
+        : appRoute.name === 'import'
+        ? locale === 'ar'
+          ? 'استيراد الملف — RALOA'
+          : 'Import profile — RALOA'
         : currentRoute === '404'
         ? locale === 'ar'
           ? '٤٠٤: الصفحة غير موجودة — RALOA'
@@ -99,6 +109,14 @@ export default function App() {
         ? locale === 'ar'
           ? 'حدّث إعدادات صفحاتك العامة على RALOA.'
           : 'Update your public RALOA page settings.'
+        : appRoute.name === 'onboarding'
+        ? locale === 'ar'
+          ? 'أنشئ صفحة عامة جديدة على RALOA.'
+          : 'Create a new public RALOA page.'
+        : appRoute.name === 'import'
+        ? locale === 'ar'
+          ? 'استورد ملف RALOA محفوظاً إلى الاستوديو.'
+          : 'Import a saved RALOA profile into Studio.'
         : currentRoute === '404'
         ? locale === 'ar'
           ? 'عذراً، الصفحة المطلوبة غير متوفرة. عد إلى الصفحة الرئيسية لرالوا.'
@@ -493,6 +511,10 @@ export default function App() {
         <AnalyticsPage locale={locale} onReturnHome={handleReturnHome} />
       ) : appRoute.name === 'settings' ? (
         <SettingsPage locale={locale} onReturnHome={handleReturnHome} />
+      ) : appRoute.name === 'onboarding' ? (
+        <OnboardingPage locale={locale} onReturnHome={handleReturnHome} />
+      ) : appRoute.name === 'import' ? (
+        <ImportPage locale={locale} onReturnHome={handleReturnHome} />
       ) : currentRoute === '404' ? (
         <NotFound
           locale={locale}

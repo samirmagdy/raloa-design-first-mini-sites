@@ -19,14 +19,14 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ locale }) => {
   return (
     <section
       id="how-it-works"
-      className="py-16 md:py-20 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 relative overflow-hidden transition-colors duration-200"
+      className="py-10 sm:py-12 md:py-14 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 relative overflow-hidden transition-colors duration-200"
     >
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative mb-10 md:mb-12">
+        <div className="relative mb-8 md:mb-10">
           <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
             {t.eyebrow}
           </span>
-          <h2 className="mt-2 text-[34px] sm:text-[42px] md:text-[46px] font-extrabold text-[#0F172A] dark:text-white tracking-tight leading-tight">
+          <h2 className="mt-2 text-[30px] sm:text-[36px] md:text-[40px] font-extrabold text-[#0F172A] dark:text-white tracking-tight leading-tight">
             {t.headline}
           </h2>
           <p className="text-[16px] sm:text-[18px] text-slate-600 dark:text-slate-300 mt-2">
@@ -42,16 +42,16 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ locale }) => {
           </div>
         </div>
 
-        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
-          <div className="hidden md:block absolute top-6 left-[15%] right-[15%] h-px bg-slate-200 dark:bg-slate-800" aria-hidden="true" />
+        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-8">
+          <div className="hidden md:block absolute top-5 left-[15%] right-[15%] h-px bg-slate-200 dark:bg-slate-800" aria-hidden="true" />
           {steps.map((step) => (
             <article key={step.number} className="relative z-10 bg-white dark:bg-slate-950 md:bg-transparent md:dark:bg-transparent">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[17px] font-extrabold shadow-md ring-4 ring-white dark:ring-slate-950">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[15px] font-extrabold shadow-md ring-3 ring-white dark:ring-slate-950">
                   {step.number}
                 </span>
-                <span className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center border border-indigo-100 dark:border-indigo-800">
-                  {step.icon}
+                <span className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center border border-indigo-100 dark:border-indigo-800">
+                  {React.cloneElement(step.icon, { className: 'w-3.5 h-3.5' })}
                 </span>
               </div>
               <h3 className="font-extrabold text-[18px] text-[#0F172A] dark:text-white tracking-tight mb-2">

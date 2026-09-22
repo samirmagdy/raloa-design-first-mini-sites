@@ -41,6 +41,7 @@ import { VoiceTourToggle } from './components/VoiceTourToggle';
 import { getCurrentRoute } from './app/router';
 import { PublicProfilePage } from './components/PublicProfilePage';
 import { AppRoute } from './app/router';
+import { StudioShell } from './components/studio/StudioShell';
 
 export default function App() {
   const [locale, setLocale] = useState<Locale>(() => getInitialLocale());
@@ -66,13 +67,21 @@ export default function App() {
   useSEO({
     locale,
     customTitle:
-      currentRoute === '404'
+      appRoute.name === 'studio'
+        ? locale === 'ar'
+          ? 'الاستوديو — RALOA'
+          : 'Studio — RALOA'
+        : currentRoute === '404'
         ? locale === 'ar'
           ? '٤٠٤: الصفحة غير موجودة — RALOA'
           : '404: Page Not Found — RALOA'
         : undefined,
     customDescription:
-      currentRoute === '404'
+      appRoute.name === 'studio'
+        ? locale === 'ar'
+          ? 'أدر صفحاتك العامة من استوديو RALOA.'
+          : 'Manage your RALOA public pages from Studio.'
+        : currentRoute === '404'
         ? locale === 'ar'
           ? 'عذراً، الصفحة المطلوبة غير متوفرة. عد إلى الصفحة الرئيسية لرالوا.'
           : 'The link you followed may be broken. Return to RALOA home.'
@@ -232,6 +241,7 @@ export default function App() {
   }, []);
 
   const handleReturnHome = () => {
+    setAppRoute({ name: 'home', path: '/' });
     setCurrentRoute('home');
     setAttemptedPath('');
     if (window.location.pathname !== '/' || window.location.hash !== '') {
@@ -241,6 +251,7 @@ export default function App() {
   };
 
   const handleNavigateToSection = (sectionId: string) => {
+    setAppRoute({ name: 'home', path: '/' });
     setCurrentRoute('home');
     setAttemptedPath('');
     if (window.location.pathname !== '/' || window.location.hash !== '') {
@@ -458,6 +469,8 @@ export default function App() {
       {/* 404 Page Not Found or Standard Landing Page */}
       {appRoute.name === 'profile' ? (
         <PublicProfilePage username={appRoute.username} locale={locale} />
+      ) : appRoute.name === 'studio' ? (
+        <StudioShell locale={locale} onReturnHome={handleReturnHome} />
       ) : currentRoute === '404' ? (
         <NotFound
           locale={locale}

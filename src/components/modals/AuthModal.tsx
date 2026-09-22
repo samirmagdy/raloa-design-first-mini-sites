@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ArrowRight, Check, Sparkles, Mail, Lock, AlertCircle } from 'lucide-react';
+import { X, ArrowRight, Check, Mail, Lock, AlertCircle } from 'lucide-react';
 import { Locale } from '../../types';
 import { RaloaMark } from '../brand/RaloaLogo';
 import { useModalAccessibility } from '../../hooks/useModalAccessibility';

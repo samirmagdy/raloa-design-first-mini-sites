@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, ArrowRight, Sparkles, AlertCircle } from 'lucide-react';
+import { Check, ArrowRight, ArrowUpRight, AlertCircle } from 'lucide-react';
 import { Locale } from '../types';
 import { dictionary } from '../data/content';
 
@@ -47,12 +47,12 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ locale, onOpenStudio }) => {
         {/* Banner with gradient matching tokens: linear-gradient(90deg, #5B5CF6 0%, #8B5CF6 100%) */}
         <div className="raloa-cta-depth relative rounded-[32px] overflow-hidden p-8 sm:p-12 lg:p-16 text-white shadow-[0_20px_50px_rgba(91,92,246,0.25)] dark:shadow-[0_20px_50px_rgba(91,92,246,0.15)] bg-gradient-to-r from-[#5B5CF6] via-[#6366F1] to-[#8B5CF6]">
           
-          {/* Decorative spark elements */}
+          {/* Directional depth accents */}
           <div className="absolute top-4 left-6 opacity-30 select-none pointer-events-none">
-            <Sparkles className="w-8 h-8 text-white animate-pulse" />
+            <ArrowUpRight className="w-8 h-8 text-white" />
           </div>
           <div className="absolute bottom-4 right-8 opacity-25 select-none pointer-events-none">
-            <Sparkles className="w-10 h-10 text-white animate-pulse" />
+            <ArrowUpRight className="w-10 h-10 text-white rotate-180" />
           </div>
 
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center">

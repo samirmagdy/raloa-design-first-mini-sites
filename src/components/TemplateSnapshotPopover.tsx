@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, ExternalLink, Globe } from 'lucide-react';
+import { LayoutTemplate, ExternalLink, Globe } from 'lucide-react';
 import { Locale, TemplateItem } from '../types';
 
 interface TemplateSnapshotPopoverProps {
@@ -128,7 +128,7 @@ export const TemplateSnapshotPopover: React.FC<TemplateSnapshotPopoverProps> = (
         {/* Footer Snapshot Badge */}
         <div className="mt-2 flex items-center justify-between px-1 text-[9px] text-slate-400">
           <span className="flex items-center gap-1 font-medium text-indigo-300">
-            <Sparkles className="w-2.5 h-2.5 text-indigo-400" />
+            <LayoutTemplate className="w-2.5 h-2.5 text-indigo-400" />
             <span>{isRtl ? 'معاينة مصغرة' : 'Site Snapshot'}</span>
           </span>
           <span className="text-slate-500 text-[8.5px]">

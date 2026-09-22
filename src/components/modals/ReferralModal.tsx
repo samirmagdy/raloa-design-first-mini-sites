@@ -6,7 +6,6 @@ import {
   Check,
   Share2,
   Users,
-  Sparkles,
   ArrowRight,
   ShieldCheck,
   CheckCircle2,
@@ -205,7 +204,7 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
           </div>
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 mb-1">
-              <Sparkles className="w-3 h-3" />
+              <Gift className="w-3 h-3" />
               <span>{isRtl ? 'برنامج مكافآت رالوا' : 'RALOA Rewards Program'}</span>
             </div>
             <h2 id="referral-modal-title" className="text-xl sm:text-2xl font-extrabold tracking-tight">
@@ -404,7 +403,7 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
         {isGoalReached && (
           <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-center mb-6">
             <h4 className="text-sm font-bold text-emerald-900 dark:text-emerald-200 mb-1">
-              🎉 {isRtl ? 'كود قسيمة شهر Pro المجاني' : 'Your Free Pro Month Voucher Code'}
+              <Gift className="inline-block h-4 w-4 align-[-3px]" aria-hidden="true" /> {isRtl ? 'كود قسيمة شهر Pro المجاني' : 'Your Free Pro Month Voucher Code'}
             </h4>
             <div className="inline-block px-4 py-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-900/80 border border-emerald-300 dark:border-emerald-700 font-mono text-xs font-bold text-emerald-800 dark:text-emerald-200 my-2">
               PRO-30DAYS-FREE-BONUS

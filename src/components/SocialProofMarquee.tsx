@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, CheckCircle2, Sparkles, ArrowUpRight, Globe, Layers, Users } from 'lucide-react';
+import { ExternalLink, CheckCircle2, ArrowUpRight, Globe, Layers, Users } from 'lucide-react';
 import { Locale } from '../types';
 
 interface SocialProofMarqueeProps {

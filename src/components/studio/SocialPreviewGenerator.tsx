@@ -3,7 +3,8 @@ import {
   Globe,
   Copy,
   Check,
-  Sparkles,
+  Activity,
+  CalendarDays,
   RefreshCw,
   Code,
   ExternalLink,
@@ -240,11 +241,11 @@ export const SocialPreviewGenerator: React.FC<SocialPreviewGeneratorProps> = ({
         <div className="flex items-center gap-2">
           {showStats && (
             <span className="px-2 py-0.5 rounded-md bg-white/10 text-white/90 font-medium">
-              ⚡ {linksCount} {isRtl ? 'خدمات وروابط' : 'Links & Services'}
+              <Activity className="inline-block h-3 w-3 align-[-2px] text-cyan-300" aria-hidden="true" /> {linksCount} {isRtl ? 'خدمات وروابط' : 'Links & Services'}
             </span>
           )}
           <span className="hidden sm:inline-block">
-            📅 {isRtl ? 'حجز فوري' : 'Live Booking'}
+            <CalendarDays className="inline-block h-3 w-3 align-[-2px]" aria-hidden="true" /> {isRtl ? 'حجز فوري' : 'Live Booking'}
           </span>
         </div>
         <div className="font-mono text-white/80 font-semibold tracking-wide">

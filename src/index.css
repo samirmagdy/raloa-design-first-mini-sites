@@ -362,6 +362,44 @@ html {
   }
 }
 
+/* Template skins keep the data-driven previews meaningfully different and usable. */
+.raloa-template-cover {
+  background: #e2e8f0;
+}
+
+.raloa-template-skin-elena .raloa-template-cover::after,
+.raloa-template-skin-studio .raloa-template-cover::after {
+  background: linear-gradient(135deg, rgba(91, 92, 246, 0.28), transparent 62%);
+}
+
+.raloa-template-skin-mateo .raloa-template-cover::after,
+.raloa-template-skin-nova .raloa-template-cover::after {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.48), transparent 68%);
+}
+
+.raloa-template-skin-dr-ahmed .raloa-template-cover::after {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.28), transparent 68%);
+}
+
+.raloa-template-skin-fitlife .raloa-template-cover::after {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.28), transparent 68%);
+}
+
+.raloa-template-skin-wander .raloa-template-cover::after {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.28), transparent 68%);
+}
+
+.raloa-template-skin-savor .raloa-template-cover::after {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.3), transparent 68%);
+}
+
+.raloa-template-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
 [dir="rtl"] .animate-marquee-track {
   animation: marquee-scroll-reverse 38s linear infinite;
 }

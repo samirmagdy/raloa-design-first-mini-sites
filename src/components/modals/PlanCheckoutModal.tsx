@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Check, ShieldCheck, Sparkles, ArrowRight, AlertCircle } from 'lucide-react';
+import { X, Check, ShieldCheck, CreditCard, ArrowRight, AlertCircle } from 'lucide-react';
 import { Locale, PricingPlan } from '../../types';
 import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 
@@ -82,7 +82,7 @@ export const PlanCheckoutModal: React.FC<PlanCheckoutModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-indigo-600" />
+            <CreditCard className="w-4 h-4 text-indigo-600" />
             <span id="plan-checkout-modal-title" className="text-xs font-extrabold uppercase tracking-wider text-slate-700">
               {isRtl ? 'اختيار باقة الاشتراك' : 'Plan Selection & Activation'}
             </span>

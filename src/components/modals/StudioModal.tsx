@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   X,
-  Sparkles,
+  Rocket,
   Check,
   Plus,
   Trash2,
@@ -263,7 +263,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
               onClick={handleStartOrPublishSite}
               className="px-4 py-2 rounded-full bg-[#0F172A] hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+              <Rocket className="w-3.5 h-3.5 text-indigo-400" />
               <span>{isDraftSaved ? (isRtl ? 'تم حفظ المسودة' : 'Draft Saved') : (isRtl ? 'حفظ المسودة' : 'Save Draft')}</span>
             </button>
 
@@ -393,7 +393,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
                       onClick={handleStartOrPublishSite}
                       className="w-full sm:w-auto px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
                     >
-                      <Sparkles className="w-3.5 h-3.5" />
+                      <Rocket className="w-3.5 h-3.5" />
                       <span>{isRtl ? 'حفظ المسودة والمتابعة' : 'Save Draft & Continue'}</span>
                     </button>
                   </div>
@@ -570,7 +570,7 @@ export const StudioModal: React.FC<StudioModalProps> = ({
                         onClick={handleStartOrPublishSite}
                         className="w-full sm:w-auto px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
                       >
-                        <Sparkles className="w-3.5 h-3.5" />
+                        <Rocket className="w-3.5 h-3.5" />
                         <span>{isRtl ? 'حفظ المسودة' : 'Save Draft'}</span>
                       </button>
                     </div>
@@ -678,8 +678,8 @@ export const StudioModal: React.FC<StudioModalProps> = ({
                     onClick={fireSiteLaunchConfetti}
                     className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-2 cursor-pointer"
                   >
-                    <Sparkles className="w-4 h-4 text-amber-300" />
-                    <span>{isRtl ? 'احتفل بالنشر 🎉' : 'Celebrate Launch 🎉'}</span>
+                    <Rocket className="w-4 h-4 text-amber-300" />
+                    <span>{isRtl ? 'احتفل بالنشر' : 'Celebrate Launch'}</span>
                   </button>
 
                   <button

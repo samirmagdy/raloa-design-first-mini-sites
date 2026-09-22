@@ -4,7 +4,7 @@ import {
   ChevronRight,
   Mail,
   Twitter,
-  Sparkles,
+  Link2,
   Github
 } from 'lucide-react';
 import { TemplateItem } from '../types';
@@ -43,7 +43,9 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
 
   return (
     <div
-      className={`relative mx-auto w-full max-w-[295px] sm:max-w-[320px] md:max-w-[340px] bg-[#0F172A] rounded-[48px] p-3 shadow-[0_28px_70px_rgba(15,23,42,0.24)] border-[6px] border-[#1E293B] select-none transition-transform duration-300 hover:scale-[1.01] raloa-phone-mockup ${className}`}
+      className={`relative mx-auto w-full max-w-[295px] sm:max-w-[320px] md:max-w-[340px] bg-[#0F172A] rounded-[48px] p-3 shadow-[0_28px_70px_rgba(15,23,42,0.24)] border-[6px] select-none transition-transform duration-300 hover:scale-[1.01] raloa-phone-mockup raloa-template-skin-${template.id} ${className}`}
+      style={{ borderColor: template.themeColor }}
+      data-template-id={template.id}
     >
       {/* Screen Frame */}
       <div className="relative bg-[#F8FAFC] rounded-[38px] overflow-hidden flex flex-col min-h-[580px] max-h-[640px] shadow-inner text-slate-800 raloa-phone-screen">
@@ -64,9 +66,13 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
 
         {/* Scrollable Screen Content */}
         <div className="flex-1 overflow-y-auto no-scrollbar px-4 pt-2 pb-6 flex flex-col items-center text-center">
+          <div className="raloa-template-cover relative w-[calc(100%+2rem)] -mx-4 h-16 overflow-hidden">
+            <img src={template.coverImage} alt="" className="h-full w-full object-cover" loading="lazy" />
+            <div className="absolute inset-0 bg-gradient-to-b from-slate-950/10 via-transparent to-[#F8FAFC]" />
+          </div>
           
           {/* Avatar with verified badge */}
-          <div className="relative mt-2 mb-3">
+          <div className="relative -mt-7 mb-3 z-10">
             <div className="w-20 h-20 rounded-full p-1 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-md">
               <img
                 src={template.avatar}
@@ -150,7 +156,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
                     />
                   ) : (
                     <div className="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-                      <Sparkles className="w-5 h-5" />
+                      <Link2 className="w-5 h-5" />
                     </div>
                   )}
 

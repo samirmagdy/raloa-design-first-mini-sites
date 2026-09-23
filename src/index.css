@@ -330,6 +330,28 @@ section[id] {
 .raloa-plan-depth {
   perspective: 1000px;
   transition: transform 240ms cubic-bezier(0.2, 0, 0, 1), box-shadow 240ms ease;
+  overflow: visible;
+}
+
+.raloa-plan-depth::before {
+  content: '';
+  position: absolute;
+  inset: 0.5rem;
+  border-radius: 1.15rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), transparent 38%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+
+.raloa-plan-depth:hover::before,
+.raloa-plan-depth:focus-within::before {
+  opacity: 1;
+}
+
+.raloa-pricing-grid .raloa-plan-depth > * {
+  position: relative;
+  z-index: 1;
 }
 
 .raloa-plan-depth:hover {
@@ -338,6 +360,17 @@ section[id] {
 
 .raloa-plan-depth-popular:hover {
   transform: perspective(1000px) rotateX(1deg) translateZ(7px) translateY(-11px);
+}
+
+.raloa-plan-depth-popular::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), transparent 42%, rgba(124, 58, 237, 0.28));
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .raloa-testimonial-depth {

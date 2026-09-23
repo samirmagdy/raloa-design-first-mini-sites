@@ -148,8 +148,18 @@ Implemented backend milestones:
   expiration and account-status checks.
 - BE-4 ownership: every protected profile/page/block/theme query scopes through the authenticated
   owner; update endpoints enforce aggregate versions and return conflict envelopes.
-- BE-5–BE-9 vertical slice: profile CRUD/duplicate/public read, page list/create/update, block
-  read/update/reorder, theme read/save, and public analytics event ingestion.
+- BE-5–BE-9 vertical slice: profile CRUD/duplicate/public read, complete page CRUD/duplicate/order
+  operations, complete block CRUD/duplicate/visibility/order operations, theme read/save, and
+  public analytics event ingestion. Page and block writes are ownership-scoped and use optimistic
+  versions where the editor mutates an existing record.
+- BE-13–BE-16 partial vertical slice: PostgreSQL-backed forms/submissions, subscriber double-opt-in
+  records, event-derived analytics snapshots, and hashed reveal-once API keys. Redis is now used as
+  an optional session cache when `REDIS_URL` is configured, with the database remaining the local
+  development fallback.
+- Reliability hardening in the implemented slice: Zod validation errors use the standard `{ ok:
+  false, error }` envelope with request IDs, confirmation tokens are hashed at rest, API key
+  hashes are never returned, and page/block reorder requests reject missing, duplicate, or foreign
+  IDs atomically.
 
 Verified locally against PostgreSQL 14 (the installed local server; the compose file targets the
 recommended PostgreSQL 18 image): migrations apply, seed completes, the API compiles, `/health`
@@ -157,8 +167,8 @@ and `/ready` return 200, public profile reads work, and cookie login can list ow
 
 Remaining backend milestones are intentionally real work, not marked complete by scaffolding:
 
-- Redis-backed session/rate-limit/cache layer and BullMQ worker;
-- media/R2 uploads, email/Resend, forms/subscribers, analytics aggregation and retention;
+- BullMQ workers, Redis rate limits/cache and analytics retention/aggregation jobs;
+- media/R2 uploads and email/Resend delivery;
 - templates/import jobs, scheduling/password gates, domains/Cloudflare, SEO/OG generation;
 - Instagram, entitlements/Stripe, API-key auth, developer API, security hardening, observability,
   backups/PITR, load tests, and full frontend HTTP-repository wiring.

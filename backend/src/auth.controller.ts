@@ -3,7 +3,7 @@ import { randomBytes } from 'node:crypto';
 import argon2 from 'argon2';
 import type { FastifyReply } from 'fastify';
 import type { AuthenticatedRequest } from './common';
-import { hashToken, parseBody, SessionGuard } from './common';
+import { cacheSession, deleteCachedSession, hashToken, parseBody, SessionGuard } from './common';
 import { PrismaService } from './prisma.service';
 import { z } from 'zod';
 
@@ -42,14 +42,17 @@ export class AuthController {
   @Post('logout')
   async logout(@Req() request: AuthenticatedRequest, @Res({ passthrough: true }) response: FastifyReply) {
     const token = (request as any).cookies?.[cookieName] as string | undefined;
-    if (token) await this.prisma.session.deleteMany({ where: { tokenHash: hashToken(token) } });
+    if (token) { await this.prisma.session.deleteMany({ where: { tokenHash: hashToken(token) } }); await deleteCachedSession(hashToken(token)); }
     response.clearCookie(cookieName, { path: '/' });
     return { ok: true, data: null };
   }
 
   private async issueSession(userId: string, response: FastifyReply) {
     const token = randomBytes(32).toString('base64url');
-    await this.prisma.session.create({ data: { userId, tokenHash: hashToken(token), expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30) } });
+    const ttl = 60 * 60 * 24 * 30;
+    const tokenHashValue = hashToken(token);
+    await this.prisma.session.create({ data: { userId, tokenHash: tokenHashValue, expiresAt: new Date(Date.now() + ttl * 1000) } });
+    await cacheSession(tokenHashValue, userId, ttl);
     response.setCookie(cookieName, token, { httpOnly: true, sameSite: 'lax', secure: process.env.COOKIE_SECURE === 'true', path: '/', maxAge: 60 * 60 * 24 * 30 });
   }
 }

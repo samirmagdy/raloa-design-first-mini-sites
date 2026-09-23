@@ -68,6 +68,10 @@ model Profile {
   owner       User      @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
   pages       Page[]
   events      AnalyticsEvent[]
+  forms       Form[]
+  submissions FormSubmission[]
+  subscribers Subscriber[]
+  apiKeys     ApiKey[]
   @@index([ownerUserId, updatedAt])
 }
 
@@ -127,4 +131,73 @@ model AnalyticsEvent {
   profile     Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
   @@index([profileId, occurredAt])
   @@index([profileId, type, occurredAt])
+}
+
+model Form {
+  id             String            @id @default(uuid()) @db.Uuid
+  profileId      String            @db.Uuid
+  pageId         String?           @db.Uuid
+  blockId        String?           @db.Uuid
+  title          Json
+  description    Json?
+  submitLabel    Json
+  successMessage Json
+  fields         Json
+  enabled        Boolean           @default(true)
+  version        Int               @default(1)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  profile        Profile           @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  submissions    FormSubmission[]
+  @@index([profileId, updatedAt])
+}
+
+model FormSubmission {
+  id          String   @id @default(uuid()) @db.Uuid
+  formId      String   @db.Uuid
+  profileId   String   @db.Uuid
+  values      Json
+  submittedAt DateTime @default(now())
+  read        Boolean  @default(false)
+  pageUrl     String?
+  userAgent   String?
+  form        Form    @relation(fields: [formId], references: [id], onDelete: Cascade)
+  profile     Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  @@index([profileId, submittedAt])
+}
+
+enum SubscriberStatus {
+  PENDING
+  ACTIVE
+  UNSUBSCRIBED
+}
+
+model Subscriber {
+  id             String           @id @default(uuid()) @db.Uuid
+  profileId      String           @db.Uuid
+  email          String
+  status         SubscriberStatus @default(PENDING)
+  confirmationHash String?
+  createdAt      DateTime         @default(now())
+  confirmedAt    DateTime?
+  unsubscribedAt DateTime?
+  source         Json
+  profile        Profile          @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  @@unique([profileId, email])
+  @@index([profileId, status, createdAt])
+}
+
+model ApiKey {
+  id         String    @id @default(uuid()) @db.Uuid
+  profileId  String    @db.Uuid
+  name       String
+  prefix     String
+  tokenHash  String    @unique
+  scopes     Json
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  revokedAt  DateTime?
+  profile    Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  @@index([profileId, revokedAt])
 }

@@ -164,6 +164,10 @@ Implemented backend milestones:
   optional Redis/in-memory request rate limiting is active, bearer API keys enforce revocation,
   expiry and scopes, and `/developer/v1` exposes scoped profile, analytics and subscriber reads.
   Runtime smoke tests verified a scoped developer read and a rejected out-of-scope request.
+- M1 account lifecycle: persisted, expiring, single-use email-verification and password-reset
+  tokens; Argon2id password change/reset; session revocation after password changes; authenticated
+  data export and password-confirmed account deletion. Resend delivery is implemented as a real
+  HTTP provider and fails explicitly when `RESEND_API_KEY` is not configured.
 
 Verified locally against PostgreSQL 14 (the installed local server; the compose file targets the
 recommended PostgreSQL 18 image): migrations apply, seed completes, the API compiles, `/health`
@@ -175,7 +179,7 @@ Remaining backend milestones are intentionally real work, not marked complete by
   tuning/metrics (the current limiter is implemented with Redis and a local fallback);
 - media/R2 uploads and email/Resend delivery;
 - templates/import jobs, scheduling/password gates, domains/Cloudflare, SEO/OG generation;
-- email verification/password reset/account export/deletion, Instagram, entitlements/Stripe,
+- Instagram, entitlements/Stripe,
   audit logging, security hardening, observability, backups/PITR, load tests, and full frontend
   HTTP-repository wiring. API-key auth and the initial developer API are now implemented; the
   remaining developer work is pagination, write scopes, documentation and production governance.

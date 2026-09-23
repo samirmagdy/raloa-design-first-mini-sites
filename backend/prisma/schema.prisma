@@ -24,6 +24,11 @@ enum EventType {
   FORM_SUBMIT
 }
 
+enum AuthTokenType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
 model User {
   id              String        @id @default(uuid()) @db.Uuid
   email           String        @unique
@@ -37,6 +42,7 @@ model User {
   updatedAt       DateTime      @updatedAt
   sessions        Session[]
   profiles        Profile[]
+  authTokens      AuthToken[]
 }
 
 model Session {
@@ -73,6 +79,18 @@ model Profile {
   subscribers Subscriber[]
   apiKeys     ApiKey[]
   @@index([ownerUserId, updatedAt])
+}
+
+model AuthToken {
+  id         String        @id @default(uuid()) @db.Uuid
+  userId     String        @db.Uuid
+  type       AuthTokenType
+  tokenHash  String        @unique
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime      @default(now())
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, type, expiresAt])
 }
 
 model Page {

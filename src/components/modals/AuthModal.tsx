@@ -5,12 +5,13 @@ import { RaloaMark } from '../brand/RaloaLogo';
 import { useModalAccessibility } from '../../hooks/useModalAccessibility';
 import { useRepository } from '../../services/RepositoryContext';
 import { text } from '../../i18n/ui';
+import type { AuthMode } from '../../services/contracts/auth';
 
 interface AuthModalProps {
   initialMode?: 'signin' | 'signup';
   locale: Locale;
   onClose: () => void;
-  onSuccess: (email: string) => void;
+  onSuccess: (email: string, mode: AuthMode) => void;
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({
@@ -35,7 +36,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     const result = await repository.auth.signIn({ email, password }, mode);
     if (result.ok) {
       setSubmitted(true);
-      onSuccess(email);
+      onSuccess(email, mode);
     } else {
       setErrorMessage(text(result.error.message, locale));
     }

@@ -18,7 +18,6 @@ import { BackToTop } from './components/BackToTop';
 import { NotFound } from './components/NotFound';
 
 // Interactive Modals
-const StudioModal = lazy(() => import('./components/modals/StudioModal').then((module) => ({ default: module.StudioModal })));
 const TemplatePreviewModal = lazy(() => import('./components/modals/TemplatePreviewModal').then((module) => ({ default: module.TemplatePreviewModal })));
 const PlanCheckoutModal = lazy(() => import('./components/modals/PlanCheckoutModal').then((module) => ({ default: module.PlanCheckoutModal })));
 const MiniSiteDemoModal = lazy(() => import('./components/modals/MiniSiteDemoModal').then((module) => ({ default: module.MiniSiteDemoModal })));
@@ -48,6 +47,7 @@ import { OnboardingPage } from './components/OnboardingPage';
 import { ImportPage } from './components/ImportPage';
 import { AuthPage } from './components/AuthPage';
 import { ManagePage } from './components/ManagePage';
+import { useSession } from './services/RepositoryContext';
 
 export default function App() {
   const [locale, setLocale] = useState<Locale>(() => getInitialLocale());
@@ -56,6 +56,7 @@ export default function App() {
 
   // One route store; navigation is History-API only, so drafts survive moving between screens.
   const route = useRoute();
+  const { status: sessionStatus } = useSession();
   const isLanding = route.name === 'home' && (typeof window === 'undefined' || window.location.hash !== '#404');
   const attemptedPath = typeof window === 'undefined' ? '' : window.location.hash === '#404' ? '#404' : route.path;
 
@@ -135,9 +136,7 @@ export default function App() {
   } = useVoiceTour({ locale });
 
   // Modal States
-  const [studioOpen, setStudioOpen] = useState(false);
-  const [studioUsername, setStudioUsername] = useState('creator');
-  const [studioTemplate, setStudioTemplate] = useState<TemplateItem>(templatesData[0]);
+  const [pendingUsername, setPendingUsername] = useState('');
 
   const [previewTemplate, setPreviewTemplate] = useState<TemplateItem | null>(() => {
     if (typeof window === 'undefined') return null;
@@ -296,10 +295,13 @@ export default function App() {
     handleSelectLocale(next);
   };
 
-  const handleOpenStudio = (username?: string, template?: TemplateItem) => {
-    if (username) setStudioUsername(username);
-    if (template) setStudioTemplate(template);
-    setStudioOpen(true);
+  const handleOpenStudio = (username?: string) => {
+    if (username) setPendingUsername(username);
+    if (sessionStatus === 'signed-in') {
+      navigate('/studio/overview');
+      return;
+    }
+    setAuthModal({ open: true, mode: 'signup' });
   };
 
   const handleSelectTemplate = (template: TemplateItem) => {
@@ -319,16 +321,16 @@ export default function App() {
     window.history.pushState(null, '', `${window.location.pathname}${newQuery}${newHash}`);
   };
 
-  const handleUseTemplateFromPreview = (template: TemplateItem) => {
+  const handleUseTemplateFromPreview = (_template: TemplateItem) => {
     handleClosePreviewTemplate();
-    handleOpenStudio(undefined, template);
+    handleOpenStudio();
   };
 
   const handleSelectPlan = (plan: PricingPlan, isYearly: boolean) => {
     setSelectedPlanState({ plan, isYearly });
   };
 
-  const handleConfirmPlan = (plan: PricingPlan) => {
+  const handleConfirmPlan = (_plan: PricingPlan) => {
     setSelectedPlanState(null);
     handleOpenStudio();
   };
@@ -344,8 +346,7 @@ export default function App() {
     contactOpen ||
     projectStatsOpen ||
     referralModalOpen ||
-    previewTemplate ||
-    studioOpen
+    previewTemplate
   );
 
   // Close the active modal in priority order (topmost first)
@@ -389,10 +390,6 @@ export default function App() {
     }
     if (previewTemplate) {
       handleClosePreviewTemplate();
-      return;
-    }
-    if (studioOpen) {
-      setStudioOpen(false);
       return;
     }
   };
@@ -487,7 +484,7 @@ export default function App() {
       ) : route.name === 'analytics' ? (
         <AnalyticsPage locale={locale} onReturnHome={handleReturnHome} />
       ) : route.name === 'onboarding' ? (
-        <OnboardingPage locale={locale} onReturnHome={handleReturnHome} />
+        <OnboardingPage locale={locale} initialUsername={pendingUsername} onReturnHome={handleReturnHome} />
       ) : route.name === 'import' ? (
         <ImportPage locale={locale} onReturnHome={handleReturnHome} />
       ) : route.name === 'manage' ? (
@@ -654,14 +651,6 @@ export default function App() {
       />
 
       {/* Live Studio Mini-Site Builder */}
-        {studioOpen && (
-          <StudioModal
-            initialUsername={studioUsername}
-            initialTemplate={studioTemplate}
-            locale={locale}
-            onClose={() => setStudioOpen(false)}
-          />
-        )}
       {/* Template Preview Details Modal */}
       {previewTemplate && (
         <TemplatePreviewModal
@@ -702,9 +691,14 @@ export default function App() {
           initialMode={authModal.mode}
           locale={locale}
           onClose={() => setAuthModal({ open: false, mode: 'signin' })}
-          onSuccess={(email) => {
+          onSuccess={(_email, mode) => {
+            const nextMode = mode ?? authModal.mode;
             setAuthModal({ open: false, mode: 'signin' });
-            handleOpenStudio(email.split('@')[0]);
+            if (nextMode === 'signup') {
+              navigate('/onboarding');
+            } else {
+              navigate('/studio/overview');
+            }
           }}
         />
       )}

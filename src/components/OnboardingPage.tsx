@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, Check, ChevronLeft, Palette, Sparkles, UserPlus } from 'lucide-react';
 import type { Locale } from '../types';
 import { navigate } from '../app/router';
-import { useRepository } from '../services/RepositoryContext';
+import { useRepository, useSession } from '../services/RepositoryContext';
 import { useAsyncResource } from '../services/useAsyncResource';
 import type { RepositoryError, Template, ThemeConfig } from '../services';
 import { themePresets } from '../theme/themeRegistry';
@@ -15,6 +15,7 @@ import { ui, text, tx, fill } from '../i18n/ui';
 
 interface OnboardingPageProps {
   locale: Locale;
+  initialUsername?: string;
   onReturnHome: () => void;
 }
 
@@ -40,15 +41,16 @@ const readProgress = (): Progress | null => {
   }
 };
 
-export const OnboardingPage: React.FC<OnboardingPageProps> = ({ locale, onReturnHome }) => {
+export const OnboardingPage: React.FC<OnboardingPageProps> = ({ locale, initialUsername = '', onReturnHome }) => {
   const repository = useRepository();
+  const { status } = useSession();
   const toast = useToast();
   const isRtl = locale === 'ar';
   const stored = useMemo(readProgress, []);
 
   const [step, setStep] = useState<Step>(stored?.step ?? 'template');
   const [templateId, setTemplateId] = useState(stored?.templateId ?? '');
-  const [username, setUsername] = useState(stored?.username ?? '');
+  const [username, setUsername] = useState(stored?.username ?? initialUsername);
   const [displayName, setDisplayName] = useState(stored?.displayName ?? '');
   const [themeId, setThemeId] = useState(stored?.themeId ?? 'raloa-light');
   const [profileId, setProfileId] = useState<string | null>(stored?.profileId ?? null);
@@ -57,6 +59,10 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({ locale, onReturn
   const [published, setPublished] = useState(false);
   const [themeChosen, setThemeChosen] = useState(!!stored?.themeId);
   const [error, setError] = useState<RepositoryError | null>(null);
+
+  useEffect(() => {
+    if (status === 'signed-out') navigate('/signin', { replace: true });
+  }, [status]);
 
   const templates = useAsyncResource(() => repository.templates.list(), []);
   const profile = useAsyncResource(
@@ -140,7 +146,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({ locale, onReturn
     navigate(`/p/${username}`);
   };
 
-  if (templates.isLoading) return <LoadingState label={tx(ui.common.loading, locale)} variant="card" />;
+  if (status !== 'signed-in' || templates.isLoading) return <LoadingState label={tx(ui.common.loading, locale)} variant="card" />;
   if (templates.error) {
     return (
       <main className="min-h-screen bg-surface-alt p-6">

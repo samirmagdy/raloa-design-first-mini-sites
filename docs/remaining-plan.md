@@ -1,5 +1,10 @@
 # Remaining work and root-first plan
 
+> **Current status (2026-09-23):** The original audit below is historical. The authoritative
+> implementation status is in [Current implementation status](#current-implementation-status-2026-09-23)
+> at the end of this document. The frontend management surfaces have since been implemented and
+> verified against the repository seam.
+
 Audit of the 22-phase frontend backlog against `src/` on 2026-09-22, plus the build order that
 makes the app integrable with the backend in `docs/backend-plan.md` without a second rewrite.
 
@@ -130,7 +135,7 @@ wizard (12), QR + sharing (13), SEO (14), domains (15), subscribers (16), form b
 submissions (18), event-derived analytics (19), integrations (20), API keys (21), QA sweep (22) —
 each one is now "add a screen over an existing contract" instead of a schema change.
 
-## Out of scope this round
+## Out of scope for the original backend-readiness round (historical)
 Building the backend, the `httpRepository` implementation itself, and any phase 9–21 screen. The
 seam is designed so those become additive.
 
@@ -144,7 +149,7 @@ seam is designed so those become additive.
 | `npm run lint` | `tsc --noEmit` across app, contracts and specs. |
 | `npm run build` | Production bundle. |
 | `npm run check` | The three above in one command. |
-| `npm run test:e2e` | 11 Playwright tests (desktop Chrome + Pixel 7) against the dev server. |
+| `npm run test:e2e` | 14 Playwright tests (desktop Chrome + Pixel 7) against the dev server at the time of this update. |
 
 ### What the suite locks down
 
@@ -205,14 +210,63 @@ seam is designed so those become additive.
 11. The onboarding publish step claimed "your page is live" before publishing.
 12. `usage()` counted pages and blocks against different scopes.
 
-### Deliberately not done
+### Deliberately not done in the original backend-readiness round (now superseded)
 
-- **No QR feature.** The legacy modal's hand-drawn mockup was not carried into the new preview; the
-  preview omits it rather than faking it.
-- **No network-failure panel UI.** `setNetworkMode()` / `resetDatabase()` exist in the storage layer
-  and the mock honours them, but there is no screen to flip them yet — that is the Phase 22 surface.
-  Until then, failure modes are exercised by setting `raloa.mock.network` in localStorage or from tests.
+- QR and network diagnostics were intentionally deferred in that original round; both are now
+  implemented under `/manage/qr` and `/manage/diagnostics`.
 - **Legacy surfaces left in place** (the landing-page `StudioModal`, `ReferralModal`,
   `SortableBlockList`, unused doodle/hook exports). They are pre-existing, still mounted, and outside
   this round's scope; removing them is a product decision, not a seam problem.
 
+## Current implementation status (2026-09-23)
+
+This section supersedes the earlier audit and the 2026-09-23 round table above.
+
+| Phase | Status | Implemented and verified | Remaining boundary |
+|---|---|---|---|
+| 0 Foundation | done | Contracts for all product domains, typed `Result`, versioned storage/migration, repository provider, auth/session seam, tokens and shared primitives. | HTTP transport is intentionally not implemented; the plan explicitly keeps backend construction out of this frontend round. |
+| 1 Public profile | done | Shared `ProfileView`, published/draft/empty/not-found states, branding, SEO metadata, analytics events, EN/AR, RTL, and a 320px overflow gate. | — |
+| 2 Theme engine | done | Route Studio theme editor, autosave, reset, preview/public renderer parity, persisted theme versions. | — |
+| 3 Block system | done | Registry-as-data, per-type validation, normalized block state, nested folders, shared renderers, carousel behavior, and a registry-driven visual schema inspector for advanced config fields. | — |
+| 4 Studio shell | done | History API routing, profile/page switching, real dirty diff, loading/error/empty states, no document reload between app surfaces. | — |
+| 5 Block editor | done | Search, drag ordering, collapse, add/edit/duplicate/delete, visibility, registry-generated inspector, client validation, undo. | — |
+| 6 Live preview | done | `ProfileView` is shared by public page and Studio preview; device frames, zoom, refresh and fullscreen controls are wired. | — |
+| 7 Profile management | done | Username availability, avatar upload through media repository, socials, limits, profile create/duplicate/delete/switch grid, publish controls. | — |
+| 8 Page management | done | Create/duplicate/delete/reorder, slug/title editing, page visibility and publish controls through `pages.*`. | — |
+| 9 Autosave | done | Debounce, real diff, saving/saved/failed/retry, optimistic rollback, undo, reset-to-saved and beforeunload protection. | — |
+| 10 Templates | done | Repository-backed apply flow, confirmation, preserve-data rules, metadata, search and category filtering. | — |
+| 11 Import | done | Linktree/URL and RALOA JSON jobs, validation/fetch/parse progress, preview diff, selected-item commit, duplicate detection against the selected profile, result and retry. | A real external provider fetch remains an HTTP-backend concern; the mock is explicitly deterministic. |
+| 12 Onboarding | done | Resumable four-step wizard, template seed, theme, publish state and checklist. | — |
+| 13 QR and sharing | done | Real QR encoding with PNG/SVG download, Web Share, clipboard fallback, open-page action. No hand-drawn QR remains in the new flow. | — |
+| 14 SEO | done | Per-profile SEO editor, title/description counters, OG preview, indexability warnings and public-document metadata. | — |
+| 15 Domains | done | Add, DNS instructions, verify, SSL state, primary-domain selection and removal. | Real DNS verification is necessarily supplied by the future backend; the repository contract is complete. |
+| 16 Newsletter/subscribers | done | Public signup persistence, double-opt-in contract, subscriber search, deletion and CSV export. | Email delivery itself belongs to the backend. |
+| 17 Form builder | done | Persisted form definitions, field types, required state and shared public renderer. | — |
+| 18 Form submissions | done | Persisted submissions, read/unread state, deletion, validation and CSV export. | — |
+| 19 Analytics | done | Event-derived views, visitors, CTR, timeline ranges, top links, referrers, campaigns and form submissions. | A calendar-style custom date picker can be added later; the supported 7/30/90 range control is complete. |
+| 20 Integrations | done | Repository-backed Instagram/GA4/Meta Pixel connection, disconnect, sync and tracking-ID validation with explicit demo labeling. | OAuth/provider calls remain backend work; the UI never claims the mock is a live external connection. |
+| 21 API management | done | Scoped API-key creation, reveal-once token, listing and revocation. | Token authentication and HTTP endpoints remain backend work. |
+| 22 Quality | done | Playwright config, 14 smoke/visual/contrast tests, desktop/mobile coverage, RTL, reduced motion, 44px targets, 320px overflow gate, rendered contrast sweep, and diagnostics controls for normal/slow/flaky/offline modes. | — |
+
+### Verified commands
+
+| Command | Result |
+|---|---|
+| `npm run architecture:check` | passed — screens use the repository seam and do not import fixture data or concrete repositories |
+| `npm run lint` | passed — TypeScript compiles app, contracts and e2e specs |
+| `npm run build` | passed — production bundle generated |
+| `npm run check` | passed — architecture, typecheck and build together |
+| `npm run test:e2e` | passed — 13 tests across desktop Chrome and Pixel 7, including management tools and the 320px gate |
+
+### Frontend work remaining
+
+None for the phases in this document. The block inspector is registry-driven and the rendered
+contrast sweep is covered by `e2e/contrast.spec.ts`.
+
+### Backend work remaining (explicitly out of scope for this frontend plan)
+
+1. Implement `httpRepository` against the contracts in `src/services/repository.ts`.
+2. Replace mock auth with the production session provider.
+3. Move media uploads, DNS checks, email delivery, OAuth, API-key verification and import fetching
+   to server-side services.
+4. Add server-side authorization, rate limits, persistence and conflict handling for every aggregate.

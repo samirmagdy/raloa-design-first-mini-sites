@@ -86,7 +86,18 @@ export const ImportPage: React.FC<ImportPageProps> = ({ locale, onReturnHome }) 
   const preview: ImportPreview | undefined = job?.preview;
   const progress = job?.progress ?? 0;
 
-  const items = useMemo(() => preview?.items ?? [], [preview]);
+  const [duplicateIds, setDuplicateIds] = useState<Record<string, string>>({});
+  useEffect(() => {
+    if (!preview || !target) { setDuplicateIds({}); return; }
+    let active = true;
+    void repository.pages.list(target, { withBlocks: true }).then((result) => {
+      if (!active || !result.ok) return;
+      const existing = new Map(result.data.flatMap((page) => page.blocks).map((block) => [block.url, block.id]));
+      setDuplicateIds(Object.fromEntries(preview.items.filter((item) => item.url && existing.has(item.url)).map((item) => [item.id, existing.get(item.url)!])));
+    });
+    return () => { active = false; };
+  }, [preview, target, repository]);
+  const items = useMemo(() => (preview?.items ?? []).map((item) => duplicateIds[item.id] ? { ...item, duplicateOf: duplicateIds[item.id] } : item), [preview, duplicateIds]);
   const duplicateCount = items.filter((item) => item.duplicateOf).length;
 
   return (

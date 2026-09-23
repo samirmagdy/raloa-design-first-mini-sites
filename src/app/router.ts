@@ -3,7 +3,7 @@ export type RouteName = 'home' | 'profile' | 'studio' | 'settings' | 'analytics'
 export type StudioSection = 'overview' | 'editor' | 'theme' | 'pages' | 'preview';
 
 export type SettingsSection = 'profile' | 'seo';
-export type ManageSection = 'templates' | 'qr' | 'seo' | 'domains' | 'subscribers' | 'forms' | 'submissions' | 'integrations' | 'api-keys';
+export type ManageSection = 'profiles' | 'templates' | 'qr' | 'seo' | 'domains' | 'subscribers' | 'forms' | 'submissions' | 'integrations' | 'api-keys' | 'diagnostics';
 
 export interface Route {
   name: RouteName;
@@ -16,7 +16,7 @@ export interface Route {
 
 const STUDIO_SECTIONS: StudioSection[] = ['overview', 'editor', 'theme', 'pages', 'preview'];
 const SETTINGS_SECTIONS: SettingsSection[] = ['profile', 'seo'];
-const MANAGE_SECTIONS: ManageSection[] = ['templates', 'qr', 'seo', 'domains', 'subscribers', 'forms', 'submissions', 'integrations', 'api-keys'];
+const MANAGE_SECTIONS: ManageSection[] = ['profiles', 'templates', 'qr', 'seo', 'domains', 'subscribers', 'forms', 'submissions', 'integrations', 'api-keys', 'diagnostics'];
 
 export const normalizePath = (path: string): string => {
   const normalized = path.replace(/\/+/g, '/').replace(/\/$/, '');

@@ -20,3 +20,10 @@ test('Arabic renders the profile right-to-left', async ({ page }) => {
   await expect(root).toBeVisible();
   await expect(root).toHaveAttribute('dir', 'rtl');
 });
+
+test('the public profile has no horizontal overflow at the 320px gate', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto('/p/elena');
+  await expect(page.locator('[data-block-id]').first()).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+});

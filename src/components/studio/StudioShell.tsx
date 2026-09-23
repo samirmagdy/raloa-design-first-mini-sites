@@ -1,7 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   CloudUpload,
+  ArrowUpRight,
+  CheckCircle2,
+  ExternalLink,
   FileText,
+  Globe2,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -349,8 +353,8 @@ export const StudioShell: React.FC<StudioShellProps> = ({ locale, section, onRet
 
             <div className="flex shrink-0 items-center gap-2">
               <SaveIndicator autosave={autosave} locale={locale} onRetry={() => void autosave.retry()} />
-              <Button size="sm" variant="secondary" onClick={() => navigate('/analytics')}>
-                {tx(ui.settings.heading, locale)}
+              <Button size="sm" variant="secondary" onClick={() => navigate('/settings/profile')}>
+                {tx(ui.studio.settings, locale)}
               </Button>
               <Button size="sm" variant={profile.published ? 'secondary' : 'primary'} onClick={() => void publish()}>
                 {profile.published ? tx(ui.studio.publishChanges, locale) : tx(ui.studio.publishPage, locale)}
@@ -358,7 +362,7 @@ export const StudioShell: React.FC<StudioShellProps> = ({ locale, section, onRet
             </div>
           </header>
 
-          <div className="mx-auto max-w-[1200px] space-y-6 p-4 sm:p-6 lg:p-8">
+          <div className="mx-auto max-w-[1320px] space-y-6 p-4 sm:p-6 lg:p-8">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div className="min-w-0">
                 <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-indigo-600">{tx(ui.studio.workspace, locale)}</p>
@@ -409,7 +413,7 @@ export const StudioShell: React.FC<StudioShellProps> = ({ locale, section, onRet
             )}
 
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-5">
-              <p className="text-xs text-slate-500">{tx(ui.common.demoNote, locale)}</p>
+              <p className="text-xs text-slate-500">{import.meta.env.VITE_REPOSITORY === 'backend' ? tx(ui.common.ready, locale) : tx(ui.common.demoNote, locale)}</p>
               {autosave.dirty && (
                 <Button variant="ghost" size="sm" onClick={() => setConfirmDiscard(true)}>
                   {tx(ui.common.discardChanges, locale)}
@@ -460,7 +464,7 @@ const SaveIndicator: React.FC<{
             ? tx(ui.common.unsaved, locale)
             : autosave.lastSavedAt
             ? tx(ui.common.saved, locale)
-            : tx(ui.common.demoNote, locale)
+            : tx(ui.common.ready, locale)
       )}
     </span>
   );
@@ -472,27 +476,116 @@ const OverviewPanel: React.FC<{
   pages: ProfilePage[];
   locale: Locale;
   onEdit: () => void;
-}> = ({ profile, page, pages, locale, onEdit }) => (
-  <div className="grid gap-5 lg:grid-cols-[1.25fr_0.75fr]">
-    <Surface className="p-5 sm:p-6">
-      <div className="flex items-center gap-4">
-        <img src={profile.avatarUrl} alt="" className="h-16 w-16 rounded-panel object-cover" />
-        <div className="min-w-0">
-          <h3 className="truncate text-lg font-extrabold">{profile.displayName}</h3>
-          <p className="truncate text-sm text-slate-500">raloa.app/@{profile.username}</p>
+}> = ({ profile, page, pages, locale, onEdit }) => {
+  const visibleBlockCount = page?.blocks.filter((block) => block.visible && !block.parentId).length ?? 0;
+  const pageTitle = page ? text(page.title, locale) : tx(ui.common.page, locale);
+  const profileInitials = profile.displayName.trim().split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
+
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-5 xl:grid-cols-[1.25fr_0.75fr]">
+        <Surface className="overflow-hidden">
+          <div className="relative h-28 overflow-hidden bg-[linear-gradient(115deg,#111827_0%,#312e81_52%,#6366f1_100%)]">
+            <div className="absolute -end-10 -top-20 h-56 w-56 rounded-full border border-white/20" aria-hidden="true" />
+            <div className="absolute end-20 top-8 h-24 w-24 rounded-full bg-white/10 blur-2xl" aria-hidden="true" />
+            <span className="absolute bottom-4 start-5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-2xs font-extrabold uppercase tracking-[0.16em] text-indigo-50">
+              {profile.published ? tx(ui.common.published, locale) : tx(ui.common.draft, locale)}
+            </span>
+          </div>
+          <div className="px-5 pb-5 sm:px-6 sm:pb-6">
+            <div className="-mt-10 flex items-end justify-between gap-4">
+              <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-indigo-100 text-xl font-extrabold text-indigo-700 shadow-md">
+                {profile.avatarUrl ? <img src={profile.avatarUrl} alt="" className="h-full w-full object-cover" /> : profileInitials || 'R'}
+              </div>
+              <a
+                href={`/p/${profile.username}`}
+                target="_blank"
+                rel="noreferrer"
+                className="mb-1 inline-flex min-h-11 items-center gap-1.5 rounded-full border border-slate-200 px-3 text-xs font-extrabold text-slate-700 transition hover:border-indigo-300 hover:text-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              >
+                <Globe2 className="h-3.5 w-3.5" aria-hidden="true" />
+                {tx(ui.studio.yourPublicPage, locale)}
+                <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
+            </div>
+            <div className="mt-4 min-w-0">
+              <h3 className="truncate text-xl font-extrabold tracking-tight">{profile.displayName}</h3>
+              <p className="mt-1 truncate text-sm text-slate-500">raloa.app/@{profile.username}</p>
+              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600">{text(profile.bio, locale)}</p>
+            </div>
+            <div className="mt-5 flex flex-wrap gap-3 border-t border-slate-100 pt-5">
+              <Button onClick={onEdit}>
+                <FileText className="h-4 w-4" aria-hidden="true" />
+                {tx(ui.studio.openEditor, locale)}
+              </Button>
+              <Button variant="secondary" onClick={() => window.open(`/p/${profile.username}`, '_blank', 'noopener,noreferrer')}>
+                {tx(ui.studio.preview, locale)}
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              </Button>
+            </div>
+          </div>
+        </Surface>
+
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
+          <Metric label={tx(ui.common.pages, locale)} value={String(pages.length)} />
+          <Metric label={tx(ui.studio.visibleBlocks, locale)} value={String(visibleBlockCount)} />
+          <Metric label={tx(ui.common.published, locale)} value={profile.published ? tx(ui.common.published, locale) : tx(ui.common.draft, locale)} />
+          <Metric label={tx(ui.studio.lastUpdated, locale)} value={new Date(profile.updatedAt).toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-GB')} />
         </div>
       </div>
-      <p className="mt-5 max-w-xl text-sm leading-relaxed text-slate-600">{text(profile.bio, locale)}</p>
-      <Button className="mt-5" onClick={onEdit}>
-        {tx(ui.studio.openEditor, locale)}
-      </Button>
-    </Surface>
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
-      <Metric label={tx(ui.common.pages, locale)} value={String(pages.length)} />
-      <Metric label={tx(ui.studio.visibleBlocks, locale)} value={String(page?.blocks.filter((block) => block.visible && !block.parentId).length ?? 0)} />
-      <Metric label={tx(ui.common.published, locale)} value={profile.published ? tx(ui.common.published, locale) : tx(ui.common.draft, locale)} />
-      <Metric label={tx(ui.studio.lastUpdated, locale)} value={new Date(profile.updatedAt).toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-GB')} />
+
+      <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+        <Surface className="p-5 sm:p-6">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-indigo-600">{locale === 'ar' ? 'الخطوة التالية' : 'Next up'}</p>
+              <h3 className="mt-2 text-lg font-extrabold">{locale === 'ar' ? 'اجعل صفحتك جاهزة للمشاركة' : 'Make your page share-ready'}</h3>
+            </div>
+            <CheckCircle2 className="h-5 w-5 text-emerald-500" aria-hidden="true" />
+          </div>
+          <div className="mt-5 space-y-3">
+            <JourneyItem done={Boolean(profile.displayName)} label={locale === 'ar' ? 'أضف هويتك' : 'Add your identity'} />
+            <JourneyItem done={Boolean(page?.blocks.length)} label={locale === 'ar' ? 'أضف رابطك الأول' : 'Add your first link'} />
+            <JourneyItem done={profile.published} label={locale === 'ar' ? 'انشر صفحتك' : 'Publish your page'} />
+          </div>
+        </Surface>
+
+        <Surface className="p-5 sm:p-6">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-indigo-600">{tx(ui.common.page, locale)}</p>
+              <h3 className="mt-2 text-lg font-extrabold">{pageTitle}</h3>
+              <p className="mt-1 text-sm text-slate-500">{page ? `raloa.app/@${profile.username}/${page.slug}` : tx(ui.studio.cannotLoadBody, locale)}</p>
+            </div>
+            <Button size="sm" variant="ghost" onClick={() => navigate('/studio/pages')}>
+              {tx(ui.studio.pages, locale)}
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </div>
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            <PageSignal label={locale === 'ar' ? 'الظهور' : 'Visibility'} value={page?.published ? tx(ui.common.published, locale) : tx(ui.common.draft, locale)} />
+            <PageSignal label={locale === 'ar' ? 'الكتل' : 'Blocks'} value={String(page?.blocks.length ?? 0)} />
+            <PageSignal label={locale === 'ar' ? 'الحالة' : 'Status'} value={page?.published ? tx(ui.common.published, locale) : tx(ui.common.draft, locale)} />
+          </div>
+        </Surface>
+      </div>
     </div>
+  );
+};
+
+const JourneyItem: React.FC<{ done: boolean; label: string }> = ({ done, label }) => (
+  <div className="flex items-center gap-3 text-sm font-bold text-slate-700">
+    <span className={`flex h-6 w-6 items-center justify-center rounded-full ${done ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400'}`}>
+      <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+    </span>
+    {label}
+  </div>
+);
+
+const PageSignal: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+  <div className="rounded-xl border border-slate-100 bg-slate-50 px-3 py-3">
+    <p className="text-2xs font-extrabold uppercase tracking-[0.12em] text-slate-500">{label}</p>
+    <p className="mt-1 truncate text-sm font-extrabold text-slate-900">{value}</p>
   </div>
 );
 

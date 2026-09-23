@@ -49,6 +49,7 @@ export const ui = {
     loading: { en: 'Loading…', ar: 'جارٍ التحميل…' },
     demoNote: { en: 'Demo mode: work is stored on this device until the API is connected.', ar: 'وضع تجريبي: يُحفظ العمل على هذا الجهاز حتى ربط الخادم.' },
     offline: { en: 'You appear to be offline. Nothing was changed.', ar: 'يبدو أن الاتصال منقطع. لم يتم تغيير أي شيء.' },
+    ready: { en: 'Ready to edit', ar: 'جاهز للتعديل' },
     required: { en: 'Required', ar: 'مطلوب' },
     optional: { en: 'Optional', ar: 'اختياري' },
     visible: { en: 'Visible', ar: 'ظاهر' },

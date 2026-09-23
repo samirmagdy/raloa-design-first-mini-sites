@@ -22,6 +22,16 @@ export class ProfileController {
   @Post()
   async create(@Req() request: AuthenticatedRequest, @Body() body: unknown) { const input = parseBody(profileInput, body); if (reserved.has(input.username)) return { ok: false, error: { code: 'validation', message: 'That username is reserved.' } }; const exists = await this.prisma.profile.findUnique({ where: { username: input.username } }); if (exists) return { ok: false, error: { code: 'validation', message: 'That username is taken.' } }; const profile = await this.prisma.profile.create({ data: { ownerUserId: request.user!.id, username: input.username, displayName: input.displayName, role: input.role ?? { en: '', ar: '' }, bio: input.bio ?? { en: '', ar: '' }, seo: { title: input.displayName, description: input.bio ?? '', indexable: false }, socials: [], theme: {} } }); return { ok: true, data: shapeProfile(profile) }; }
 
+  @Get('usage')
+  async usage(@Req() request: AuthenticatedRequest) {
+    const profiles = await this.prisma.profile.findMany({ where: { ownerUserId: request.user!.id }, include: { pages: { include: { blocks: true } } } });
+    const subscription = await this.prisma.subscription.findFirst({ where: { userId: request.user!.id, status: 'ACTIVE' } });
+    const plan = subscription?.plan === 'business' ? 'business' : subscription?.plan === 'creator' ? 'creator' : 'free';
+    const limits = { free: { profiles: 2, pages: 3, blocks: 25, visits: 10_000 }, creator: { profiles: 12, pages: 10, blocks: 150, visits: 50_000 }, business: { profiles: 40, pages: 40, blocks: 500, visits: 500_000 } }[plan];
+    const pages = profiles.flatMap((profile) => profile.pages);
+    return { ok: true, data: { plan, profilesUsed: profiles.length, profileLimit: limits.profiles, pagesUsed: pages.length, pageLimit: limits.pages, blocksUsed: pages.reduce((total, page) => total + page.blocks.length, 0), blockLimit: limits.blocks, monthlyVisits: 0, visitLimit: limits.visits } };
+  }
+
   @Get(':id')
   async get(@Req() request: AuthenticatedRequest, @Param('id') id: string) { const profile = await this.prisma.profile.findFirst({ where: { id: parseBody(idSchema, id), ownerUserId: request.user!.id } }); return { ok: true, data: profile ? shapeProfile(profile) : null }; }
 

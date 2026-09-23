@@ -3,3 +3,4 @@ export type { RaloaRepository, ProfilesRepository, PagesRepository, BlocksReposi
 export { RepositoryProvider, useRepository, useSession, useRequireAuth } from './RepositoryContext';
 export { useAsyncResource } from './useAsyncResource';
 export { useAutosave, useHistory } from './useAutosave';
+export { createHttpRepository } from './httpRepository';

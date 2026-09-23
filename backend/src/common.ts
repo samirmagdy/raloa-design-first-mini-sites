@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import type { FastifyRequest } from 'fastify';
 import { PrismaService } from './prisma.service';
 import Redis from 'ioredis';
+import { recordRateLimit } from './metrics';
 
 export type AuthenticatedRequest = FastifyRequest & { user?: { id: string; email: string }; apiKey?: { id: string; profileId: string; scopes: string[] } };
 
@@ -78,7 +79,10 @@ export class RateLimitGuard implements CanActivate {
     const ip = request.ip ?? 'unknown';
     const route = request.url.split('?')[0];
     const limit = route.startsWith('/public/v1') ? 60 : 120;
-    if (!(await consumeRateLimit(`${ip}:${route}`, limit, 60))) throw new HttpException({ code: 'rate_limited', message: 'Too many requests. Try again shortly.' }, HttpStatus.TOO_MANY_REQUESTS);
+    if (!(await consumeRateLimit(`${ip}:${route}`, limit, 60))) {
+      recordRateLimit();
+      throw new HttpException({ code: 'rate_limited', message: 'Too many requests. Try again shortly.' }, HttpStatus.TOO_MANY_REQUESTS);
+    }
     return true;
   }
 }

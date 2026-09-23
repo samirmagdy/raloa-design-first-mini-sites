@@ -12,7 +12,7 @@ interface HeroProps {
   locale: Locale;
   heroTemplate: TemplateItem;
   onOpenStudio: (username: string) => void;
-  onOpenPhoneAction: (type: 'portfolio' | 'booking' | 'shop' | 'gear', data?: any) => void;
+  onOpenPhoneAction: (type: 'portfolio' | 'booking' | 'shop' | 'gear', data?: TemplateItem['sampleLinks'][number]) => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({

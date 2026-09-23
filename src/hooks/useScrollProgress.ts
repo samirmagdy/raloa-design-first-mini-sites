@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useScroll, useTransform, useSpring, MotionValue } from 'motion/react';
+type ScrollOffset = NonNullable<Parameters<typeof useScroll>[0]>['offset'];
 
 export interface ScrollProgressState {
   progress: number; // 0 to 1 normalized
@@ -11,7 +12,7 @@ export interface ScrollProgressState {
 export interface UseScrollProgressOptions {
   threshold?: number;
   targetRef?: React.RefObject<HTMLElement | null>;
-  offset?: any;
+  offset?: ScrollOffset;
   smooth?: boolean;
 }
 
@@ -84,7 +85,7 @@ export function useScrollProgress(options: UseScrollProgressOptions = {}) {
   return {
     ...scrollState,
     scrollYProgress,
-    smoothProgress,
+    smoothProgress: smooth ? smoothProgress : scrollYProgress,
     scrollYMotion: scrollY
   };
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Patch, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Patch, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiKeyGuard, requireApiScope, type AuthenticatedRequest } from './common';
 import { PrismaService } from './prisma.service';
 import { parseBody } from './common';
@@ -41,11 +41,12 @@ export class DeveloperController {
   }
 
   @Get('profiles/:profileId/subscribers')
-  async subscribers(@Req() request: AuthenticatedRequest, @Param('profileId') profileId: string) {
+  async subscribers(@Req() request: AuthenticatedRequest, @Param('profileId') profileId: string, @Query('cursor') cursor?: string, @Query('limit') limit?: string) {
     requireApiScope(request, 'subscribers:read');
     if (request.apiKey!.profileId !== profileId) return { ok: false, error: { code: 'not_found', message: 'Profile not found.' } };
-    const subscribers = await this.prisma.subscriber.findMany({ where: { profileId }, select: { id: true, email: true, status: true, createdAt: true, confirmedAt: true }, orderBy: { createdAt: 'desc' }, take: 101 });
-    return { ok: true, data: { items: subscribers.slice(0, 100), nextCursor: subscribers.length > 100 ? subscribers[99].id : null } };
+    const pageSize = Math.min(Math.max(Number(limit) || 100, 1), 100);
+    const subscribers = await this.prisma.subscriber.findMany({ where: { profileId }, select: { id: true, email: true, status: true, createdAt: true, confirmedAt: true }, orderBy: { createdAt: 'desc' }, ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}), take: pageSize + 1 });
+    return { ok: true, data: { items: subscribers.slice(0, pageSize), nextCursor: subscribers.length > pageSize ? subscribers[pageSize - 1].id : null, limit: pageSize } };
   }
 
   @Patch('profiles/:profileId')

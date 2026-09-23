@@ -57,6 +57,8 @@ export class SubscriberController {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
   @Get()
   async list(@Req() req: AuthenticatedRequest, @Param('profileId') profileId: string) { if (!(await ownedProfile(this.prisma, req.user!.id, profileId))) return { ok: false, error: { code: 'not_found', message: 'Profile not found.' } }; return { ok: true, data: await this.prisma.subscriber.findMany({ where: { profileId }, orderBy: { createdAt: 'desc' }, take: 100, select: { id: true, profileId: true, email: true, status: true, createdAt: true, confirmedAt: true, unsubscribedAt: true, source: true } }) }; }
+  @Get('export.csv')
+  async exportCsv(@Req() req: AuthenticatedRequest, @Param('profileId') profileId: string, @Res() response: any) { if (!(await ownedProfile(this.prisma, req.user!.id, profileId))) return { ok: false, error: { code: 'not_found', message: 'Profile not found.' } }; const rows = await this.prisma.subscriber.findMany({ where: { profileId }, orderBy: { createdAt: 'desc' }, select: { id: true, email: true, status: true, createdAt: true, confirmedAt: true, unsubscribedAt: true } }); const csv = ['id,email,status,createdAt,confirmedAt,unsubscribedAt', ...rows.map((row) => [row.id, row.email, row.status, row.createdAt.toISOString(), row.confirmedAt?.toISOString() ?? '', row.unsubscribedAt?.toISOString() ?? ''].map((value) => `"${String(value).replace(/"/g, '""')}"`).join(','))].join('\n'); return response.type('text/csv').header('content-disposition', 'attachment; filename="raloa-subscribers.csv"').send(csv); }
   @Post(':subscriberId/confirm')
   async confirm(@Param('profileId') profileId: string, @Param('subscriberId') subscriberId: string, @Body() body: unknown) { const input = parseBody(z.object({ token: z.string().min(20) }), body); const updated = await this.prisma.subscriber.updateMany({ where: { id: subscriberId, profileId, confirmationHash: hashToken(input.token) }, data: { status: 'ACTIVE', confirmedAt: new Date(), confirmationHash: null } }); return updated.count ? { ok: true, data: null } : { ok: false, error: { code: 'validation', message: 'Invalid confirmation token.' } }; }
   @Delete(':subscriberId')
@@ -68,4 +70,10 @@ export class PublicUnsubscribeController {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
   @Post(':subscriberId/unsubscribe')
   async unsubscribe(@Param('subscriberId') subscriberId: string, @Body() body: unknown) { const input = parseBody(z.object({ token: z.string().min(20) }), body); const updated = await this.prisma.subscriber.updateMany({ where: { id: subscriberId, unsubscribeHash: hashToken(input.token) }, data: { status: 'UNSUBSCRIBED', unsubscribedAt: new Date() } }); return updated.count ? { ok: true, data: null } : { ok: false, error: { code: 'validation', message: 'Invalid unsubscribe token.' } }; }
+
+  @Post('confirm')
+  async confirm(@Body() body: unknown) { const input = parseBody(z.object({ token: z.string().min(20) }), body); const updated = await this.prisma.subscriber.updateMany({ where: { confirmationHash: hashToken(input.token) }, data: { status: 'ACTIVE', confirmedAt: new Date(), confirmationHash: null } }); return updated.count ? { ok: true, data: null } : { ok: false, error: { code: 'validation', message: 'Invalid confirmation token.' } }; }
+
+  @Post('unsubscribe')
+  async unsubscribeByToken(@Body() body: unknown) { const input = parseBody(z.object({ token: z.string().min(20) }), body); const updated = await this.prisma.subscriber.updateMany({ where: { unsubscribeHash: hashToken(input.token) }, data: { status: 'UNSUBSCRIBED', unsubscribedAt: new Date() } }); return updated.count ? { ok: true, data: null } : { ok: false, error: { code: 'validation', message: 'Invalid unsubscribe token.' } }; }
 }

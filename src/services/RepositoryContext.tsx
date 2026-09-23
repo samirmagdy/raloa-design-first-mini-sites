@@ -3,6 +3,7 @@ import type { Session } from './contracts/auth';
 import type { RepositoryError, Result } from './contracts/result';
 import type { RaloaRepository } from './repository';
 import { createMockRepository } from './mock/mockRepository';
+import { createHttpRepository } from './httpRepository';
 
 /**
  * The swap point. `httpRepository` will be constructed the same way once `/api/v1` exists; until
@@ -11,11 +12,7 @@ import { createMockRepository } from './mock/mockRepository';
  */
 const resolveRepository = (): RaloaRepository => {
   const configured = (import.meta.env?.VITE_REPOSITORY as string | undefined) ?? '';
-  if (configured && configured !== 'mock') {
-    // Intentionally loud: wiring an HTTP repository is a backend milestone, not a flag flip.
-    throw new Error(`Repository "${configured}" is not implemented yet. Set VITE_REPOSITORY=mock or omit it.`);
-  }
-  return createMockRepository();
+  return configured === 'http' || configured === 'backend' ? createHttpRepository() : createMockRepository();
 };
 
 const RepositoryContext = createContext<RaloaRepository | null>(null);

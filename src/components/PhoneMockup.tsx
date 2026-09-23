@@ -14,7 +14,7 @@ interface PhoneMockupProps {
   className?: string;
   isRtl?: boolean;
   interactive?: boolean;
-  onOpenAction?: (type: 'portfolio' | 'booking' | 'shop' | 'gear', data?: any) => void;
+  onOpenAction?: (type: 'portfolio' | 'booking' | 'shop' | 'gear', data?: TemplateItem['sampleLinks'][number]) => void;
 }
 
 export const PhoneMockup: React.FC<PhoneMockupProps> = ({

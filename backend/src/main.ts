@@ -9,7 +9,7 @@ import { AppModule } from './app.module';
 import { loadConfig } from './config';
 import { PrismaService } from './prisma.service';
 import { HttpErrorFilter } from './http-error.filter';
-import { metrics } from './metrics';
+import { metrics, recordRequest } from './metrics';
 
 async function bootstrap() {
   const config = loadConfig();
@@ -17,6 +17,7 @@ async function bootstrap() {
   await app.register(cookie, { secret: config.SESSION_SECRET });
   await app.register(cors, { origin: config.FRONTEND_ORIGIN, credentials: true });
   await app.register(helmet);
+  app.getHttpAdapter().getInstance().addHook('onRequest', () => { recordRequest(); });
   app.useGlobalFilters(new HttpErrorFilter());
   app.setGlobalPrefix('');
   app.enableShutdownHooks();

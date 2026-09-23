@@ -23,7 +23,8 @@ export const envSchema = z.object({
   CLOUDFLARE_ACCOUNT_ID: z.string().min(1).optional(),
   CLOUDFLARE_ZONE_ID: z.string().min(1).optional(),
   INSTAGRAM_APP_ID: z.string().min(1).optional(),
-  INSTAGRAM_APP_SECRET: z.string().min(1).optional()
+  INSTAGRAM_APP_SECRET: z.string().min(1).optional(),
+  OPS_DASHBOARD_TOKEN: z.string().min(32).optional()
 });
 
 export type AppConfig = z.infer<typeof envSchema>;

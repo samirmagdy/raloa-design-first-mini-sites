@@ -1,8 +1,10 @@
 import { Catch, ArgumentsHost, ExceptionFilter, HttpException } from '@nestjs/common';
+import { recordError } from './metrics';
 
 @Catch()
 export class HttpErrorFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
+    recordError();
     const response = host.switchToHttp().getResponse();
     const request = host.switchToHttp().getRequest<{ id?: string }>();
     const status = exception instanceof HttpException ? exception.getStatus() : 500;

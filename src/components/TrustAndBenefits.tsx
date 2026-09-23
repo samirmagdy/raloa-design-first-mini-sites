@@ -76,9 +76,9 @@ export const TrustAndBenefits: React.FC<TrustAndBenefitsProps> = ({ locale }) =>
   };
 
   return (
-    <section id="benefits" className="pt-4 pb-12 sm:pb-16 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden transition-colors duration-200">
+    <section id="benefits" className="pt-6 pb-16 sm:pb-20 md:pb-24 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden transition-colors duration-200">
       {/* Approved trust row: quiet static brand proof, not a competing content carousel. */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-8">
+      <div className="max-w-[1280px] mx-auto px-5 sm:px-7 lg:px-10 pt-3 pb-10">
         <p className="text-center text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-5">
           {isRtl ? 'يعمل مع المنصات التي تستخدمها بالفعل' : 'Works with the platforms you already use'}
         </p>
@@ -128,7 +128,7 @@ export const TrustAndBenefits: React.FC<TrustAndBenefitsProps> = ({ locale }) =>
       </div>
 
       {/* 02 Core Platform Value Pillars */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-5 sm:mt-8">
+      <div className="max-w-[1280px] mx-auto px-5 sm:px-7 lg:px-10 mt-6 sm:mt-8">
         <h2 className="sr-only">
           {isRtl ? 'لماذا يختار صناع المحتوى رالوا' : 'Why creators choose RALOA'}
         </h2>
@@ -137,7 +137,7 @@ export const TrustAndBenefits: React.FC<TrustAndBenefitsProps> = ({ locale }) =>
           {benefitsList.map((benefit) => (
             <div
               key={benefit.id}
-              className="bg-white dark:bg-slate-900 rounded-[20px] p-4 sm:p-6 border border-slate-200/90 dark:border-slate-800 shadow-[0_6px_18px_rgba(15,23,42,0.04)] dark:shadow-[0_6px_18px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_28px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_12px_28px_rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col justify-start group hover:-translate-y-1"
+              className="raloa-feature-depth bg-white dark:bg-slate-900 rounded-[1.35rem] p-4 sm:p-6 border border-slate-200/90 dark:border-slate-800 shadow-[0_10px_28px_rgba(15,23,42,0.035)] dark:shadow-[0_10px_28px_rgba(0,0,0,0.28)] transition-all duration-300 flex flex-col justify-start group"
             >
               <div
                 className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center mb-3 sm:mb-5 transition-transform group-hover:scale-110 duration-200"

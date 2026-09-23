@@ -37,9 +37,9 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({ locale, onContactSup
   };
 
   return (
-    <section id="faq" className="py-12 sm:py-18 md:py-28 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 transition-colors duration-200">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
+    <section id="faq" className="py-16 sm:py-20 md:py-24 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 transition-colors duration-200">
+      <div className="max-w-[1280px] mx-auto px-5 sm:px-7 lg:px-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
           
           {/* Left Column: Heading & Contact info */}
           <div className="lg:col-span-5">
@@ -54,7 +54,7 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({ locale, onContactSup
                 locale={locale}
               />
             </div>
-            <h2 className="text-[32px] sm:text-[42px] font-extrabold text-ink dark:text-white tracking-tight leading-[1.08] mb-4">
+            <h2 className="text-[32px] sm:text-[42px] font-extrabold text-ink dark:text-white tracking-[-0.035em] leading-[1.05] mb-4">
               {t.headline}
             </h2>
             <p className="text-[15px] sm:text-[16px] text-slate-600 dark:text-slate-300 font-normal">
@@ -75,7 +75,7 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({ locale, onContactSup
               return (
                 <div
                   key={item.id}
-                  className="rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden transition-all duration-200 bg-white dark:bg-slate-900"
+                  className={`raloa-faq-item rounded-[1.25rem] border border-slate-200/90 dark:border-slate-800 overflow-hidden transition-all duration-200 bg-white dark:bg-slate-900 ${isOpen ? 'raloa-faq-open' : ''}`}
                 >
                   <button
                     onClick={() => toggleItem(item.id)}

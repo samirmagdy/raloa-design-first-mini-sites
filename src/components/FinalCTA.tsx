@@ -41,8 +41,8 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({ locale, onOpenStudio }) => {
   };
 
   return (
-    <section className="py-14 sm:py-20 md:py-28 bg-white dark:bg-slate-950 transition-colors duration-200">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 sm:py-20 md:py-24 bg-white dark:bg-slate-950 transition-colors duration-200">
+      <div className="max-w-[1280px] mx-auto px-5 sm:px-7 lg:px-10">
         
         {/* Banner with gradient matching tokens: linear-gradient(90deg, #5B5CF6 0%, #8B5CF6 100%) */}
         <div className="raloa-cta-depth relative rounded-[28px] sm:rounded-[32px] overflow-hidden p-6 sm:p-12 lg:p-16 text-white shadow-[0_20px_50px_rgba(91,92,246,0.25)] dark:shadow-[0_20px_50px_rgba(91,92,246,0.15)] bg-gradient-to-r from-[#4338CA] via-[#4F46E5] to-[#6D28D9]">

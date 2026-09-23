@@ -13,16 +13,16 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ locale, onSeeMoreSto
   const t = dictionary[locale].testimonialsSection;
 
   return (
-    <section id="testimonials" className="py-12 sm:py-18 md:py-28 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 transition-colors duration-200">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="testimonials" className="py-16 sm:py-20 md:py-24 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80 transition-colors duration-200">
+      <div className="max-w-[1280px] mx-auto px-5 sm:px-7 lg:px-10">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-9 sm:mb-14 gap-5 sm:gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-12 gap-5 sm:gap-6">
           <div className="max-w-[600px]">
             <span className="text-[12px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block mb-2">
               {t.eyebrow}
             </span>
-            <h2 className="text-[32px] sm:text-[40px] md:text-[46px] font-extrabold text-ink dark:text-white tracking-tight leading-tight">
+            <h2 className="text-[32px] sm:text-[40px] md:text-[44px] font-extrabold text-ink dark:text-white tracking-[-0.035em] leading-[1.05]">
               {t.headline}
             </h2>
           </div>

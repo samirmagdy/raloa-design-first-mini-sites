@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Check, ArrowRight } from 'lucide-react';
 import { Locale, PricingPlan } from '../types';
 import { pricingPlans, dictionary } from '../data/content';
+import { AnnotationCard, CurvedArrowDownRight } from './brand/Doodles';
 
 interface PricingTableProps {
   locale: Locale;
@@ -30,7 +31,11 @@ export const PricingTable: React.FC<PricingTableProps> = ({ locale, onSelectPlan
           </p>
 
           {/* Billing Cycle Toggle */}
-          <div className="inline-flex items-center gap-1 p-1 bg-white dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 shadow-2xs mt-8">
+          <div className="relative inline-flex items-center gap-1 p-1 bg-white dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 shadow-2xs mt-8">
+            <div className="hidden sm:flex absolute right-1 -top-12 items-end gap-0.5 text-indigo-600 dark:text-indigo-400 rotate-[-3deg] pointer-events-none" aria-hidden="true">
+              <AnnotationCard rotation="rotate-2" className="whitespace-nowrap text-[11px] px-2.5 py-1">{t.saveBadge}</AnnotationCard>
+              <CurvedArrowDownRight className="w-9 h-8 rotate-[-8deg] translate-y-2" />
+            </div>
             <button
               onClick={() => setIsYearly(false)}
               aria-pressed={!isYearly}

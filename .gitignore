@@ -8,3 +8,6 @@ playwright-report/
 *.log
 .env*
 !.env.example
+backend/dist/
+backend/.env
+backend/prisma/dev.db

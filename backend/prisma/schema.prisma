@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+  DELETING
+}
+
+enum PageVisibility {
+  PUBLIC
+  DRAFT
+  UNLISTED
+}
+
+enum EventType {
+  VIEW
+  CLICK
+  FORM_SUBMIT
+}
+
+model User {
+  id              String        @id @default(uuid()) @db.Uuid
+  email           String        @unique
+  passwordHash    String
+  status          AccountStatus @default(ACTIVE)
+  emailVerifiedAt DateTime?
+  locale          String        @default("en")
+  timezone        String        @default("UTC")
+  lastLoginAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  sessions        Session[]
+  profiles        Profile[]
+}
+
+model Session {
+  id        String   @id @default(uuid()) @db.Uuid
+  tokenHash String   @unique
+  userId    String   @db.Uuid
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, expiresAt])
+}
+
+model Profile {
+  id          String    @id @default(uuid()) @db.Uuid
+  ownerUserId String    @db.Uuid
+  username    String    @unique
+  displayName String
+  role        Json
+  bio         Json
+  avatarUrl   String?
+  verified    Boolean   @default(false)
+  published   Boolean   @default(false)
+  seo         Json
+  socials     Json
+  theme       Json
+  version     Int       @default(1)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  owner       User      @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+  pages       Page[]
+  events      AnalyticsEvent[]
+  @@index([ownerUserId, updatedAt])
+}
+
+model Page {
+  id          String         @id @default(uuid()) @db.Uuid
+  profileId   String         @db.Uuid
+  title       Json
+  slug        String
+  description Json
+  published   Boolean        @default(false)
+  visibility  PageVisibility @default(DRAFT)
+  position    Int            @default(0)
+  version     Int            @default(1)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  profile     Profile        @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  blocks      Block[]
+  @@unique([profileId, slug])
+  @@index([profileId, position])
+}
+
+model Block {
+  id        String   @id @default(uuid()) @db.Uuid
+  pageId    String   @db.Uuid
+  parentId  String?  @db.Uuid
+  type      String
+  title     Json?
+  subtitle  Json?
+  content   Json?
+  url       String?
+  config    Json
+  position  Int      @default(0)
+  visible   Boolean  @default(true)
+  startsAt  DateTime?
+  endsAt    DateTime?
+  version   Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  parent    Block?   @relation("BlockChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Block[]  @relation("BlockChildren")
+  @@index([pageId, position])
+  @@index([parentId, position])
+}
+
+model AnalyticsEvent {
+  id          String    @id @default(uuid()) @db.Uuid
+  profileId   String    @db.Uuid
+  pageId      String?   @db.Uuid
+  blockId     String?   @db.Uuid
+  type        EventType
+  occurredAt  DateTime  @default(now())
+  visitorHash String?
+  referrer    String?
+  utm         Json?
+  userAgent   String?
+  profile     Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  @@index([profileId, occurredAt])
+  @@index([profileId, type, occurredAt])
+}

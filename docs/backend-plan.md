@@ -1,6 +1,6 @@
 # RALOA Backend Plan
 
-Status: proposal, not started. Scope: the backend requirements backlog (modular monolith, NestJS + Fastify, ~400 numbered items across 41 sections) consolidated into an executable plan.
+Status: implementation in progress (BE-1 through the first BE-9 vertical slice). Scope: the backend requirements backlog (modular monolith, NestJS + Fastify, ~400 numbered items across 41 sections) consolidated into an executable plan.
 
 This plan is grounded in the current frontend contracts rather than written generically. Where it contradicts the source requirements document, the reason is stated inline.
 
@@ -130,3 +130,35 @@ The source document's "security before CRUD" principle is right in spirit and wr
 1. Does a block need per-locale content for *every* field, or only user-facing text fields? (Affects D1 and the registry schema in D3.)
 2. Is `visible` the intended single source of truth for show/hide, with `type: 'hidden'` a legacy artefact to migrate away from? (Affects D2 and any fixture data.)
 3. Which of the 37 declared block types are actually shipping to creators, versus aspirational? The registry in D3 should only contain types with a renderer.
+
+## Implementation status (2026-09-23)
+
+The repository now contains a runnable `backend/` application. This is not a mock server:
+PostgreSQL persistence is defined in Prisma 7 migrations, passwords are Argon2id hashes, sessions
+are opaque hashed tokens in the database, and profile/page/block/theme writes enforce ownership and
+optimistic versions.
+
+Implemented backend milestones:
+
+- BE-1 foundation: NestJS + Fastify, typed environment validation, CORS, Helmet, request logging,
+  graceful shutdown, `/health`, `/ready`, and Swagger `/docs`.
+- BE-2 persistence: PostgreSQL schema, UUIDs, foreign keys, unique profile/page constraints,
+  indexes, JSONB content/config/theme fields, migration and seed commands.
+- BE-3 identity: registration, Argon2id login, HttpOnly cookie sessions, `/auth/me`, logout,
+  expiration and account-status checks.
+- BE-4 ownership: every protected profile/page/block/theme query scopes through the authenticated
+  owner; update endpoints enforce aggregate versions and return conflict envelopes.
+- BE-5–BE-9 vertical slice: profile CRUD/duplicate/public read, page list/create/update, block
+  read/update/reorder, theme read/save, and public analytics event ingestion.
+
+Verified locally against PostgreSQL 14 (the installed local server; the compose file targets the
+recommended PostgreSQL 18 image): migrations apply, seed completes, the API compiles, `/health`
+and `/ready` return 200, public profile reads work, and cookie login can list owned profiles.
+
+Remaining backend milestones are intentionally real work, not marked complete by scaffolding:
+
+- Redis-backed session/rate-limit/cache layer and BullMQ worker;
+- media/R2 uploads, email/Resend, forms/subscribers, analytics aggregation and retention;
+- templates/import jobs, scheduling/password gates, domains/Cloudflare, SEO/OG generation;
+- Instagram, entitlements/Stripe, API-key auth, developer API, security hardening, observability,
+  backups/PITR, load tests, and full frontend HTTP-repository wiring.

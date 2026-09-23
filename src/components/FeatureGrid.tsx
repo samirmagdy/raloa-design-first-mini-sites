@@ -45,19 +45,19 @@ export const FeatureGrid: React.FC<FeatureGridProps> = ({ locale, onExploreFeatu
   };
 
   return (
-    <section id="features" className="py-12 sm:py-18 md:py-28 bg-surface-alt dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="features" className="py-16 sm:py-20 md:py-24 bg-surface-alt dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
+      <div className="max-w-[1280px] mx-auto px-5 sm:px-7 lg:px-10">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-9 sm:mb-14 gap-5 sm:gap-6">
-          <div className="max-w-[640px]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-12 gap-5 sm:gap-6">
+          <div className="max-w-[650px]">
             <span className="text-[12px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block mb-2">
               {t.eyebrow}
             </span>
-            <h2 className="text-[32px] sm:text-[40px] md:text-[46px] font-extrabold text-ink dark:text-white tracking-tight leading-[1.1]">
+            <h2 className="text-[32px] sm:text-[40px] md:text-[44px] font-extrabold text-ink dark:text-white tracking-[-0.035em] leading-[1.05]">
               {t.headline}
             </h2>
-            <p className="text-[16px] sm:text-[18px] text-slate-600 dark:text-slate-300 mt-2 font-normal">
+            <p className="text-[16px] sm:text-[18px] text-slate-600 dark:text-slate-300 mt-3 font-normal leading-relaxed max-w-[560px]">
               {t.subheadline}
             </p>
           </div>
@@ -72,14 +72,16 @@ export const FeatureGrid: React.FC<FeatureGridProps> = ({ locale, onExploreFeatu
         </div>
 
         {/* 8-Card Grid (4x2 on desktop, 2x4 on tablet, 1x8 on mobile) */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-          {featuresList.map((item) => (
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+          {featuresList.map((item, index) => (
             <div
               key={item.id}
-              className="bg-white dark:bg-slate-900 rounded-[20px] p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-[0_4px_16px_rgba(15,23,42,0.03)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_28px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_12px_28px_rgba(0,0,0,0.5)] transition-all duration-300 group hover:-translate-y-1"
+              className="raloa-feature-depth group relative overflow-hidden rounded-[1.35rem] bg-white dark:bg-slate-900 p-4 sm:p-6 border border-slate-200/90 dark:border-slate-800 shadow-[0_10px_28px_rgba(15,23,42,0.035)] dark:shadow-[0_10px_28px_rgba(0,0,0,0.28)] transition-all duration-300"
+              style={{ '--feature-index': index } as React.CSSProperties}
             >
+              <span className="raloa-feature-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
               <div
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center mb-3 sm:mb-5 transition-transform group-hover:scale-110 duration-200"
+                className="relative z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 transition-transform group-hover:scale-105 duration-200"
                 style={{ backgroundColor: item.bgColor }}
               >
                 {renderIcon(item.icon)}

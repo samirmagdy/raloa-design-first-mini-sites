@@ -83,12 +83,12 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
   };
 
   return (
-    <section id="templates" className="py-14 sm:py-18 md:py-28 bg-surface-alt dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="templates" className="py-16 sm:py-20 md:py-24 bg-surface-alt dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
+      <div className="max-w-[1280px] mx-auto px-5 sm:px-7 lg:px-10">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div className="max-w-[640px]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-9 md:mb-10 gap-5">
+          <div className="max-w-[600px]">
             <span className="text-[12px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block mb-2">
               {t.eyebrow}
             </span>

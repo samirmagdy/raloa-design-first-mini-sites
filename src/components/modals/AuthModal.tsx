@@ -34,12 +34,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     if (!email || !password) return;
     setErrorMessage('');
     const result = await repository.auth.signIn({ email, password }, mode);
-    if (result.ok) {
-      setSubmitted(true);
-      onSuccess(email, mode);
-    } else {
+    if ('error' in result) {
       setErrorMessage(text(result.error.message, locale));
+      return;
     }
+    setSubmitted(true);
+    onSuccess(email, mode);
   };
 
   return (

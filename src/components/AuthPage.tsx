@@ -29,7 +29,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ locale, onReturnHome }) => {
     setError(null);
     const result = await signIn(email, password);
     setBusy(false);
-    if (!result.ok) {
+    if ('error' in result) {
       setError(
         result.error.fields?.length
           ? text(result.error.fields[0].message, locale)

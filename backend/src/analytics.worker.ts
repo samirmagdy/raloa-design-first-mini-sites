@@ -2,7 +2,7 @@ import { Queue, Worker } from 'bullmq';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
-import { connection, queueName } from './analytics.queue';
+import { connection, deadLetterName, queueName } from './analytics.queue';
 
 const redis = connection();
 if (!redis) throw new Error('REDIS_URL is required to run the analytics worker.');
@@ -21,9 +21,11 @@ const worker = new Worker(queueName, async (job) => {
   if (job.name === 'retention') await prisma.analyticsEvent.deleteMany({ where: { occurredAt: { lt: new Date(Date.now() - 365 * 86_400_000) } } });
 }, { connection: redis, concurrency: 4 });
 const maintenanceQueue = new Queue(queueName, { connection: redis });
+const deadLetterQueue = new Queue(deadLetterName, { connection: redis });
+worker.on('failed', (job, error) => { if (job) void deadLetterQueue.add(job.name, { ...job.data, failure: error.message }, { removeOnComplete: 100, removeOnFail: 1000 }); });
 
 const retention = setInterval(() => { void maintenanceQueue.add('retention', {}, { removeOnComplete: 10, removeOnFail: 100 }); }, 86_400_000);
 console.log('RALOA analytics worker started');
-const shutdown = async () => { clearInterval(retention); await worker.close(); await maintenanceQueue.close(); await prisma.$disconnect(); await pool.end(); process.exit(0); };
+const shutdown = async () => { clearInterval(retention); await worker.close(); await maintenanceQueue.close(); await deadLetterQueue.close(); await prisma.$disconnect(); await pool.end(); process.exit(0); };
 process.once('SIGTERM', () => void shutdown());
 process.once('SIGINT', () => void shutdown());

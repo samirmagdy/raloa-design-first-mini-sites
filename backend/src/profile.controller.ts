@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import argon2 from 'argon2';
 import { z } from 'zod';
 import type { AuthenticatedRequest } from './common';
 import { idSchema, localized, parseBody, SessionGuard } from './common';
@@ -38,5 +39,27 @@ export class ProfileController {
 export class PublicController {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
   @Get('profiles/:username')
-  async get(@Param('username') username: string) { const profile = await this.prisma.profile.findUnique({ where: { username: username.toLowerCase() }, include: { pages: { where: { published: true, visibility: 'PUBLIC' }, orderBy: { position: 'asc' }, include: { blocks: { where: { visible: true }, orderBy: { position: 'asc' } } } } } }); if (!profile || !profile.published) return { ok: true, data: null }; return { ok: true, data: shapeProfile(profile) }; }
+  async get(@Param('username') username: string) {
+    const now = new Date();
+    const profile = await this.prisma.profile.findUnique({
+      where: { username: username.toLowerCase() },
+      include: {
+        pages: {
+          where: { published: true, visibility: 'PUBLIC' },
+          orderBy: { position: 'asc' },
+          include: {
+            blocks: {
+              where: { visible: true, passwordProtected: false, AND: [{ OR: [{ startsAt: null }, { startsAt: { lte: now } }] }, { OR: [{ endsAt: null }, { endsAt: { gt: now } }] }] },
+              orderBy: { position: 'asc' }
+            }
+          }
+        }
+      }
+    });
+    if (!profile || !profile.published) return { ok: true, data: null };
+    return { ok: true, data: shapeProfile(profile) };
+  }
+
+  @Post('blocks/:blockId/unlock')
+  async unlock(@Param('blockId') blockId: string, @Body() body: unknown) { const input = parseBody(z.object({ password: z.string().min(1).max(200) }), body); const block = await this.prisma.block.findUnique({ where: { id: blockId }, include: { page: { include: { profile: true } } } }); if (!block || !block.passwordProtected || !block.passwordHash || !block.page.published || block.page.visibility !== 'PUBLIC' || !block.page.profile.published) return { ok: false, error: { code: 'not_found', message: 'Protected block not found.' } }; const now = new Date(); if ((block.startsAt && block.startsAt > now) || (block.endsAt && block.endsAt <= now)) return { ok: false, error: { code: 'not_found', message: 'Protected block not available.' } }; if (!(await argon2.verify(block.passwordHash, input.password))) return { ok: false, error: { code: 'unauthorized', message: 'Incorrect password.' } }; const { passwordHash: _passwordHash, ...safe } = block; return { ok: true, data: safe }; }
 }

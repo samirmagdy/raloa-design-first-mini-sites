@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { hashToken, parseBody, SessionGuard, type AuthenticatedRequest } from './common';
 import { PrismaService } from './prisma.service';
 
-const scopes = z.enum(['profiles:read', 'profiles:write', 'analytics:read', 'subscribers:read']);
+const scopes = z.enum(['profiles:read', 'profiles:write', 'analytics:read', 'subscribers:read', 'subscribers:write']);
 
 @Controller('api/v1/profiles/:profileId/api-keys')
 @UseGuards(SessionGuard)

@@ -84,3 +84,4 @@ export class RateLimitGuard implements CanActivate {
 }
 
 export const errorEnvelope = (error: unknown) => ({ ok: false, error: { code: 'server', message: error instanceof Error ? error.message : 'Unexpected server error' } });
+export const writeAudit = async (prisma: PrismaService, input: { userId?: string; action: string; entity?: string; entityId?: string; ip?: string; metadata?: unknown }) => { await prisma.auditLog.create({ data: { userId: input.userId, action: input.action, entity: input.entity, entityId: input.entityId, ip: input.ip, metadata: input.metadata as any } }); };

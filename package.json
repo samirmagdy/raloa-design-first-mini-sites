@@ -19,7 +19,7 @@
     "backend:prisma:seed": "tsx backend/prisma/seed.ts",
     "backend:up": "docker compose -f docker-compose.backend.yml up -d",
     "backend:down": "docker compose -f docker-compose.backend.yml down",
-    "backend:check": "npm run backend:build && npm run backend:prisma:generate",
+    "backend:check": "npm run backend:prisma:generate && npm run backend:build",
     "check": "npm run architecture:check && npm run lint && npm run build"
   },
   "dependencies": {
@@ -61,6 +61,7 @@
     "recharts": "^3.10.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
+    "stripe": "^18.5.0",
     "vite": "^8.3.0",
     "zod": "^4.6.5"
   },

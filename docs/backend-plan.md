@@ -178,6 +178,13 @@ Implemented backend milestones:
 - M5 publishing/growth slice: subscriber unsubscribe tokens, submission CSV export, and generated
   `robots.txt`/`sitemap.xml` are implemented with database-backed ownership and published-profile
   filtering.
+- M6 security slice: block scheduling is enforced in the public query, protected blocks never ship
+  their content before verification, and password gates use Argon2id hashes with a dedicated
+  unlock endpoint.
+- M4/M6 provider slices: persisted custom domains, Cloudflare custom-hostname/DNS verification
+  hooks, encrypted Instagram access-token storage with Graph API validation, GA4/Meta tracking
+  configuration, template storage/application, Stripe Checkout/Portal/webhook synchronization,
+  subscriptions, and entitlements are now represented by real routes and migrations.
 
 Verified locally against PostgreSQL 14 (the installed local server; the compose file targets the
 recommended PostgreSQL 18 image): migrations apply, seed completes, the API compiles, `/health`
@@ -185,12 +192,12 @@ and `/ready` return 200, public profile reads work, and cookie login can list ow
 
 Remaining backend milestones are intentionally real work, not marked complete by scaffolding:
 
-- production hardening for the queue worker (deployment supervision, dashboards, dead-letter review)
-  and rate-limit tuning/metrics (the current limiter is implemented with Redis and a local fallback);
-- email/Resend delivery is implemented; remaining work is queued email delivery and template
-  management;
-- templates/import jobs, scheduling/password gates, domains/Cloudflare, SEO/OG generation;
-- Instagram, entitlements/Stripe,
-  audit logging, security hardening, observability, backups/PITR, load tests, and full frontend
-  HTTP-repository wiring. API-key auth and the initial developer API are now implemented; the
-  remaining developer work is pagination, write scopes, documentation and production governance.
+- production deployment supervision/dashboards and rate-limit tuning (a dead-letter queue and
+  `/metrics` endpoint now exist; the current limiter is implemented with Redis and a local fallback);
+- email/Resend delivery is implemented; remaining work is queued delivery and template management;
+- templates, domain management, Instagram/GA4/Meta integration routes, Stripe Checkout/Portal,
+  signed webhook synchronization, import jobs, and dynamic SVG OG output are implemented;
+- Stripe production reconciliation/entitlement policy review, full Sentry integration, backups/PITR,
+  and full frontend HTTP-repository wiring remain. A k6 load-test scenario, `/metrics`, queue
+  dead-letter handling, developer pagination, and developer profile write scopes are implemented;
+  production dashboards/governance and generated developer documentation remain.

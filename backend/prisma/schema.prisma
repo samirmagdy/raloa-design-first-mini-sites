@@ -34,6 +34,56 @@ enum MediaAssetStatus {
   READY
 }
 
+enum DomainStatus {
+  PENDING
+  VERIFYING
+  VERIFIED
+  FAILED
+}
+
+enum SslStatus {
+  NONE
+  PROVISIONING
+  ACTIVE
+  ERROR
+}
+
+enum IntegrationKind {
+  INSTAGRAM
+  GA4
+  META_PIXEL
+}
+
+enum IntegrationState {
+  DISCONNECTED
+  CONNECTED
+  ERROR
+}
+
+enum ImportSource {
+  LINKTREE
+  URLSWERV
+  RALOA_JSON
+}
+
+enum ImportStatus {
+  IDLE
+  VALIDATING
+  FETCHING
+  PARSING
+  READY
+  FAILED
+  COMMITTED
+}
+
+enum SubscriptionStatus {
+  INCOMPLETE
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  UNPAID
+}
+
 model User {
   id              String        @id @default(uuid()) @db.Uuid
   email           String        @unique
@@ -48,6 +98,10 @@ model User {
   sessions        Session[]
   profiles        Profile[]
   authTokens      AuthToken[]
+  importJobs      ImportJob[]
+  subscriptions   Subscription[]
+  entitlements    Entitlement[]
+  auditLogs       AuditLog[]
 }
 
 model Session {
@@ -85,6 +139,8 @@ model Profile {
   apiKeys     ApiKey[]
   dailyAnalytics AnalyticsDaily[]
   mediaAssets   MediaAsset[]
+  domains       CustomDomain[]
+  integrations  Integration[]
   @@index([ownerUserId, updatedAt])
 }
 
@@ -129,6 +185,112 @@ model MediaAsset {
   @@index([profileId, createdAt])
 }
 
+model CustomDomain {
+  id                String       @id @default(uuid()) @db.Uuid
+  profileId         String       @db.Uuid
+  hostname          String       @unique
+  status            DomainStatus @default(PENDING)
+  ssl               SslStatus    @default(NONE)
+  verificationToken String
+  records           Json
+  isPrimary         Boolean      @default(false)
+  lastCheckedAt     DateTime?
+  detail            String?
+  createdAt         DateTime     @default(now())
+  profile           Profile      @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  @@index([profileId, status])
+}
+
+model Integration {
+  id            String            @id @default(uuid()) @db.Uuid
+  profileId     String            @db.Uuid
+  kind          IntegrationKind
+  state         IntegrationState  @default(DISCONNECTED)
+  enabled       Boolean           @default(false)
+  account       Json?
+  config        Json?
+  lastSyncAt    DateTime?
+  syncState     String            @default("idle")
+  trackingId    String?
+  instagramGrid Json?
+  detail        String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  profile       Profile           @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  @@unique([profileId, kind])
+}
+
+model Template {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         Json
+  tagline      Json
+  category     String
+  tags         Json
+  audience     Json
+  theme        Json
+  pages        Json
+  previewImage String
+  isFeatured   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ImportJob {
+  id          String       @id @default(uuid()) @db.Uuid
+  userId      String       @db.Uuid
+  source      ImportSource
+  input       String
+  status      ImportStatus  @default(IDLE)
+  progress    Int           @default(0)
+  preview     Json?
+  error       String?
+  committedAt DateTime?
+  createdAt   DateTime      @default(now())
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, createdAt])
+}
+
+model Subscription {
+  id                   String             @id @default(uuid()) @db.Uuid
+  userId               String             @db.Uuid
+  stripeCustomerId     String?            @unique
+  stripeSubscriptionId String?            @unique
+  plan                 String             @default("free")
+  status               SubscriptionStatus @default(INCOMPLETE)
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, status])
+}
+
+model Entitlement {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  key       String
+  enabled   Boolean  @default(false)
+  limit     Int?
+  used      Int      @default(0)
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([userId, key])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String?  @db.Uuid
+  action    String
+  entity    String?
+  entityId  String?
+  ip        String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+}
+
 model Page {
   id          String         @id @default(uuid()) @db.Uuid
   profileId   String         @db.Uuid
@@ -161,6 +323,8 @@ model Block {
   visible   Boolean  @default(true)
   startsAt  DateTime?
   endsAt    DateTime?
+  passwordHash String?
+  passwordProtected Boolean @default(false)
   version   Int      @default(1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

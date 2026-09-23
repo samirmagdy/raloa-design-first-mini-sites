@@ -14,6 +14,10 @@ import { EmailService } from './email.service';
 import { MediaController } from './media.controller';
 import { StorageService } from './storage.service';
 import { SeoController } from './seo.controller';
+import { DomainController, IntegrationController, TemplateController } from './features.controller';
+import { BillingController, StripeWebhookController } from './billing.controller';
+import { ImportController } from './import.controller';
+import { OgController } from './og.controller';
 
-@Module({ controllers: [AuthController, ProfileController, PublicController, PageController, BlockController, ThemeController, AnalyticsController, AnalyticsSnapshotController, ApiKeyController, FormController, PublicFormController, SubmissionController, PublicSubscriberController, SubscriberController, PublicUnsubscribeController, DeveloperController, MediaController, SeoController], providers: [PrismaService, EmailService, StorageService, SessionGuard, ApiKeyGuard, { provide: APP_GUARD, useClass: RateLimitGuard }], exports: [PrismaService, EmailService, StorageService] })
+@Module({ controllers: [AuthController, ProfileController, PublicController, PageController, BlockController, ThemeController, AnalyticsController, AnalyticsSnapshotController, ApiKeyController, FormController, PublicFormController, SubmissionController, PublicSubscriberController, SubscriberController, PublicUnsubscribeController, DeveloperController, MediaController, SeoController, DomainController, IntegrationController, TemplateController, BillingController, StripeWebhookController, ImportController, OgController], providers: [PrismaService, EmailService, StorageService, SessionGuard, ApiKeyGuard, { provide: APP_GUARD, useClass: RateLimitGuard }], exports: [PrismaService, EmailService, StorageService] })
 export class AppModule {}

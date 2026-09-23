@@ -168,6 +168,16 @@ Implemented backend milestones:
   tokens; Argon2id password change/reset; session revocation after password changes; authenticated
   data export and password-confirmed account deletion. Resend delivery is implemented as a real
   HTTP provider and fails explicitly when `RESEND_API_KEY` is not configured.
+- M3 analytics async slice: BullMQ is installed with a standalone `backend:worker` command,
+  analytics events enqueue profile aggregation when Redis is configured, daily aggregates are
+  persisted in `AnalyticsDaily`, and the worker includes a 365-day event-retention job. The API
+  keeps synchronous event persistence when Redis is unavailable.
+- M3 media slice: Cloudflare R2-compatible S3 storage now has ownership-scoped presign, completion
+  (HEAD metadata verification), listing, and deletion endpoints. Uploads are limited to supported
+  image types and 50 MB, and the API refuses to operate when storage credentials are absent.
+- M5 publishing/growth slice: subscriber unsubscribe tokens, submission CSV export, and generated
+  `robots.txt`/`sitemap.xml` are implemented with database-backed ownership and published-profile
+  filtering.
 
 Verified locally against PostgreSQL 14 (the installed local server; the compose file targets the
 recommended PostgreSQL 18 image): migrations apply, seed completes, the API compiles, `/health`
@@ -175,9 +185,10 @@ and `/ready` return 200, public profile reads work, and cookie login can list ow
 
 Remaining backend milestones are intentionally real work, not marked complete by scaffolding:
 
-- BullMQ workers, analytics retention/aggregation jobs, and production-grade distributed rate-limit
-  tuning/metrics (the current limiter is implemented with Redis and a local fallback);
-- media/R2 uploads and email/Resend delivery;
+- production hardening for the queue worker (deployment supervision, dashboards, dead-letter review)
+  and rate-limit tuning/metrics (the current limiter is implemented with Redis and a local fallback);
+- email/Resend delivery is implemented; remaining work is queued email delivery and template
+  management;
 - templates/import jobs, scheduling/password gates, domains/Cloudflare, SEO/OG generation;
 - Instagram, entitlements/Stripe,
   audit logging, security hardening, observability, backups/PITR, load tests, and full frontend

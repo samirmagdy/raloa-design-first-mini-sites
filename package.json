@@ -12,6 +12,7 @@
     "architecture:check": "node scripts/architecture-check.mjs",
     "test:e2e": "playwright test",
     "backend:dev": "tsx backend/src/main.ts",
+    "backend:worker": "tsx backend/src/analytics.worker.ts",
     "backend:build": "tsc -p backend/tsconfig.json",
     "backend:prisma:generate": "prisma generate --schema backend/prisma/schema.prisma",
     "backend:prisma:migrate": "prisma migrate dev --config backend/prisma.config.ts",
@@ -22,6 +23,8 @@
     "check": "npm run architecture:check && npm run lint && npm run build"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1138.0",
+    "@aws-sdk/s3-request-presigner": "^3.1138.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
@@ -41,6 +44,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^6.1.1",
     "argon2": "^0.45.1",
+    "bullmq": "^5.81.5",
     "canvas-confetti": "^1.9.4",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",

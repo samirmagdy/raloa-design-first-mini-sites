@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { randomBytes } from 'node:crypto';
 import { z } from 'zod';
 import { hashToken, idSchema, parseBody, SessionGuard, type AuthenticatedRequest } from './common';
@@ -36,6 +36,8 @@ export class SubmissionController {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
   @Get()
   async list(@Req() req: AuthenticatedRequest, @Param('profileId') profileId: string) { if (!(await ownedProfile(this.prisma, req.user!.id, profileId))) return { ok: false, error: { code: 'not_found', message: 'Profile not found.' } }; return { ok: true, data: await this.prisma.formSubmission.findMany({ where: { profileId }, orderBy: { submittedAt: 'desc' }, take: 100 }) }; }
+  @Get('export.csv')
+  async exportCsv(@Req() req: AuthenticatedRequest, @Param('profileId') profileId: string, @Res() response: any) { if (!(await ownedProfile(this.prisma, req.user!.id, profileId))) return { ok: false, error: { code: 'not_found', message: 'Profile not found.' } }; const rows = await this.prisma.formSubmission.findMany({ where: { profileId }, orderBy: { submittedAt: 'desc' }, take: 10000, select: { id: true, formId: true, submittedAt: true, read: true, values: true } }); const csvCell = (value: unknown) => `"${String(typeof value === 'object' ? JSON.stringify(value) : value ?? '').replace(/"/g, '""')}"`; const csv = ['id,formId,submittedAt,read,values', ...rows.map((row) => [row.id, row.formId, row.submittedAt.toISOString(), row.read, row.values].map(csvCell).join(','))].join('\n'); return response.type('text/csv').header('content-disposition', 'attachment; filename="raloa-submissions.csv"').send(csv); }
   @Patch(':submissionId')
   async markRead(@Req() req: AuthenticatedRequest, @Param('profileId') profileId: string, @Param('submissionId') submissionId: string, @Body() body: unknown) { const input = parseBody(z.object({ read: z.boolean() }), body); const updated = await this.prisma.formSubmission.updateMany({ where: { id: submissionId, profileId, profile: { ownerUserId: req.user!.id } }, data: { read: input.read } }); return updated.count ? { ok: true, data: null } : { ok: false, error: { code: 'not_found', message: 'Submission not found.' } }; }
   @Delete(':submissionId')
@@ -46,7 +48,7 @@ export class SubmissionController {
 export class PublicSubscriberController {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
   @Post()
-  async subscribe(@Param('profileId') profileId: string, @Body() body: unknown) { const input = parseBody(z.object({ email: z.string().trim().toLowerCase().email(), pageId: idSchema.optional(), blockId: idSchema.optional() }), body); const token = randomBytes(32).toString('base64url'); const subscriber = await this.prisma.subscriber.upsert({ where: { profileId_email: { profileId, email: input.email } }, update: { status: 'PENDING', confirmedAt: null, confirmationHash: hashToken(token), unsubscribedAt: null }, create: { profileId, email: input.email, confirmationHash: hashToken(token), source: { pageId: input.pageId, blockId: input.blockId } } }); return { ok: true, data: { subscriberId: subscriber.id, status: subscriber.status, confirmationToken: token } }; }
+  async subscribe(@Param('profileId') profileId: string, @Body() body: unknown) { const input = parseBody(z.object({ email: z.string().trim().toLowerCase().email(), pageId: idSchema.optional(), blockId: idSchema.optional() }), body); const token = randomBytes(32).toString('base64url'); const unsubscribeToken = randomBytes(32).toString('base64url'); const subscriber = await this.prisma.subscriber.upsert({ where: { profileId_email: { profileId, email: input.email } }, update: { status: 'PENDING', confirmedAt: null, confirmationHash: hashToken(token), unsubscribeHash: hashToken(unsubscribeToken), unsubscribedAt: null }, create: { profileId, email: input.email, confirmationHash: hashToken(token), unsubscribeHash: hashToken(unsubscribeToken), source: { pageId: input.pageId, blockId: input.blockId } } }); return { ok: true, data: { subscriberId: subscriber.id, status: subscriber.status, confirmationToken: token, unsubscribeToken } }; }
 }
 
 @Controller('api/v1/profiles/:profileId/subscribers')
@@ -59,4 +61,11 @@ export class SubscriberController {
   async confirm(@Param('profileId') profileId: string, @Param('subscriberId') subscriberId: string, @Body() body: unknown) { const input = parseBody(z.object({ token: z.string().min(20) }), body); const updated = await this.prisma.subscriber.updateMany({ where: { id: subscriberId, profileId, confirmationHash: hashToken(input.token) }, data: { status: 'ACTIVE', confirmedAt: new Date(), confirmationHash: null } }); return updated.count ? { ok: true, data: null } : { ok: false, error: { code: 'validation', message: 'Invalid confirmation token.' } }; }
   @Delete(':subscriberId')
   async remove(@Req() req: AuthenticatedRequest, @Param('profileId') profileId: string, @Param('subscriberId') subscriberId: string) { const deleted = await this.prisma.subscriber.deleteMany({ where: { id: subscriberId, profileId, profile: { ownerUserId: req.user!.id } } }); return deleted.count ? { ok: true, data: null } : { ok: false, error: { code: 'not_found', message: 'Subscriber not found.' } }; }
+}
+
+@Controller('public/v1/subscribers')
+export class PublicUnsubscribeController {
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+  @Post(':subscriberId/unsubscribe')
+  async unsubscribe(@Param('subscriberId') subscriberId: string, @Body() body: unknown) { const input = parseBody(z.object({ token: z.string().min(20) }), body); const updated = await this.prisma.subscriber.updateMany({ where: { id: subscriberId, unsubscribeHash: hashToken(input.token) }, data: { status: 'UNSUBSCRIBED', unsubscribedAt: new Date() } }); return updated.count ? { ok: true, data: null } : { ok: false, error: { code: 'validation', message: 'Invalid unsubscribe token.' } }; }
 }

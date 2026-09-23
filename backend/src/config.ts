@@ -11,6 +11,10 @@ export const envSchema = z.object({
   PUBLIC_APP_URL: z.string().url().default('http://localhost:3000'),
   RESEND_API_KEY: z.string().min(1).optional(),
   EMAIL_FROM: z.string().min(3).default('RALOA <no-reply@raloa.app>')
+  ,R2_ENDPOINT: z.string().url().optional(),
+  R2_ACCESS_KEY_ID: z.string().min(1).optional(),
+  R2_SECRET_ACCESS_KEY: z.string().min(1).optional(),
+  R2_BUCKET: z.string().min(1).optional()
 });
 
 export type AppConfig = z.infer<typeof envSchema>;

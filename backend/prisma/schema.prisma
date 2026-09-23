@@ -29,6 +29,11 @@ enum AuthTokenType {
   PASSWORD_RESET
 }
 
+enum MediaAssetStatus {
+  UPLOADING
+  READY
+}
+
 model User {
   id              String        @id @default(uuid()) @db.Uuid
   email           String        @unique
@@ -78,6 +83,8 @@ model Profile {
   submissions FormSubmission[]
   subscribers Subscriber[]
   apiKeys     ApiKey[]
+  dailyAnalytics AnalyticsDaily[]
+  mediaAssets   MediaAsset[]
   @@index([ownerUserId, updatedAt])
 }
 
@@ -91,6 +98,35 @@ model AuthToken {
   createdAt  DateTime      @default(now())
   user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@index([userId, type, expiresAt])
+}
+
+model AnalyticsDaily {
+  id               String   @id @default(uuid()) @db.Uuid
+  profileId        String   @db.Uuid
+  day              DateTime @db.Date
+  views            Int      @default(0)
+  uniqueVisitors   Int      @default(0)
+  linkClicks       Int      @default(0)
+  formSubmissions  Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  profile          Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  @@unique([profileId, day])
+  @@index([profileId, day])
+}
+
+model MediaAsset {
+  id          String           @id @default(uuid()) @db.Uuid
+  profileId   String           @db.Uuid
+  objectKey   String           @unique
+  filename    String
+  mimeType    String
+  sizeBytes   Int
+  status      MediaAssetStatus @default(UPLOADING)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  profile     Profile          @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  @@index([profileId, createdAt])
 }
 
 model Page {
@@ -196,6 +232,7 @@ model Subscriber {
   email          String
   status         SubscriberStatus @default(PENDING)
   confirmationHash String?
+  unsubscribeHash  String?
   createdAt      DateTime         @default(now())
   confirmedAt    DateTime?
   unsubscribedAt DateTime?

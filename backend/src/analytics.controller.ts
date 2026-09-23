@@ -3,12 +3,13 @@ import { z } from 'zod';
 import { parseBody } from './common';
 import { PrismaService } from './prisma.service';
 import { SessionGuard, type AuthenticatedRequest } from './common';
+import { enqueueAnalyticsAggregation } from './analytics.queue';
 
 @Controller('public/v1/profiles/:profileId/events')
 export class AnalyticsController {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
   @Post()
-  async record(@Param('profileId') profileId: string, @Body() body: unknown) { const input = parseBody(z.object({ type: z.enum(['VIEW', 'CLICK', 'FORM_SUBMIT']), pageId: z.string().uuid().optional(), blockId: z.string().uuid().optional(), visitorHash: z.string().max(128).optional(), referrer: z.string().max(500).optional(), utm: z.record(z.string(), z.string()).optional(), userAgent: z.string().max(500).optional() }), body); await this.prisma.analyticsEvent.create({ data: { profileId, ...input, type: input.type } }); return { ok: true, data: null }; }
+  async record(@Param('profileId') profileId: string, @Body() body: unknown) { const input = parseBody(z.object({ type: z.enum(['VIEW', 'CLICK', 'FORM_SUBMIT']), pageId: z.string().uuid().optional(), blockId: z.string().uuid().optional(), visitorHash: z.string().max(128).optional(), referrer: z.string().max(500).optional(), utm: z.record(z.string(), z.string()).optional(), userAgent: z.string().max(500).optional() }), body); await this.prisma.analyticsEvent.create({ data: { profileId, ...input, type: input.type } }); try { await enqueueAnalyticsAggregation(profileId); } catch { /* event persistence remains successful; failed jobs are retried by the worker */ } return { ok: true, data: null }; }
 }
 
 @Controller('api/v1/profiles/:profileId/analytics')

@@ -47,6 +47,14 @@ export class AuthController {
     return { ok: true, data: null };
   }
 
+  @UseGuards(SessionGuard)
+  @Post('logout-all')
+  async logoutAll(@Req() request: AuthenticatedRequest, @Res({ passthrough: true }) response: FastifyReply) {
+    await this.prisma.session.deleteMany({ where: { userId: request.user!.id } });
+    response.clearCookie(cookieName, { path: '/' });
+    return { ok: true, data: null };
+  }
+
   private async issueSession(userId: string, response: FastifyReply) {
     const token = randomBytes(32).toString('base64url');
     const ttl = 60 * 60 * 24 * 30;

@@ -313,6 +313,14 @@ export const StudioShell: React.FC<StudioShellProps> = ({ locale, section, onRet
             </button>
             <button
               type="button"
+              onClick={() => navigate('/manage/templates')}
+              className="flex min-h-11 w-full items-center gap-3 rounded-control px-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+            >
+              <Layers3 className="h-4 w-4" aria-hidden="true" />
+              {locale === 'ar' ? 'إدارة متقدمة' : 'Advanced management'}
+            </button>
+            <button
+              type="button"
               onClick={onReturnHome}
               className="flex min-h-11 w-full items-center gap-3 rounded-control px-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900"
             >

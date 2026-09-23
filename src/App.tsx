@@ -47,6 +47,7 @@ import { SettingsPage } from './components/SettingsPage';
 import { OnboardingPage } from './components/OnboardingPage';
 import { ImportPage } from './components/ImportPage';
 import { AuthPage } from './components/AuthPage';
+import { ManagePage } from './components/ManagePage';
 
 export default function App() {
   const [locale, setLocale] = useState<Locale>(() => getInitialLocale());
@@ -489,6 +490,8 @@ export default function App() {
         <OnboardingPage locale={locale} onReturnHome={handleReturnHome} />
       ) : route.name === 'import' ? (
         <ImportPage locale={locale} onReturnHome={handleReturnHome} />
+      ) : route.name === 'manage' ? (
+        <ManagePage locale={locale} section={route.manageSection ?? 'templates'} onReturnHome={handleReturnHome} />
       ) : route.name === 'signin' ? (
         <AuthPage locale={locale} onReturnHome={handleReturnHome} />
       ) : !isLanding ? (

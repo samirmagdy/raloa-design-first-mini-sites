@@ -1,8 +1,9 @@
-export type RouteName = 'home' | 'profile' | 'studio' | 'settings' | 'analytics' | 'import' | 'onboarding' | 'signin' | 'not-found';
+export type RouteName = 'home' | 'profile' | 'studio' | 'settings' | 'analytics' | 'import' | 'onboarding' | 'manage' | 'signin' | 'not-found';
 
 export type StudioSection = 'overview' | 'editor' | 'theme' | 'pages' | 'preview';
 
 export type SettingsSection = 'profile' | 'seo';
+export type ManageSection = 'templates' | 'qr' | 'seo' | 'domains' | 'subscribers' | 'forms' | 'submissions' | 'integrations' | 'api-keys';
 
 export interface Route {
   name: RouteName;
@@ -10,10 +11,12 @@ export interface Route {
   username?: string;
   studioSection?: StudioSection;
   settingsSection?: SettingsSection;
+  manageSection?: ManageSection;
 }
 
 const STUDIO_SECTIONS: StudioSection[] = ['overview', 'editor', 'theme', 'pages', 'preview'];
 const SETTINGS_SECTIONS: SettingsSection[] = ['profile', 'seo'];
+const MANAGE_SECTIONS: ManageSection[] = ['templates', 'qr', 'seo', 'domains', 'subscribers', 'forms', 'submissions', 'integrations', 'api-keys'];
 
 export const normalizePath = (path: string): string => {
   const normalized = path.replace(/\/+/g, '/').replace(/\/$/, '');
@@ -31,6 +34,12 @@ export const parseAppRoute = (pathname: string): Route => {
   if (path === '/analytics') return { name: 'analytics', path };
   if (path === '/import') return { name: 'import', path };
   if (path === '/onboarding') return { name: 'onboarding', path };
+
+  const manageMatch = path.match(/^\/manage(?:\/([a-z-]+))?$/);
+  if (manageMatch) {
+    const section = sectionOf(manageMatch[1], MANAGE_SECTIONS, 'templates');
+    return { name: 'manage', path: `/manage/${section}`, settingsSection: undefined, studioSection: undefined, manageSection: section };
+  }
 
   const studioMatch = path.match(/^\/studio(?:\/([a-z-]+))?$/);
   if (studioMatch) {
@@ -57,7 +66,8 @@ export const routeEquals = (left: Route, right: Route): boolean =>
   left.name === right.name &&
   left.username === right.username &&
   left.studioSection === right.studioSection &&
-  left.settingsSection === right.settingsSection;
+  left.settingsSection === right.settingsSection &&
+  left.manageSection === right.manageSection;
 
 type Listener = (route: Route) => void;
 

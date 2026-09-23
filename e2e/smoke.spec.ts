@@ -47,6 +47,15 @@ test('studio navigation swaps the screen without reloading the document', async 
   expect(await page.evaluate(() => (window as unknown as { __raloaDocumentMarker?: string }).__raloaDocumentMarker)).toBe('alive');
 });
 
+test('management tools use the authenticated repository surface', async ({ page }) => {
+  await signIn(page);
+  await page.goto('/manage/qr');
+  await expect(page.getByRole('heading', { name: /QR & sharing/i })).toBeVisible();
+  await expect(page.locator('img[alt*="QR code"]')).toBeVisible();
+  await page.getByRole('button', { name: /API keys/i }).click();
+  await expect(page.getByRole('heading', { name: /API keys/i }).first()).toBeVisible();
+});
+
 test('unknown routes render the not-found screen', async ({ page }) => {
   await page.goto('/definitely-not-a-page');
   await expect(page).toHaveTitle(/404/);

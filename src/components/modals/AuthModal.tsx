@@ -3,6 +3,8 @@ import { X, ArrowRight, Check, Mail, Lock, AlertCircle } from 'lucide-react';
 import { Locale } from '../../types';
 import { RaloaMark } from '../brand/RaloaLogo';
 import { useModalAccessibility } from '../../hooks/useModalAccessibility';
+import { useRepository } from '../../services/RepositoryContext';
+import { text } from '../../i18n/ui';
 
 interface AuthModalProps {
   initialMode?: 'signin' | 'signup';
@@ -24,27 +26,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [errorMessage, setErrorMessage] = useState('');
   const isRtl = locale === 'ar';
   const dialogRef = useModalAccessibility<HTMLDivElement>(true);
+  const repository = useRepository();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
-    const endpoint = import.meta.env.VITE_AUTH_ENDPOINT;
-    if (!endpoint) {
-      setErrorMessage(isRtl ? 'خدمة الحسابات غير مهيأة في هذه النسخة.' : 'Authentication is not configured for this deployment.');
-      return;
-    }
-
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode, email, password })
-      });
-      if (!response.ok) throw new Error(`Authentication failed: ${response.status}`);
+    setErrorMessage('');
+    const result = await repository.auth.signIn({ email, password }, mode);
+    if (result.ok) {
       setSubmitted(true);
       onSuccess(email);
-    } catch {
-      setErrorMessage(isRtl ? 'تعذر إتمام العملية. حاول مرة أخرى.' : 'Authentication failed. Please try again.');
+    } else {
+      setErrorMessage(text(result.error.message, locale));
     }
   };
 

@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { config as loadDotEnv } from 'dotenv';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import cookie from '@fastify/cookie';
@@ -11,13 +12,15 @@ import { PrismaService } from './prisma.service';
 import { HttpErrorFilter } from './http-error.filter';
 import { metrics, recordRequest } from './metrics';
 
+loadDotEnv({ path: 'backend/.env' });
+
 async function bootstrap() {
   const config = loadConfig();
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ logger: true }), { rawBody: true });
   await app.register(cookie, { secret: config.SESSION_SECRET });
   await app.register(cors, { origin: config.FRONTEND_ORIGIN, credentials: true });
   await app.register(helmet);
-  app.getHttpAdapter().getInstance().addHook('onRequest', () => { recordRequest(); });
+  app.getHttpAdapter().getInstance().addHook('onRequest', async () => { recordRequest(); });
   app.useGlobalFilters(new HttpErrorFilter());
   app.setGlobalPrefix('');
   app.enableShutdownHooks();

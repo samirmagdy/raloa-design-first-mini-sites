@@ -29,15 +29,15 @@ export const AuthPage: React.FC<AuthPageProps> = ({ locale, onReturnHome }) => {
     setError(null);
     const result = await signIn(email, password);
     setBusy(false);
-    if (result.ok) {
-      navigate('/studio/overview');
+    if (!result.ok) {
+      setError(
+        result.error.fields?.length
+          ? text(result.error.fields[0].message, locale)
+          : text(result.error.message, locale)
+      );
       return;
     }
-    setError(
-      result.error.fields?.length
-        ? text(result.error.fields[0].message, locale)
-        : text(result.error.message, locale)
-    );
+    navigate('/studio/overview');
   };
 
   return (

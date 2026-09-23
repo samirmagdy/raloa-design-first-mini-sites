@@ -59,6 +59,24 @@ const normalizeProfile = (value: unknown): PublicProfile => {
   return { ...profile, ownerId: String(profile.ownerId ?? profile.ownerUserId), avatarUrl: String(profile.avatarUrl ?? ''), socials: Array.isArray(profile.socials) ? profile.socials as ProfileSocial[] : [], version: Number(profile.version ?? 1), createdAt: String(profile.createdAt ?? ''), updatedAt: String(profile.updatedAt ?? '') } as PublicProfile;
 };
 
+const normalizeSession = (value: unknown): Session | null => {
+  if (!value || typeof value !== 'object') return null;
+  const source = asObject(value);
+  const userSource = asObject(source.user ?? source);
+  const now = new Date();
+  return {
+    user: {
+      id: String(userSource.id ?? ''),
+      email: String(userSource.email ?? ''),
+      displayName: String(userSource.displayName ?? userSource.email ?? ''),
+      plan: (userSource.plan ?? 'free') as Session['user']['plan'],
+      createdAt: String(userSource.createdAt ?? now.toISOString())
+    },
+    signedInAt: String(source.signedInAt ?? now.toISOString()),
+    expiresAt: String(source.expiresAt ?? new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString())
+  };
+};
+
 const normalizePageResult = <T,>(result: Result<T[]>): Result<ProfilePage[]> => result.ok ? { ok: true, data: result.data.map(normalizePage) } : result;
 
 const profiles: RaloaRepository['profiles'] = {
@@ -186,8 +204,8 @@ const imports: RaloaRepository['imports'] = {
 };
 
 const auth: RaloaRepository['auth'] = {
-  session: async () => request<Session | null>('/api/v1/auth/me'),
-  signIn: async (credentials: Credentials, _mode?: AuthMode) => request<Session>('/api/v1/auth/login', json(credentials)),
+  session: async () => { const result = await request<unknown>('/api/v1/auth/me'); return result.ok ? { ok: true, data: normalizeSession(result.data) } : result; },
+  signIn: async (credentials: Credentials, mode: AuthMode = 'signin') => { const result = await request<unknown>(`/api/v1/auth/${mode === 'signup' ? 'register' : 'login'}`, json(credentials)); return result.ok ? { ok: true, data: normalizeSession(result.data) as Session } : result; },
   signOut: async () => request<void>('/api/v1/auth/logout', json({}))
 };
 

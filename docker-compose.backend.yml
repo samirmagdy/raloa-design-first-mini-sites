@@ -5,8 +5,10 @@ services:
       POSTGRES_USER: raloa
       POSTGRES_PASSWORD: raloa
       POSTGRES_DB: raloa
-    ports: ["5432:5432"]
-    volumes: ["raloa-postgres:/var/lib/postgresql/data"]
+    # PostgreSQL 18 stores its cluster below /var/lib/postgresql/<major>/docker.
+    # Bind the parent directory so the image can manage versioned data safely.
+    ports: ["5433:5432"]
+    volumes: ["raloa-postgres-v18:/var/lib/postgresql"]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U raloa -d raloa"]
       interval: 5s
@@ -21,4 +23,4 @@ services:
       timeout: 5s
       retries: 20
 volumes:
-  raloa-postgres:
+  raloa-postgres-v18:

@@ -16,14 +16,25 @@ export const parseBody = <T>(schema: ZodType<T>, body: unknown): T => {
 
 export const hashToken = (value: string) => createHash('sha256').update(value).digest('hex');
 const redis = process.env.REDIS_URL ? new Redis(process.env.REDIS_URL, { lazyConnect: true, maxRetriesPerRequest: 1 }) : null;
-export const cacheSession = async (tokenHash: string, userId: string, ttlSeconds: number) => { if (!redis) return; try { if (redis.status === 'wait') await redis.connect(); await redis.set(`session:${tokenHash}`, userId, 'EX', ttlSeconds); } catch { /* database session remains authoritative when Redis is unavailable */ } };
-export const readCachedSession = async (tokenHash: string) => { if (!redis) return null; try { if (redis.status === 'wait') await redis.connect(); return await redis.get(`session:${tokenHash}`); } catch { return null; } };
-export const deleteCachedSession = async (tokenHash: string) => { if (!redis) return; try { if (redis.status === 'wait') await redis.connect(); await redis.del(`session:${tokenHash}`); } catch { /* best effort */ } };
+const withRedisTimeout = async <T,>(operation: Promise<T>, timeoutMs = 750): Promise<T> => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      operation,
+      new Promise<T>((_, reject) => { timer = setTimeout(() => reject(new Error('Redis operation timed out')), timeoutMs); })
+    ]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+};
+export const cacheSession = async (tokenHash: string, userId: string, ttlSeconds: number) => { if (!redis) return; try { if (redis.status === 'wait') await withRedisTimeout(redis.connect()); await withRedisTimeout(redis.set(`session:${tokenHash}`, userId, 'EX', ttlSeconds)); } catch { /* database session remains authoritative when Redis is unavailable */ } };
+export const readCachedSession = async (tokenHash: string) => { if (!redis) return null; try { if (redis.status === 'wait') await withRedisTimeout(redis.connect()); return await withRedisTimeout(redis.get(`session:${tokenHash}`)); } catch { return null; } };
+export const deleteCachedSession = async (tokenHash: string) => { if (!redis) return; try { if (redis.status === 'wait') await withRedisTimeout(redis.connect()); await withRedisTimeout(redis.del(`session:${tokenHash}`)); } catch { /* best effort */ } };
 const memoryRateLimits = new Map<string, { count: number; resetAt: number }>();
 export const consumeRateLimit = async (key: string, limit: number, windowSeconds: number) => {
   const now = Date.now();
   if (redis) {
-    try { if (redis.status === 'wait') await redis.connect(); const bucket = `rate:${key}:${Math.floor(now / (windowSeconds * 1000))}`; const count = await redis.incr(bucket); if (count === 1) await redis.expire(bucket, windowSeconds); return count <= limit; } catch { /* fall through to local limiter */ }
+    try { if (redis.status === 'wait') await withRedisTimeout(redis.connect()); const bucket = `rate:${key}:${Math.floor(now / (windowSeconds * 1000))}`; const count = await withRedisTimeout(redis.incr(bucket)); if (count === 1) await withRedisTimeout(redis.expire(bucket, windowSeconds)); return count <= limit; } catch { /* fall through to local limiter */ }
   }
   const current = memoryRateLimits.get(key);
   if (!current || current.resetAt <= now) { memoryRateLimits.set(key, { count: 1, resetAt: now + windowSeconds * 1000 }); return true; }

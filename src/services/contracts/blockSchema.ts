@@ -120,7 +120,16 @@ const fieldMessage = (field: BlockFieldDefinition, reason: string, numeric?: str
 };
 
 /** Client half of the config validation the server repeats (D3). */
-export const validateBlock = (block: ProfileBlock): RepositoryFieldError[] => {
+/**
+ * `requireContent: false` is the draft rule: a block may be stored half-finished while you type, so
+ * only values that are present and wrong are rejected. Publishing uses the default rule.
+ */
+export interface BlockValidationOptions {
+  requireContent?: boolean;
+}
+
+export const validateBlock = (block: ProfileBlock, options: BlockValidationOptions = {}): RepositoryFieldError[] => {
+  const requireContent = options.requireContent !== false;
   const definition = getBlockDefinition(block.type);
   if (!definition) return [{ field: 'type', message: { en: 'Unknown block type.', ar: 'نوع كتلة غير معروف.' } }];
 
@@ -132,12 +141,15 @@ export const validateBlock = (block: ProfileBlock): RepositoryFieldError[] => {
     }
   };
 
-  if (definition.titleRequired) requiredSlot('title');
-  if (definition.hasUrl && definition.urlRequired && !isSafeUrl(block.url)) {
-    errors.push({
-      field: 'url',
-      message: { en: 'Add a link starting with https://, mailto: or tel:.', ar: 'أضف رابطاً يبدأ بـ https:// أو mailto: أو tel:.' }
-    });
+  if (definition.titleRequired && requireContent) requiredSlot('title');
+  if (definition.hasUrl && definition.urlRequired) {
+    const url = (block.url ?? '').trim();
+    if (url ? !isSafeUrl(url) : requireContent) {
+      errors.push({
+        field: 'url',
+        message: { en: 'Add a link starting with https://, mailto: or tel:.', ar: 'أضف رابطاً يبدأ بـ https:// أو mailto: أو tel:.' }
+      });
+    }
   }
   if (block.type === 'phone' && block.url && !/^tel:/i.test(block.url)) {
     errors.push({
@@ -152,6 +164,7 @@ export const validateBlock = (block: ProfileBlock): RepositoryFieldError[] => {
   visibleFields(definition.fields, block.config).forEach((field) => {
     const reason = configValueMatchesKind(field, block.config[field.key]);
     if (!reason) return;
+    if (!requireContent && reason === 'required') return;
     const bound = reason === 'max' ? field.max : reason === 'maxLength' ? field.maxLength : field.min;
     errors.push(fieldMessage(field, reason, String(bound ?? '')));
   });

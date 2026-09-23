@@ -53,6 +53,8 @@ interface BlockEditorWorkspaceProps {
 interface UndoCommand {
   label: string;
   invert: () => Promise<void>;
+  /** Undoes the optimistic edit when the write never landed, so no phantom row is left behind. */
+  rollback?: () => void;
 }
 
 const MAX_HISTORY = 20;
@@ -140,6 +142,7 @@ export const BlockEditorWorkspace: React.FC<BlockEditorWorkspaceProps> = ({ page
     const response = await run();
     setBusy(false);
     if (!response.ok) {
+      command?.rollback?.();
       // The retry re-issues this exact mutation, not the whole document.
       onError(response.error, () => void write(run, onOk, command));
       return;
@@ -173,9 +176,15 @@ export const BlockEditorWorkspace: React.FC<BlockEditorWorkspaceProps> = ({ page
       (created) => {
         createdId = created.id;
         setPageBlocks(mapBlock(withInserted(blocks, parentId, created, afterIndex), created.id, () => created));
+        // The repository mints the id, so the selection has to move onto the stored block.
+        setSelectedId(created.id);
       },
       {
         label: tx(ui.editor.addBlock, locale),
+        rollback: () => {
+          setPageBlocks(previous);
+          setSelectedId(selected?.id ?? '');
+        },
         invert: async () => {
           if (createdId) await repository.blocks.remove(page.id, createdId);
           setPageBlocks(previous);

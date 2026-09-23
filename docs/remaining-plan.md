@@ -6,6 +6,9 @@ makes the app integrable with the backend in `docs/backend-plan.md` without a se
 Goal of this round: **backend readiness**, not the remaining screens. Screens come after; the seam
 comes first.
 
+**Status: Stages 0–3 are built and verified — see "Round result" at the end for what each phase can
+now do, what the automated suite proves, and what is still open.**
+
 ## Audit
 
 Status: `done` = meets the phase gate, `partial` = gate not met, `none` = not started.
@@ -130,3 +133,86 @@ each one is now "add a screen over an existing contract" instead of a schema cha
 ## Out of scope this round
 Building the backend, the `httpRepository` implementation itself, and any phase 9–21 screen. The
 seam is designed so those become additive.
+
+## Round result (2026-09-23)
+
+### Commands
+
+| Command | Proves |
+|---|---|
+| `npm run architecture:check` | No screen imports the mock repository, no product screen reads `src/data` fixtures, no file outside the storage layer names the domain DB key. Verified to fail on seeded violations, not just to pass. |
+| `npm run lint` | `tsc --noEmit` across app, contracts and specs. |
+| `npm run build` | Production bundle. |
+| `npm run check` | The three above in one command. |
+| `npm run test:e2e` | 11 Playwright tests (desktop Chrome + Pixel 7) against the dev server. |
+
+### What the suite locks down
+
+- Public page records a **view** event with **UTM** attribution and a per-block **click** event
+  (`analytics.record`, not seeded numbers) — `e2e/smoke.spec.ts`.
+- In-app navigation changes the route **without reloading the document**.
+- Editor edits autosave through `blocks.update` and **survive a reload**; **undo** reverts through the
+  repository, not just on screen.
+- Adding a block persists under the **repository-minted id** and undo removes it again.
+- Publishing is **refused while a visible block is incomplete** (D3 validation at the publish
+  boundary, not at every keystroke).
+- A theme change persists through `themes.save` with the correct `expectedVersion` and reaches the
+  preview screen through the shared renderer.
+- Mobile: no horizontal overflow, the themed surface fills the viewport, Arabic renders RTL.
+
+### Where each phase now stands
+
+| Phase | Now | Still open |
+|---|---|---|
+| 0 Foundation | done for this round's purpose: 15 sub-repositories behind one seam, `Result<T, RepositoryError>`, versioned `raloa.db.v2` with v1 migration, token set, shared UI primitives, dictionary | — |
+| 1 Public profile | partial → shared renderer, four distinct non-happy states, branding respected, view/click events recorded | 320px evidence sweep |
+| 2 Theme engine | done: route Studio edits the theme, autosaves, preview + public page follow without reload | — |
+| 3 Block system | partial: D2 state split, registry-as-data with per-type fields and `validateBlock` | visual schema editor |
+| 4 Studio shell | partial: reload-free routing, real dirty diff, profile/page switching reads `profiles.activeId()` | — |
+| 5 Block editor | partial: search, drag-and-drop ordering, collapse, undo, registry-generated inspector | — |
+| 6 Live preview | done: `ProfileView` is the only tree for preview and public page; device frames, zoom | — |
+| 7 Profile management | partial: username edit + availability check, avatar upload through `media.upload`, socials, limits | create/duplicate/delete grid |
+| 8 Page management | partial: create/duplicate/delete/reorder/visibility through `pages.*` | — |
+| 9 Autosave | done: debounce, diff, saving/saved/failed, retry of the failed mutation, optimistic + rollback, beforeunload | — |
+| 10 Templates | partial: `templates.apply` replaces pages/blocks and carries the template theme; onboarding applies it | gallery categories/search |
+| 11 Import | partial: job pipeline (validate → fetch → parse → ready), preview diff, commit | duplicate warnings |
+| 12 Onboarding | done: 4-step wizard with resume, template seeding, theme, publish | — |
+| 13 QR and sharing | none — deliberately not faked | whole phase |
+| 14 SEO | partial: per-profile SEO feeds the public document (title/OG/robots) | SEO screen + counters |
+| 15–18, 20, 21 | contracts + mock data exist (domains, forms, submissions, subscribers, integrations, API keys) but no screens | screens |
+| 19 Analytics | done as a root: every number derives from the events table; ranges, top links, referrers, campaigns | date-range picker |
+| 22 Quality | partial: gate + e2e suite + RTL/reduced motion | contrast sweep, network-failure panel UI |
+
+### Bugs found and fixed while verifying (each reproduced live first)
+
+1. `templates.apply` deleted pages before measuring their blocks, so old blocks were orphaned
+   instead of replaced.
+2. The onboarding plan-limit check counted profiles against a cap smaller than the seed.
+3. `media.upload` returned an unpersisted asset and the screen read files itself, bypassing the
+   seam; upload now owns validation, storage and the returned URL.
+4. The studio/settings profile loader wrote its own `activeProfileId`, re-triggering itself and
+   overwriting edits made during the reload window.
+5. Undo of a block edit sent the pre-write `expectedVersion`, so the revert always conflicted and
+   never persisted.
+6. Undo of "add block" removed the client-side id the repository never stored.
+7. A failed create left a phantom row that could never be saved.
+8. `analytics.record` was routed through the latency simulator, so a click that navigated away could
+   be dropped.
+9. The public profile's themed surface did not fill the viewport, leaving a white band under dark
+   themes.
+10. Embed blocks iframed share URLs (a YouTube watch link cannot play in an iframe); the existing
+    share→embed converter is now used.
+11. The onboarding publish step claimed "your page is live" before publishing.
+12. `usage()` counted pages and blocks against different scopes.
+
+### Deliberately not done
+
+- **No QR feature.** The legacy modal's hand-drawn mockup was not carried into the new preview; the
+  preview omits it rather than faking it.
+- **No network-failure panel UI.** `setNetworkMode()` / `resetDatabase()` exist in the storage layer
+  and the mock honours them, but there is no screen to flip them yet — that is the Phase 22 surface.
+  Until then, failure modes are exercised by setting `raloa.mock.network` in localStorage or from tests.
+- **Legacy surfaces left in place** (the landing-page `StudioModal`, `ReferralModal`,
+  `SortableBlockList`, unused doodle/hook exports). They are pre-existing, still mounted, and outside
+  this round's scope; removing them is a product decision, not a seam problem.
+

@@ -44,6 +44,38 @@ test('undo reverts the last edit and the revert is persisted', async ({ page }) 
   await expect.poll(() => blockTitle(page, blockId ?? '')).toBe(original);
 });
 
+test('adding a block persists under the stored id, and undo removes it again', async ({ page }) => {
+  await page.goto('/studio/editor');
+  const storedYoutube = async () => ((await database(page)) as Database).blocks.filter((block) => block.type === 'youtube').length;
+
+  await page.getByRole('tab', { name: /video/i }).click();
+  await page.getByRole('button', { name: 'YouTube', exact: true }).click();
+
+  // The repository mints the id, so the row the editor selects has to be the stored one.
+  await expect(page.getByLabel('Title (EN)')).toHaveValue('YouTube');
+  await expect.poll(storedYoutube).toBe(1);
+
+  await page.getByRole('button', { name: /undo/i }).click();
+  await expect.poll(storedYoutube).toBe(0);
+});
+
+test('publishing is refused while a visible block is incomplete', async ({ page }) => {
+  await page.goto('/studio/editor');
+  const publishedBefore = async () => {
+    const db = (await database(page)) as Database;
+    return `${db.profiles.find((profile) => profile.id === db.activeProfileId)?.published}`;
+  };
+  const stateBefore = await publishedBefore();
+
+  await page.getByRole('tab', { name: /video/i }).click();
+  await page.getByRole('button', { name: 'YouTube', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText(/required|تصحيحاً/i);
+
+  await page.getByRole('button', { name: /publish changes/i }).click();
+  await expect(page.getByLabel('Notifications')).toContainText(/attention|تحتاج تصحيحاً/i);
+  expect(await publishedBefore()).toBe(stateBefore);
+});
+
 test('a theme chosen in the editor is stored and reaches the preview screen', async ({ page }) => {
   await page.goto('/studio/theme');
   await page.getByRole('button', { name: 'midnight' }).click();

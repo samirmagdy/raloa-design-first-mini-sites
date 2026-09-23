@@ -52,6 +52,18 @@ import type { Template, TemplateApplyResult } from '../contracts/template';
 import type { ThemeConfig } from '../contracts/theme';
 import { clone, conflict, database, notFound, respond, unauthorized, validationError } from './transport';
 
+/** Drafts may be stored incomplete; what is about to be seen by the public has to be finished. */
+const unfinishedBlocks = (db: RaloaDatabase, pageIds: string[]): ProfileBlock[] =>
+  db.blocks.filter((block) => pageIds.includes(block.pageId) && block.visible && validateBlock(block).length > 0);
+
+const publishBlocked = (blocks: ProfileBlock[]) =>
+  repositoryError('validation', {
+    en: `${blocks.length} visible block${blocks.length === 1 ? '' : 's'} still need attention.`,
+    ar: `لا يزال ${blocks.length} كتلة ظاهرة تحتاج تصحيحاً.`
+  }, {
+    fields: blocks.map((block) => ({ field: block.id, message: validateBlock(block)[0].message }))
+  });
+
 const USERNAME_PATTERN = /^[a-z0-9](?:[a-z0-9-]{1,28}[a-z0-9])?$/;
 const RESERVED_USERNAMES = ['admin', 'api', 'app', 'support', 'raloa', 'studio', 'settings', 'analytics', 'import', 'onboarding', 'me'];
 const HOSTNAME_PATTERN = /^(?!-)[a-z0-9-]{1,63}(?:(?<!-)\.[a-z0-9-]{1,63})+$/i;
@@ -393,6 +405,11 @@ const profiles: ProfilesRepository = {
       const result = mutateDatabase((db) => {
         const profile = profileOf(db, profileId);
         if (!profile) return { error: notFound('profile') } as const;
+        if (published) {
+          const publicPageIds = pagesOf(db, profileId).filter((page) => page.published).map((page) => page.id);
+          const unfinished = unfinishedBlocks(db, publicPageIds);
+          if (unfinished.length) return { error: publishBlocked(unfinished) } as const;
+        }
         profile.published = published;
         profile.seo.indexable = published && profile.seo.indexable !== false;
         touchProfile(profile);
@@ -604,6 +621,10 @@ const pages: PagesRepository = {
       const result = mutateDatabase((db) => {
         const record = db.pages.find((page) => page.id === pageId);
         if (!record) return { error: notFound('page') } as const;
+        if (published) {
+          const unfinished = unfinishedBlocks(db, [pageId]);
+          if (unfinished.length) return { error: publishBlocked(unfinished) } as const;
+        }
         record.published = published;
         record.visibility = published ? 'public' : 'draft';
         record.version += 1;
@@ -647,7 +668,7 @@ const blocks: BlocksRepository = {
           position: block.position ?? db.blocks.filter((item) => item.pageId === pageId && item.parentId === (block.parentId ?? null)).length,
           version: 1
         };
-        const errors = validateBlock(candidate);
+        const errors = validateBlock(candidate, { requireContent: false });
         if (errors.length) {
           return { error: repositoryError('validation', {
             en: 'Fix the highlighted fields before adding this block.',
@@ -670,11 +691,11 @@ const blocks: BlocksRepository = {
         if (block.version !== expectedVersion) return { error: conflict(block.version) } as const;
 
         const next: ProfileBlock = { ...block, ...patch, id: block.id, pageId, version: block.version + 1 };
-        const errors = validateBlock(next);
+        const errors = validateBlock(next, { requireContent: false });
         if (errors.length) {
           return { error: repositoryError('validation', {
-            en: 'This block still has fields to fix.',
-            ar: 'لا تزال هذه الكتلة تحتاج تصحيحاً.'
+            en: 'This block has a field to correct.',
+            ar: 'لدى هذه الكتلة حقل يحتاج تصحيحاً.'
           }, { fields: errors }) } as const;
         }
         Object.assign(block, patch, { version: block.version + 1 });
